@@ -13,8 +13,8 @@ augroup END
 set nocompatible
 
 " フォーマット設定
-:set encoding=utf-8
-:set fileformats=unix,dos,mac
+set encoding=utf-8
+set fileformats=unix,dos,mac
 
 " }}}
 
@@ -60,7 +60,7 @@ set showmode
 set cursorline
 
 " ウィンドウ間のバーをカスタマイズ
-:set fillchars+=vert:\|
+set fillchars+=vert:\|
 hi VertSplit ctermbg=238 ctermfg=238 guibg=#d0d0d0 guifg=#444444
 
 " ステータスバーカラーをカスタマイズ
@@ -103,7 +103,7 @@ set hlsearch
 set scrolloff=10
 
 " マウススクロール
-:set mouse=a
+set mouse=a
 
 " }}}
 
@@ -144,7 +144,7 @@ set spell spelllang=en_us
 set nospell
 
 " バッファ切り替え時のワーニングを無視
-:set hidden
+set hidden
 
 " 保存時に行末空白削除
 autocmd BufWritePre * :%s/\s\+$//ge
@@ -203,13 +203,13 @@ noremap <silent>== :call ToggleNetrw()<CR>
 " ## カスタムマッピング ---------------------- {{{
 
 " リーダーキーをスペースキーにする
-:let mapleader = " "
+let mapleader = " "
 
 " ローカルリーダーキー を \ にする
-:let maplocalleader = "\\"
+let maplocalleader = "\\"
 
 " インサートモードからエスケープ
-:inoremap <C-c> <esc>
+inoremap <C-c> <esc>
 " ウィンドウ間移動が遅くなるので以下は却下
 " :inoremap jk <esc>
 " 以下はクリップボードが正常に働かなくなる
@@ -217,127 +217,127 @@ noremap <silent>== :call ToggleNetrw()<CR>
 " :inoremap <c-[> <nop>
 
 " Insert モードで Emacs のキーバインドを使えるようにする
-:inoremap <C-p> <Up>
-:inoremap <C-n> <Down>
-:inoremap <C-b> <Left>
-:inoremap <C-f> <Right>
-:inoremap <C-e> <End>
-:inoremap <C-d> <Del>
-:inoremap <C-h> <BS>
+inoremap <C-p> <Up>
+inoremap <C-n> <Down>
+inoremap <C-b> <Left>
+inoremap <C-f> <Right>
+inoremap <C-e> <End>
+inoremap <C-d> <Del>
+inoremap <C-h> <BS>
 
 " ビジュアルモードで選択した範囲をクリップボードにコピー
-:vnoremap y "+y
+vnoremap y "+y
 " ビジュアルモードで選択した範囲にクリップボードからペースト
-:vnoremap p "+p
+vnoremap p "+p
 " ビジュアルモードで選択した範囲をカットしてクリップボードにコピー　
-:vnoremap d "+d
+vnoremap d "+d
 " ビジュアルモードで選択した範囲をカットしてクリップボードにコピー　
-:vnoremap x "+x
+vnoremap x "+x
 
 " https://superuser.com/questions/271471/vim-macro-to-convert-camelcase-to-lowercase-with-underscores
 " キャメルケースをスネークケースに変換
-:vnoremap <leader>s :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul
+vnoremap <leader>s :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul
 " スネークケースをキャメルケースに変換
-:vnoremap <leader>c :s/_\([a-z]\)/\u\1/g<CR>gUl
+vnoremap <leader>c :s/_\([a-z]\)/\u\1/g<CR>gUl
 " 行頭の空白を削除
-:vnoremap <leader>= :s/\v^ *//g<CR>
+vnoremap <leader>= :s/\v^ *//g<CR>
 " `class` と `::` を `module` にする置換
-:vnoremap <leader>: :s/\v(class \|\:\:)+/\rmodule /g<CR>
+vnoremap <leader>: :s/\v(class \|\:\:)+/\rmodule /g<CR>
 
 " ウインドウ間移動
-:nnoremap <leader>h <c-w>h
-:nnoremap <leader>j <c-w>j
-:nnoremap <leader>k <c-w>k
-:nnoremap <leader>l <c-w>l
+nnoremap <leader>h <c-w>h
+nnoremap <leader>j <c-w>j
+nnoremap <leader>k <c-w>k
+nnoremap <leader>l <c-w>l
 
 " 画面分割
-:nnoremap <leader>v :vs<CR><c-w>l
-:nnoremap <leader>n :sp<CR><c-w>j
+nnoremap <leader>v :vs<CR><c-w>l
+nnoremap <leader>n :sp<CR><c-w>j
 
 " ウインドウ幅を右に広げる
-:nnoremap <leader>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
+nnoremap <leader>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
 " ウインドウ幅を左に広げる
-:nnoremap <leader>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
+nnoremap <leader>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
 " ウインドウ高さを高くする
-:nnoremap <leader>= <c-w>+<c-w><<c-w>+<c-w>+<c-w>+
+nnoremap <leader>= <c-w>+<c-w><<c-w>+<c-w>+<c-w>+
 " ウインドウ高さを低くする
-:nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
+nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 
 " 選択した両側を指定した記号で囲む　
-:vnoremap ' c'<C-r>"'<Esc>b
-:vnoremap " c"<C-r>""<Esc>b
-:vnoremap ` c`<C-r>"`<Esc>b
-:vnoremap ( c(<C-r>")<Esc>b
-:vnoremap ) c(<C-r>")<Esc>b
-:vnoremap [ c[<C-r>"]<Esc>b
-:vnoremap ] c[<C-r>"]<Esc>b
-:vnoremap { c{<C-r>"}<Esc>b
-:vnoremap } c{<C-r>"}<Esc>b
-:vnoremap < c<<C-r>"><Esc>b
-:vnoremap > c<<C-r>"><Esc>b
-:vnoremap * c*<C-r>"*<Esc>b
-:vnoremap ~ c~<C-r>"~<Esc>b
-:vnoremap <leader><space> c <C-r>" <Esc>b
+vnoremap ' c'<C-r>"'<Esc>b
+vnoremap " c"<C-r>""<Esc>b
+vnoremap ` c`<C-r>"`<Esc>b
+vnoremap ( c(<C-r>")<Esc>b
+vnoremap ) c(<C-r>")<Esc>b
+vnoremap [ c[<C-r>"]<Esc>b
+vnoremap ] c[<C-r>"]<Esc>b
+vnoremap { c{<C-r>"}<Esc>b
+vnoremap } c{<C-r>"}<Esc>b
+vnoremap < c<<C-r>"><Esc>b
+vnoremap > c<<C-r>"><Esc>b
+vnoremap * c*<C-r>"*<Esc>b
+vnoremap ~ c~<C-r>"~<Esc>b
+vnoremap <leader><space> c <C-r>" <Esc>b
 " 選択した両側を一文字ずつ削除
-:vnoremap <leader>' c<Bs><C-r>"<Esc>wxb
+vnoremap <leader>' c<Bs><C-r>"<Esc>wxb
 
 " ~/.vimrc を開く
-:nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 " ~/.vimrc を読み込む
-:nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " 開いているファイルパスをコピーする
 " https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
 " http://intothelambda.com/archives/4
-:nnoremap <leader>C :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
-:nnoremap <leader>c :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
+nnoremap <leader>C :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
+nnoremap <leader>c :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
 
 " 方向キーとバックスペースキーを無効にする
-:vnoremap <Up>    <nop>
-:vnoremap <Down>  <nop>
-:vnoremap <Left>  <nop>
-:vnoremap <Right> <nop>
-:inoremap <Up>    <nop>
-:inoremap <Down>  <nop>
-:inoremap <Left>  <nop>
-:inoremap <Right> <nop>
-:nnoremap <Up>    <nop>
-:nnoremap <Down>  <nop>
-:nnoremap <Left>  <nop>
-:nnoremap <Right> <nop>
-:vnoremap <Bs>    <nop>
-:inoremap <Bs>    <nop>
-:nnoremap <Bs>    <nop>
+vnoremap <Up>    <nop>
+vnoremap <Down>  <nop>
+vnoremap <Left>  <nop>
+vnoremap <Right> <nop>
+inoremap <Up>    <nop>
+inoremap <Down>  <nop>
+inoremap <Left>  <nop>
+inoremap <Right> <nop>
+nnoremap <Up>    <nop>
+nnoremap <Down>  <nop>
+nnoremap <Left>  <nop>
+nnoremap <Right> <nop>
+vnoremap <Bs>    <nop>
+inoremap <Bs>    <nop>
+nnoremap <Bs>    <nop>
 
 " fzf キーバインド
-:nnoremap <silent> F :Files<CR>
-:nnoremap <silent> B :Buffers<CR>
-:nnoremap <silent> H :History<CR>
-:nnoremap <leader>/ :execute 'Rg ' . input('Rg/')<CR>
+nnoremap <silent> F :Files<CR>
+nnoremap <silent> B :Buffers<CR>
+nnoremap <silent> H :History<CR>
+nnoremap <leader>/ :execute 'Rg ' . input('Rg/')<CR>
 
 " スペースを 2 つ開けて `*` を入力して開始
-:nnoremap <leader>2 i<space><space>*<space>
+nnoremap <leader>2 i<space><space>*<space>
 " スペースを 4 つ開けて `*` を入力して開始
-:nnoremap <leader>4 i<space><space><space><space>*<space>
+nnoremap <leader>4 i<space><space><space><space>*<space>
 
 " }}}
 
 " ## スニペット設定 ---------------------- {{{
 
 " Ruby 用スニペット
-:iabbrev fro # frozen_string_literal: true
-:iabbrev par # @param options [String] description
-:iabbrev ret # @return [String] description
-:iabbrev rai # @raise [StandardError] description
-:iabbrev att attr_reader
+iabbrev fro # frozen_string_literal: true
+iabbrev par # @param options [String] description
+iabbrev ret # @return [String] description
+iabbrev rai # @raise [StandardError] description
+iabbrev att attr_reader
 
 " }}}
 
 " ## カスタムコマンド ---------------------- {{{
 
-:command! -range=% JsonToHash :<line1>,<line2>call JsonToHash()
-:command! -range=% RocketToHash :<line1>,<line2>call RocketToHash()
-:command BreakLine %s/\v}\s*,/},\r/ge | %s/\v]\s*,/],\r/ge | %s/\v"\s*,/",\r/ge | %s/{/{\r/ge | %s/}/\r}/ge | %s/\[/\[\r/ge | %s/\]/\r]/ge
+command! -range=% JsonToHash :<line1>,<line2>call JsonToHash()
+command! -range=% RocketToHash :<line1>,<line2>call RocketToHash()
+command BreakLine %s/\v}\s*,/},\r/ge | %s/\v]\s*,/],\r/ge | %s/\v"\s*,/",\r/ge | %s/{/{\r/ge | %s/}/\r}/ge | %s/\[/\[\r/ge | %s/\]/\r]/ge
 
 " Rg でカラー出力しない
 " https://github.com/junegunn/fzf.vim/issues/488#issuecomment-350523157
@@ -348,42 +348,42 @@ command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-n
 
 " ## カスタムファンクション ---------------------- {{{
 
-:function! JsonToHash() range
-:  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)"\s*:\s*/\1\2: /g'
-:  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)"\s+:/\1\2:/g'
-:  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)":/\1\2:/g'
-:  silent! execute a:firstline . ',' . a:lastline . "s/'/\\'/g"
-:  silent! execute a:firstline . ',' . a:lastline . 's/"' . "/'/g"
-:  normal! gg=G
-:endfunction
+function! JsonToHash() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)"\s*:\s*/\1\2: /g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)"\s+:/\1\2:/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)":/\1\2:/g'
+  silent! execute a:firstline . ',' . a:lastline . "s/'/\\'/g"
+  silent! execute a:firstline . ',' . a:lastline . 's/"' . "/'/g"
+  normal! gg=G
+endfunction
 
-:function! RocketToHash() range
-:  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)".*\=\>/\1\2:/g'
-:  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)(\w+):\s*/\1\2: /g'
-:  silent! execute a:firstline . ',' . a:lastline . "s/'/\\'/g"
-:  silent! execute a:firstline . ',' . a:lastline . 's/"' . "/'/g"
-:  normal! gg=G
-:endfunction
+function! RocketToHash() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)".*\=\>/\1\2:/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)(\w+):\s*/\1\2: /g'
+  silent! execute a:firstline . ',' . a:lastline . "s/'/\\'/g"
+  silent! execute a:firstline . ',' . a:lastline . 's/"' . "/'/g"
+  normal! gg=G
+endfunction
 
 " }}}
 
 " ## プラグイン設定 ---------------------- {{{
 
 " プラグラインインストールコマンド `:PlugUpdate`
-:if has('nvim')
+if has('nvim')
 " nvim の時
-:else
+else
 " vim の時
-:  call plug#begin('~/.vim/plugged')
-:    Plug 'prabirshrestha/async.vim'
-:    Plug 'prabirshrestha/asyncomplete.vim'
-:    Plug 'prabirshrestha/asyncomplete-lsp.vim'
-:    Plug 'prabirshrestha/vim-lsp'
-:    Plug 'mattn/vim-lsp-settings'
-:    Plug 'mattn/vim-goimports'
-:    Plug '/usr/local/opt/fzf'
-:    Plug 'junegunn/fzf.vim'
-:  call plug#end()
-:endif
+  call plug#begin('~/.vim/plugged')
+    Plug 'prabirshrestha/async.vim'
+    Plug 'prabirshrestha/asyncomplete.vim'
+    Plug 'prabirshrestha/asyncomplete-lsp.vim'
+    Plug 'prabirshrestha/vim-lsp'
+    Plug 'mattn/vim-lsp-settings'
+    Plug 'mattn/vim-goimports'
+    Plug '/usr/local/opt/fzf'
+    Plug 'junegunn/fzf.vim'
+  call plug#end()
+endif
 
 " }}}
