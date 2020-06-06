@@ -293,15 +293,15 @@ vnoremap <leader>' c<Bs><C-r>"<Esc>wxb
 
 " キャメルケースをスネークケースに変換
 " https://superuser.com/questions/271471/vim-macro-to-convert-camelcase-to-lowercase-with-underscores
-vnoremap S :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul
+vnoremap S :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul \| :noh<CR>w
 " スネークケースをキャメルケースに変換
-vnoremap C :s/_\([a-z]\)/\u\1/g<CR>gUl
+vnoremap C :s/_\([a-z]\)/\u\1/g<CR>gUl \| :noh<CR>w
 
 " 行頭の空白を削除
-vnoremap = :s/\v^ *//g<CR>
+vnoremap = :s/\v^ *//g<CR> \| :noh<CR>
 
 " `class` と `::` を `module` にする置換
-vnoremap M :s/\v(class \|\:\:)+/\rmodule /g<CR>
+vnoremap M :s/\v(class \|\:\:)+/\rmodule /g \| :noh<CR>
 
 " スペースを 2 つ開けて `*` を入力して開始
 " nnoremap <leader>2 i<space><space>*<space>
@@ -334,7 +334,7 @@ nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 " ~/.vimrc を開く
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 " ~/.vimrc を読み込む
-nnoremap <leader>rv :source $MYVIMRC<cr>
+nnoremap <leader>rv :source $MYVIMRC \| :noh<CR>
 
 " 開いているファイルのパスをコピーする
 " https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
