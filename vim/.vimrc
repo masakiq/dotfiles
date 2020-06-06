@@ -334,7 +334,7 @@ nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 " ~/.vimrc を開く
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 " ~/.vimrc を読み込む
-nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>rv :source $MYVIMRC<cr>
 
 " 開いているファイルのパスをコピーする
 " https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
