@@ -202,11 +202,17 @@ noremap <silent>== :call ToggleNetrw()<CR>
 
 " ## カスタムマッピング ---------------------- {{{
 
+" ### リーダーキー設定 ---------------------- {{{
+
 " リーダーキーをスペースキーにする
 let mapleader = " "
 
 " ローカルリーダーキー を \ にする
 let maplocalleader = "\\"
+
+" }}}
+
+" ### マップ基本設定 ---------------------- {{{
 
 " インサートモードからエスケープ
 inoremap <C-c> <esc>
@@ -225,6 +231,27 @@ inoremap <C-e> <End>
 inoremap <C-d> <Del>
 inoremap <C-h> <BS>
 
+" 方向キーとバックスペースキーを無効にする
+vnoremap <Up>    <nop>
+vnoremap <Down>  <nop>
+vnoremap <Left>  <nop>
+vnoremap <Right> <nop>
+inoremap <Up>    <nop>
+inoremap <Down>  <nop>
+inoremap <Left>  <nop>
+inoremap <Right> <nop>
+nnoremap <Up>    <nop>
+nnoremap <Down>  <nop>
+nnoremap <Left>  <nop>
+nnoremap <Right> <nop>
+vnoremap <Bs>    <nop>
+inoremap <Bs>    <nop>
+nnoremap <Bs>    <nop>
+
+" }}}
+
+" ### クリップボード系 ---------------------- {{{
+
 " ビジュアルモードで選択した範囲をクリップボードにコピー
 vnoremap y "+y
 " ビジュアルモードで選択した範囲にクリップボードからペースト
@@ -242,15 +269,48 @@ vnoremap <leader>d $h"+d
 " ビジュアルモードで選択した箇所の末尾までカットしてクリップボードにコピー
 vnoremap <leader>x $h"+x
 
-" https://superuser.com/questions/271471/vim-macro-to-convert-camelcase-to-lowercase-with-underscores
+" }}}
+
+" ### 変換系 ---------------------- {{{
+
+" 選択した両側を指定した記号で囲む　
+vnoremap ' c'<C-r>"'<Esc>b
+vnoremap " c"<C-r>""<Esc>b
+vnoremap ` c`<C-r>"`<Esc>b
+vnoremap ( c(<C-r>")<Esc>b
+vnoremap ) c(<C-r>")<Esc>b
+vnoremap [ c[<C-r>"]<Esc>b
+vnoremap ] c[<C-r>"]<Esc>b
+vnoremap { c{<C-r>"}<Esc>b
+vnoremap } c{<C-r>"}<Esc>b
+vnoremap < c<<C-r>"><Esc>b
+vnoremap > c<<C-r>"><Esc>b
+vnoremap * c*<C-r>"*<Esc>b
+vnoremap ~ c~<C-r>"~<Esc>b
+vnoremap <leader><space> c <C-r>" <Esc>b
+" 選択した両側を一文字ずつ削除
+vnoremap <leader>' c<Bs><C-r>"<Esc>wxb
+
 " キャメルケースをスネークケースに変換
+" https://superuser.com/questions/271471/vim-macro-to-convert-camelcase-to-lowercase-with-underscores
 vnoremap S :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul
 " スネークケースをキャメルケースに変換
 vnoremap C :s/_\([a-z]\)/\u\1/g<CR>gUl
+
 " 行頭の空白を削除
 vnoremap = :s/\v^ *//g<CR>
+
 " `class` と `::` を `module` にする置換
 vnoremap M :s/\v(class \|\:\:)+/\rmodule /g<CR>
+
+" スペースを 2 つ開けて `*` を入力して開始
+" nnoremap <leader>2 i<space><space>*<space>
+" スペースを 4 つ開けて `*` を入力して開始
+" nnoremap <leader>4 i<space><space><space><space>*<space>
+
+" }}}
+
+" ### ウィンドウ操作系 ---------------------- {{{
 
 " ウインドウ間移動
 nnoremap <leader>h <c-w>h
@@ -271,51 +331,20 @@ nnoremap <leader>= <c-w>+<c-w><<c-w>+<c-w>+<c-w>+
 " ウインドウ高さを低くする
 nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 
-" 選択した両側を指定した記号で囲む　
-vnoremap ' c'<C-r>"'<Esc>b
-vnoremap " c"<C-r>""<Esc>b
-vnoremap ` c`<C-r>"`<Esc>b
-vnoremap ( c(<C-r>")<Esc>b
-vnoremap ) c(<C-r>")<Esc>b
-vnoremap [ c[<C-r>"]<Esc>b
-vnoremap ] c[<C-r>"]<Esc>b
-vnoremap { c{<C-r>"}<Esc>b
-vnoremap } c{<C-r>"}<Esc>b
-vnoremap < c<<C-r>"><Esc>b
-vnoremap > c<<C-r>"><Esc>b
-vnoremap * c*<C-r>"*<Esc>b
-vnoremap ~ c~<C-r>"~<Esc>b
-vnoremap <leader><space> c <C-r>" <Esc>b
-" 選択した両側を一文字ずつ削除
-vnoremap <leader>' c<Bs><C-r>"<Esc>wxb
-
 " ~/.vimrc を開く
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 " ~/.vimrc を読み込む
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
-" 開いているファイルパスをコピーする
+" 開いているファイルのパスをコピーする
 " https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
 " http://intothelambda.com/archives/4
 nnoremap <leader>C :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
 nnoremap <leader>c :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
 
-" 方向キーとバックスペースキーを無効にする
-vnoremap <Up>    <nop>
-vnoremap <Down>  <nop>
-vnoremap <Left>  <nop>
-vnoremap <Right> <nop>
-inoremap <Up>    <nop>
-inoremap <Down>  <nop>
-inoremap <Left>  <nop>
-inoremap <Right> <nop>
-nnoremap <Up>    <nop>
-nnoremap <Down>  <nop>
-nnoremap <Left>  <nop>
-nnoremap <Right> <nop>
-vnoremap <Bs>    <nop>
-inoremap <Bs>    <nop>
-nnoremap <Bs>    <nop>
+" }}}
+
+" ### プラグインマッピング ---------------------- {{{
 
 " fzf キーバインド
 nnoremap <silent> F :Files<CR>
@@ -323,10 +352,7 @@ nnoremap <silent> B :Buffers<CR>
 nnoremap <silent> H :History<CR>
 nnoremap <leader>/ :execute 'Rg ' . input('Rg/')<CR>
 
-" スペースを 2 つ開けて `*` を入力して開始
-nnoremap <leader>2 i<space><space>*<space>
-" スペースを 4 つ開けて `*` を入力して開始
-nnoremap <leader>4 i<space><space><space><space>*<space>
+" }}}
 
 " }}}
 
