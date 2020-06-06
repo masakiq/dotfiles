@@ -244,13 +244,13 @@ vnoremap <leader>x $h"+x
 
 " https://superuser.com/questions/271471/vim-macro-to-convert-camelcase-to-lowercase-with-underscores
 " キャメルケースをスネークケースに変換
-vnoremap <leader>s :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul
+vnoremap S :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul
 " スネークケースをキャメルケースに変換
-vnoremap <leader>c :s/_\([a-z]\)/\u\1/g<CR>gUl
+vnoremap C :s/_\([a-z]\)/\u\1/g<CR>gUl
 " 行頭の空白を削除
-vnoremap <leader>= :s/\v^ *//g<CR>
+vnoremap = :s/\v^ *//g<CR>
 " `class` と `::` を `module` にする置換
-vnoremap <leader>: :s/\v(class \|\:\:)+/\rmodule /g<CR>
+vnoremap M :s/\v(class \|\:\:)+/\rmodule /g<CR>
 
 " ウインドウ間移動
 nnoremap <leader>h <c-w>h
@@ -260,7 +260,7 @@ nnoremap <leader>l <c-w>l
 
 " 画面分割
 nnoremap <leader>v :vs<CR><c-w>l
-nnoremap <leader>n :sp<CR><c-w>j
+nnoremap <leader>s :sp<CR><c-w>j
 
 " ウインドウ幅を右に広げる
 nnoremap <leader>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
