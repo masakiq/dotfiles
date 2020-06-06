@@ -310,6 +310,19 @@ vnoremap M :s/\v(class \|\:\:)+/\rmodule /g \| :noh<CR>
 
 " }}}
 
+" ### ファイル操作系 ---------------------- {{{
+
+" 開いているファイルの名前を変更する
+nnoremap <leader>n :call RenameFile()<cr>
+
+" 開いているファイルのパスをコピーする
+" https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
+" http://intothelambda.com/archives/4
+nnoremap <leader>C :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
+nnoremap <leader>c :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
+
+" }}}
+
 " ### ウィンドウ操作系 ---------------------- {{{
 
 " ウインドウ間移動
@@ -335,12 +348,6 @@ nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 " ~/.vimrc を読み込む
 nnoremap <leader>rv :source $MYVIMRC \| :noh<CR>
-
-" 開いているファイルのパスをコピーする
-" https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
-" http://intothelambda.com/archives/4
-nnoremap <leader>C :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
-nnoremap <leader>c :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
 
 " }}}
 
@@ -401,6 +408,16 @@ function! RocketToHash() range
   silent! execute a:firstline . ',' . a:lastline . "s/'/\\'/g"
   silent! execute a:firstline . ',' . a:lastline . 's/"' . "/'/g"
   normal! gg=G
+endfunction
+
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
 endfunction
 
 " }}}
