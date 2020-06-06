@@ -326,9 +326,12 @@ nnoremap <leader>4 i<space><space><space><space>*<space>
 
 " Ruby 用スニペット
 iabbrev fro # frozen_string_literal: true
-iabbrev par # @param options [String] description
-iabbrev ret # @return [String] description
-iabbrev rai # @raise [StandardError] description
+iabbrev par @param options [String] description
+iabbrev ret @return [String] description
+iabbrev rai @raise [StandardError] description
+iabbrev opt @option options [String] description
+iabbrev exa @example description
+iabbrev yie @yield [String] description
 iabbrev att attr_reader
 
 " }}}
