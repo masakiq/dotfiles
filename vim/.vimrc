@@ -337,7 +337,7 @@ iabbrev att attr_reader
 
 command! -range=% JsonToHash :<line1>,<line2>call JsonToHash()
 command! -range=% RocketToHash :<line1>,<line2>call RocketToHash()
-command BreakLine %s/\v}\s*,/},\r/ge | %s/\v]\s*,/],\r/ge | %s/\v"\s*,/",\r/ge | %s/{/{\r/ge | %s/}/\r}/ge | %s/\[/\[\r/ge | %s/\]/\r]/ge
+command! BreakLine %s/\v}\s*,/},\r/ge | %s/\v]\s*,/],\r/ge | %s/\v"\s*,/",\r/ge | %s/{/{\r/ge | %s/}/\r}/ge | %s/\[/\[\r/ge | %s/\]/\r]/ge
 
 " Rg でカラー出力しない
 " https://github.com/junegunn/fzf.vim/issues/488#issuecomment-350523157
@@ -372,6 +372,16 @@ endfunction
 " プラグラインインストールコマンド `:PlugUpdate`
 if has('nvim')
 " nvim の時
+  call plug#begin('~/.vim/plugged')
+    Plug 'prabirshrestha/async.vim'
+    Plug 'prabirshrestha/asyncomplete.vim'
+    Plug 'prabirshrestha/asyncomplete-lsp.vim'
+    Plug 'prabirshrestha/vim-lsp'
+    Plug 'mattn/vim-lsp-settings'
+    Plug 'mattn/vim-goimports'
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+    Plug 'junegunn/fzf.vim'
+  call plug#end()
 else
 " vim の時
   call plug#begin('~/.vim/plugged')
