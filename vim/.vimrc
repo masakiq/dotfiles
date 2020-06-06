@@ -367,6 +367,7 @@ iabbrev opt @option options [String] description
 iabbrev exa @example description
 iabbrev yie @yield [String] description
 iabbrev att attr_reader
+iabbrev yard # @param options [String] description <CR>@return [String] description<CR>@raise [StandardError] description<CR>@option options [String] description<CR>@example description<CR>@yield [String] description
 
 " }}}
 
