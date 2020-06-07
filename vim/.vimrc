@@ -412,6 +412,8 @@ command! BreakLine %s/\v}\s*,/},\r/ge | %s/\v]\s*,/],\r/ge | %s/\v"\s*,/",\r/ge 
 " https://github.com/junegunn/fzf.vim/issues/488#issuecomment-350523157
 " https://github.com/junegunn/fzf.vim/pull/696
 command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-number --no-heading --no-require-git '.shellescape(<q-args>), 1, <bang>0)
+" デフォルト rg --column --line-number --no-heading --color=always --smart-case --
+" command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-number --no-heading --smart-case -- '.shellescape(<q-args>), 1, <bang>0)
 
 " }}}
 
