@@ -353,6 +353,12 @@ nnoremap <leader>l <c-w>l
 nnoremap <leader>v :vs<CR><c-w>l
 nnoremap <leader>s :sp<CR><c-w>j
 
+" For Rails
+" 実装ファイルからテストファイルを開く
+nnoremap <leader>t :execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')<CR><c-w>l
+" テストファイルから実装ファイルを開く
+nnoremap <leader>i :execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')<CR><c-w>l
+
 " ウインドウ幅を右に広げる
 nnoremap <leader>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
 " ウインドウ幅を左に広げる
