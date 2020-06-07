@@ -272,13 +272,13 @@ vnoremap d "+d
 " ビジュアルモードで選択した範囲をカットしてクリップボードにコピー　
 vnoremap x "+x
 " ビジュアルモードで選択した箇所の末尾までクリップボードにコピー　
-vnoremap <leader>y $h"+y
+" vnoremap <leader>y $h"+y
 " ビジュアルモードで選択した箇所の末尾までクリップボードからペースト
-vnoremap <leader>p $h"+p
+" vnoremap <leader>p $h"+p
 " ビジュアルモードで選択した箇所の末尾までカットしてクリップボードにコピー
-vnoremap <leader>d $h"+d
+" vnoremap <leader>d $h"+d
 " ビジュアルモードで選択した箇所の末尾までカットしてクリップボードにコピー
-vnoremap <leader>x $h"+x
+" vnoremap <leader>x $h"+x
 
 " }}}
 
