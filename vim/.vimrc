@@ -354,13 +354,13 @@ nnoremap <leader>v :vs<CR><c-w>l
 nnoremap <leader>s :sp<CR><c-w>j
 
 " ウインドウ幅を右に広げる
-nnoremap <leader>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
+nnoremap <leader>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
 " ウインドウ幅を左に広げる
-nnoremap <leader>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
+nnoremap <leader>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
 " ウインドウ高さを高くする
-nnoremap <leader>= <c-w>+<c-w><<c-w>+<c-w>+<c-w>+
+nnoremap <leader>= <c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+
 " ウインドウ高さを低くする
-nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
+nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 
 " }}}
 
