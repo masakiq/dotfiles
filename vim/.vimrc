@@ -213,8 +213,8 @@ noremap <silent>== :call ToggleNetrw()<CR>
 " リーダーキーをスペースキーにする
 let mapleader = " "
 
-" ローカルリーダーキー を \ にする
-let maplocalleader = "\\"
+" ローカルリーダーキーを , にする
+let maplocalleader = ","
 
 " }}}
 
@@ -319,7 +319,7 @@ vnoremap M :s/\v(class \|\:\:)+/\rmodule /g \| :noh<CR>
 " ### ファイル操作系 ---------------------- {{{
 
 " 開いているファイルの名前を変更する
-nnoremap <leader>n :call RenameFile()<cr>
+nnoremap N :call RenameFile()<cr>
 
 " 開いているファイルのパスをコピーする
 " https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
