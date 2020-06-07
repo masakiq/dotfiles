@@ -327,6 +327,18 @@ nnoremap <leader>n :call RenameFile()<cr>
 nnoremap <leader>C :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
 nnoremap <leader>c :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
 
+if has('nvim')
+  " ~/.vimrc を開く
+  nnoremap <leader>ev :vsplit ~/.config/nvim/init.vim<cr>
+  " ~/.vimrc を読み込む
+  nnoremap <leader>rv :source ~/.config/nvim/init.vim \| :noh<CR>
+else
+  " ~/.vimrc を開く
+  nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+  " ~/.vimrc を読み込む
+  nnoremap <leader>rv :source $MYVIMRC \| :noh<CR>
+endif
+
 " }}}
 
 " ### ウィンドウ操作系 ---------------------- {{{
@@ -349,11 +361,6 @@ nnoremap <leader>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
 nnoremap <leader>= <c-w>+<c-w><<c-w>+<c-w>+<c-w>+
 " ウインドウ高さを低くする
 nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
-
-" ~/.vimrc を開く
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-" ~/.vimrc を読み込む
-nnoremap <leader>rv :source $MYVIMRC \| :noh<CR>
 
 " }}}
 
