@@ -360,13 +360,13 @@ nnoremap <leader>t :execute ':vs ' . substitute(substitute(expand('%'), '^app', 
 nnoremap <leader>i :execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')<CR><c-w>l
 
 " ウインドウ幅を右に広げる
-nnoremap <leader>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
+nnoremap <leader>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
 " ウインドウ幅を左に広げる
-nnoremap <leader>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
+nnoremap <leader>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
 " ウインドウ高さを高くする
-nnoremap <leader>= <c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+
+nnoremap <leader>= <c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+
 " ウインドウ高さを低くする
-nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
+nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 
 " }}}
 
