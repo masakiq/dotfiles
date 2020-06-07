@@ -304,7 +304,7 @@ vnoremap S :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul \| :noh<CR>w
 vnoremap C :s/_\([a-z]\)/\u\1/g<CR>gUl \| :noh<CR>w
 
 " 行頭の空白を削除
-vnoremap = :s/\v^ *//g<CR> \| :noh<CR>
+" vnoremap = :s/\v^ *//g<CR> \| :noh<CR>
 
 " `class` と `::` を `module` にする置換
 vnoremap M :s/\v(class \|\:\:)+/\rmodule /g \| :noh<CR>
