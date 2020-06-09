@@ -147,7 +147,7 @@ set nospell
 set hidden
 
 " 保存時に行末空白削除
-autocmd BufWritePre * :%s/\s\+$//ge
+autocmd BufWritePre * if &filetype != 'markdown' | :%s/\s\+$//ge | endif
 
 " }}}
 
