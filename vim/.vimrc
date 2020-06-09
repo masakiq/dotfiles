@@ -206,20 +206,17 @@ noremap <silent>== :call ToggleNetrw()<CR>
 
 " }}}
 
-" ## カスタムマッピング ---------------------- {{{
+" ## Markdown 設定 ---------------------- {{{
 
-" ### リーダーキー設定 ---------------------- {{{
-
-" リーダーキーをスペースキーにする
-let mapleader = " "
-
-" ローカルリーダーキーを , にする
-let maplocalleader = ","
 
 " }}}
 
 " ### マップ基本設定 ---------------------- {{{
 
+" リーダーキーを , にする
+let mapleader = ","
+" ローカルリーダーキーを , にする
+" let maplocalleader = ","
 " インサートモードからエスケープ
 inoremap <C-c> <esc>
 " ウィンドウ間移動が遅くなるので以下は却下
@@ -298,9 +295,9 @@ vnoremap < c<<C-r>"><Esc>b
 vnoremap > c<<C-r>"><Esc>b
 vnoremap * c*<C-r>"*<Esc>b
 vnoremap ~ c~<C-r>"~<Esc>b
-vnoremap <leader><space> c <C-r>" <Esc>b
+vnoremap <space><space> c <C-r>" <Esc>b
 " 選択した両側を一文字ずつ削除
-vnoremap <leader>' c<Bs><C-r>"<Esc>wxb
+vnoremap <space>d c<Bs><C-r>"<Esc>wxb
 
 " キャメルケースをスネークケースに変換
 " https://superuser.com/questions/271471/vim-macro-to-convert-camelcase-to-lowercase-with-underscores
@@ -309,7 +306,7 @@ vnoremap S :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul \| :noh<CR>w
 vnoremap C :s/_\([a-z]\)/\u\1/g<CR>gUl \| :noh<CR>w
 
 " 行頭の空白を削除
-" vnoremap = :s/\v^ *//g<CR> \| :noh<CR>
+vnoremap <space>= :s/\v^ *//g<CR> \| :noh<CR>
 
 " `class` と `::` を `module` にする置換
 vnoremap M :s/\v(class \|\:\:)+/\rmodule /g \| :noh<CR>
@@ -329,19 +326,19 @@ nnoremap N :call RenameFile()<cr>
 " 開いているファイルのパスをコピーする
 " https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
 " http://intothelambda.com/archives/4
-nnoremap <leader>C :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
-nnoremap <leader>c :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
+nnoremap <space>C :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
+nnoremap <space>c :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
 
 if has('nvim')
   " ~/.vimrc を開く
-  nnoremap <leader>ev :vsplit ~/.config/nvim/init.vim<cr>
+  nnoremap <space>ev :vsplit ~/.config/nvim/init.vim<cr>
   " ~/.vimrc を読み込む
-  nnoremap <leader>rv :source ~/.config/nvim/init.vim \| :noh<CR>
+  nnoremap <space>rv :source ~/.config/nvim/init.vim \| :noh<CR>
 else
   " ~/.vimrc を開く
-  nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+  nnoremap <space>ev :vsplit $MYVIMRC<cr>
   " ~/.vimrc を読み込む
-  nnoremap <leader>rv :source $MYVIMRC \| :noh<CR>
+  nnoremap <space>rv :source $MYVIMRC \| :noh<CR>
 endif
 
 " }}}
@@ -349,29 +346,29 @@ endif
 " ### ウィンドウ操作系 ---------------------- {{{
 
 " ウインドウ間移動
-nnoremap <leader>h <c-w>h
-nnoremap <leader>j <c-w>j
-nnoremap <leader>k <c-w>k
-nnoremap <leader>l <c-w>l
+nnoremap <space>h <c-w>h
+nnoremap <space>j <c-w>j
+nnoremap <space>k <c-w>k
+nnoremap <space>l <c-w>l
 
 " 画面分割
-nnoremap <leader>v :vs<CR><c-w>l
-nnoremap <leader>s :sp<CR><c-w>j
+nnoremap <space>v :vs<CR><c-w>l
+nnoremap <space>s :sp<CR><c-w>j
 
 " For Rails
 " 実装ファイルからテストファイルを開く
-nnoremap <leader>t :execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')<CR><c-w>l
+nnoremap <space>t :execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')<CR><c-w>l
 " テストファイルから実装ファイルを開く
-nnoremap <leader>i :execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')<CR><c-w>l
+nnoremap <space>i :execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')<CR><c-w>l
 
 " ウインドウ幅を右に広げる
-nnoremap <leader>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
+nnoremap <space>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
 " ウインドウ幅を左に広げる
-nnoremap <leader>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
+nnoremap <space>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
 " ウインドウ高さを高くする
-nnoremap <leader>= <c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+
+nnoremap <space>= <c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+
 " ウインドウ高さを低くする
-nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
+nnoremap <space>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 
 " }}}
 
@@ -381,7 +378,7 @@ nnoremap <leader>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<
 nnoremap <silent> F :Files<CR>
 nnoremap <silent> B :Buffers<CR>
 nnoremap <silent> H :History<CR>
-nnoremap <leader>/ :execute 'Rg ' . input('Rg/')<CR>
+nnoremap <space>/ :execute 'Rg ' . input('Rg/')<CR>
 
 " }}}
 
