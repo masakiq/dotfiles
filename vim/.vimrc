@@ -61,11 +61,11 @@ set cursorline
 
 " ウィンドウ間のバーをカスタマイズ
 set fillchars+=vert:\|
-hi VertSplit ctermbg=238 ctermfg=238 guibg=#d0d0d0 guifg=#444444
+hi VertSplit ctermbg=240 ctermfg=240 guibg=#d0d0d0 guifg=#444444
 
 " ステータスバーカラーをカスタマイズ
 hi StatusLine ctermbg=Black ctermfg=Cyan
-hi StatusLineNC ctermbg=252 ctermfg=238 guibg=#d0d0d0 guifg=#444444
+hi StatusLineNC ctermbg=252 ctermfg=240 guibg=#d0d0d0 guifg=#444444
 augroup BgHighlight
     autocmd!
     autocmd WinEnter * set cul
