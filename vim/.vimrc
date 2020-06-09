@@ -225,9 +225,8 @@ let mapleader = ","
 " ローカルリーダーキーを , にする
 " let maplocalleader = ","
 " インサートモードからエスケープ
+inoremap jk <esc>
 inoremap <C-c> <esc>
-" ウィンドウ間移動が遅くなるので以下は却下
-" :inoremap jk <esc>
 " 以下はクリップボードが正常に働かなくなる
 " :inoremap <esc> <nop>
 " :inoremap <c-[> <nop>
@@ -240,6 +239,8 @@ inoremap <C-f> <Right>
 inoremap <C-e> <End>
 inoremap <C-d> <Del>
 inoremap <C-h> <BS>
+inoremap <C-a> <Home>
+inoremap <C-k> <esc>`^DA
 
 " 方向キーとバックスペースキーを無効にする
 vnoremap <Up>    <nop>
