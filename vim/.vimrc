@@ -313,6 +313,8 @@ vnoremap S :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul \| :noh<CR>w
 " スネークケースをキャメルケースに変換
 vnoremap C :s/_\([a-z]\)/\u\1/g<CR>gUl \| :noh<CR>w
 
+" 選択した文字を小文字にしてコピーする
+vnoremap Z :call ChangeDowncaseAndCopy()<cr>w
 " 行頭の空白を削除
 vnoremap <space>= :s/\v^ *//g<CR> \| :noh<CR>
 
@@ -449,6 +451,20 @@ function! RenameFile()
         exec ':silent !rm ' . old_name
         redraw!
     endif
+endfunction
+
+function! ChangeDowncaseAndCopy()
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    let lines = getline(line_start, line_end)
+    if len(lines) == 0
+        return ''
+    endif
+    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][column_start - 1:]
+    let replaced = substitute(tolower(join(lines, "\n")), "::", "", "g")
+    let @+=replaced
+    echom 'Copyed! ' . replaced
 endfunction
 
 " }}}
