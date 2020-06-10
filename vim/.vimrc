@@ -465,6 +465,7 @@ function! ChangeDowncaseAndCopy()
     let replaced = substitute(tolower(join(lines, "\n")), "::", "", "g")
     let @+=replaced
     echom 'Copyed! ' . replaced
+    execute 'Files'
 endfunction
 
 " }}}
