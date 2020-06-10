@@ -218,12 +218,16 @@ let g:previm_enable_realtime = 1
 
 " }}}
 
+" ## カスタムマッピング ---------------------- {{{
+
 " ### マップ基本設定 ---------------------- {{{
 
 " リーダーキーを , にする
 let mapleader = ","
+
 " ローカルリーダーキーを , にする
 " let maplocalleader = ","
+
 " インサートモードからエスケープ
 inoremap jk <esc>
 inoremap <C-c> <esc>
@@ -315,6 +319,7 @@ vnoremap C :s/_\([a-z]\)/\u\1/g<CR>gUl \| :noh<CR>w
 
 " 選択した文字を小文字にしてコピーする
 vnoremap Z :call ChangeDowncaseAndCopy()<cr>w
+
 " 行頭の空白を削除
 vnoremap <space>= :s/\v^ *//g<CR> \| :noh<CR>
 
