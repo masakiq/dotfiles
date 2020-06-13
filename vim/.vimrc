@@ -501,7 +501,7 @@ function! RenameFile()
     endif
 endfunction
 
-function! ChangeDowncaseAndCopy()
+function! SelectedVisualModeText()
     let [line_start, column_start] = getpos("'<")[1:2]
     let [line_end, column_end] = getpos("'>")[1:2]
     let lines = getline(line_start, line_end)
@@ -510,10 +510,45 @@ function! ChangeDowncaseAndCopy()
     endif
     let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
     let lines[0] = lines[0][column_start - 1:]
-    let replaced = substitute(tolower(join(lines, "\n")), "::", "", "g")
-    let @+=replaced
-    echom 'Copyed! ' . replaced
+    return join(lines, "\n")
+endfunction
+
+function! ChangeToFileFormat(text)
+    let snake_case = substitute(substitute(a:text, '\(\l\)\(\u\)', '\1_\L\2\e', "g"), '\(\u\)\(\u\)', '\1_\L\2\e', "g")
+    let down_case = tolower(snake_case)
+    let file_format = substitute(down_case, '::', '/', "g")
+    return file_format
+endfunction
+
+function! ChangeToFileFormatAndCopyAndSearchFiles()
+    let selected_text = SelectedVisualModeText()
+    let file_format = ChangeToFileFormat(selected_text)
+    let @+=file_format
+    echom 'Copyed! ' . file_format
     execute 'Files'
+endfunction
+
+function! ChangeToFileFormatAndCopyAndSearchBuffers()
+    let selected_text = SelectedVisualModeText()
+    let file_format = ChangeToFileFormat(selected_text)
+    let @+=file_format
+    echom 'Copyed! ' . file_format
+    execute 'Buffers'
+endfunction
+
+function! ChangeToFileFormatAndCopyAndSearchHistory()
+    let selected_text = SelectedVisualModeText()
+    let file_format = ChangeToFileFormat(selected_text)
+    let @+=file_format
+    echom 'Copyed! ' . file_format
+    execute 'History'
+endfunction
+
+function! RgBySelectedText()
+    let selected = SelectedVisualModeText()
+    let @+=selected
+    echom 'Copyed! ' . selected
+    execute 'Rg ' . selected
 endfunction
 
 " }}}
