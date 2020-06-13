@@ -340,6 +340,10 @@ vnoremap <leader>m :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| 
 
 " 改行
 vnoremap <leader>b :s/\v%V,/,\r/ge<cr> \| :normal! gg=G<CR> \| :noh<CR>
+
+" JSON から Hash に変換
+" vnoremap <leader>j :s/\v%V^(\s*)"(\w+)"\s*:\s*/\1\2: /ge<CR> \| :s/\v%V^(\s*)"(\w+)"\s+:/\1\2:/ge<CR> \| :s/\v%V^(\s*)"(\w+)":/\1\2:/ge<CR> \| :s/%V'/\\'/ge<CR> \| :s/%V\"/\'/ge<CR> \| :normal! gg=G<CR> \| :noh<CR>
+vnoremap <leader>j :call JsonToHash()<cr>
 " スペースを 2 つ開けて `*` を入力して開始
 " nnoremap <leader>2 i<space><space>*<space>
 " スペースを 4 つ開けて `*` を入力して開始
@@ -446,10 +450,10 @@ command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-n
 " ## カスタムファンクション ---------------------- {{{
 
 function! JsonToHash() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)"\s*:\s*/\1\2: /g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)"\s+:/\1\2:/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)":/\1\2:/g'
-  silent! execute a:firstline . ',' . a:lastline . "s/'/\\'/g"
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)"\s*:\s*/\1\2: /g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)"\s+:/\1\2:/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)":/\1\2:/g'
+  silent! execute a:firstline . ',' . a:lastline . "s/\\v'/\\\\'/g"
   silent! execute a:firstline . ',' . a:lastline . 's/"' . "/'/g"
   normal! gg=G
 endfunction
