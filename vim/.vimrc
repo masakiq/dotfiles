@@ -338,6 +338,8 @@ vnoremap <space>= :s/\v^ *//g<CR> \| :noh<CR>
 " vnoremap M :s/\v%V(class \|\:\:)+/\rmodule /g \| :noh<CR>
 vnoremap <leader>m :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
 
+" 改行
+vnoremap <leader>b :s/\v%V,/,\r/ge<cr> \| :normal! gg=G<CR> \| :noh<CR>
 " スペースを 2 つ開けて `*` を入力して開始
 " nnoremap <leader>2 i<space><space>*<space>
 " スペースを 4 つ開けて `*` を入力して開始
