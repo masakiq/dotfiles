@@ -328,8 +328,6 @@ vnoremap <leader>s :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e
 " hoge_hoge/fuga_fuga の形式を HogeHoge::FugaFuga に変換
 vnoremap <leader>c :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V\/(\l)/::\U\1\e/ge<CR> \| :s/\v%V<(\l)/\U\1\e/ge<CR> \| :noh<CR>w
 
-" 選択した文字を小文字にしてコピーする
-vnoremap Z :call ChangeDowncaseAndCopy()<cr>w
 
 " 行頭の空白を削除
 vnoremap <space>= :s/\v^ *//g<CR> \| :noh<CR>
