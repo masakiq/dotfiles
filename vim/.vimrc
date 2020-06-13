@@ -484,9 +484,9 @@ function! JsonToHash() range
 endfunction
 
 function! RocketToHash() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)"(\w+)".*\=\>/\1\2:/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v^(\s*)(\w+):\s*/\1\2: /g'
-  silent! execute a:firstline . ',' . a:lastline . "s/'/\\'/g"
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)".*\=\>/\1\2:/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)(\w+):\s*/\1\2: /g'
+  silent! execute a:firstline . ',' . a:lastline . "s/\\v'/\\\\'/g"
   silent! execute a:firstline . ',' . a:lastline . 's/"' . "/'/g"
   normal! gg=G
 endfunction
