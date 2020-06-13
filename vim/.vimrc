@@ -319,9 +319,9 @@ vnoremap < c<<C-r>"><Esc>b
 vnoremap > c<<C-r>"><Esc>b
 vnoremap * c*<C-r>"*<Esc>b
 vnoremap ~ c~<C-r>"~<Esc>b
-vnoremap <space><space> c <C-r>" <Esc>b
+vnoremap <leader><space> c <C-r>" <Esc>b
 " 選択した両側を一文字ずつ削除
-vnoremap <space>d c<Bs><C-r>"<Esc>wxb
+vnoremap <leader>d c<Bs><C-r>"<Esc>wxb
 
 " キャメルケースをスネークケースに変換
 " https://superuser.com/questions/271471/vim-macro-to-convert-camelcase-to-lowercase-with-underscores
