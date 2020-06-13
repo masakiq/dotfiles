@@ -231,7 +231,9 @@ let mapleader = ","
 " ローカルリーダーキーを , にする
 " let maplocalleader = ","
 
-" インサートモードからエスケープ
+" リーダーキーのディレイタイム
+set timeout timeoutlen=800 ttimeoutlen=100
+
 inoremap jk <esc>
 inoremap <C-c> <esc>
 " 以下はクリップボードが正常に働かなくなる
