@@ -275,8 +275,10 @@ tnoremap <Bs>    <nop>
 
 " ビジュアルモードで単語の最後まで選択する
 vnoremap E $h
-" ビジュアルモードで行すべてを選択する
-vnoremap A 0<esc>v$h
+" ビジュアルモードでライン選択(ただし行末の改行は除く)
+vnoremap V 0<esc>v$h
+
+nnoremap V 0v$h
 
 " }}}
 
