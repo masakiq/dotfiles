@@ -330,7 +330,7 @@ vnoremap <leader>c :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V\/(\l)/::\U\1\e/ge<CR> 
 
 
 " 行頭の空白を削除
-vnoremap <space>= :s/\v^ *//g<CR> \| :noh<CR>
+vnoremap <leader>= :s/\v^ *//g<CR> \| :noh<CR>
 
 " `class` と `::` を `module` にする置換
 " vnoremap M :s/\v%V(class \|\:\:)+/\rmodule /g \| :noh<CR>
@@ -342,6 +342,7 @@ vnoremap <leader>b :s/\v%V,/,\r/ge<cr> \| :normal! gg=G<CR> \| :noh<CR>
 " JSON から Hash に変換
 " vnoremap <leader>j :s/\v%V^(\s*)"(\w+)"\s*:\s*/\1\2: /ge<CR> \| :s/\v%V^(\s*)"(\w+)"\s+:/\1\2:/ge<CR> \| :s/\v%V^(\s*)"(\w+)":/\1\2:/ge<CR> \| :s/%V'/\\'/ge<CR> \| :s/%V\"/\'/ge<CR> \| :normal! gg=G<CR> \| :noh<CR>
 vnoremap <leader>j :call JsonToHash()<cr>
+
 " スペースを 2 つ開けて `*` を入力して開始
 " nnoremap <leader>2 i<space><space>*<space>
 " スペースを 4 つ開けて `*` を入力して開始
