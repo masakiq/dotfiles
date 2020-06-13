@@ -426,6 +426,20 @@ vnoremap <space>/ :<C-u>call RgBySelectedText()<CR>
 
 " }}}
 
+" ### ターミナルモード ---------------------- {{{
+
+" nnoremap <space>c :terminal<CR>
+
+if has('nvim')
+  tnoremap jk <C-\><C-n>
+else
+  tnoremap jk <C-w>N
+endif
+
+nnoremap <space>c :execute 'Buffers fish'<CR>
+
+" }}}
+
 " }}}
 
 " ## スニペット設定 ---------------------- {{{
