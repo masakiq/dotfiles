@@ -335,7 +335,8 @@ vnoremap Z :call ChangeDowncaseAndCopy()<cr>w
 vnoremap <space>= :s/\v^ *//g<CR> \| :noh<CR>
 
 " `class` と `::` を `module` にする置換
-vnoremap M :s/\v(class \|\:\:)+/\rmodule /g \| :noh<CR>
+" vnoremap M :s/\v%V(class \|\:\:)+/\rmodule /g \| :noh<CR>
+vnoremap <leader>m :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
 
 " スペースを 2 つ開けて `*` を入力して開始
 " nnoremap <leader>2 i<space><space>*<space>
