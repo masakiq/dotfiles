@@ -256,17 +256,22 @@ vnoremap <Up>    <nop>
 vnoremap <Down>  <nop>
 vnoremap <Left>  <nop>
 vnoremap <Right> <nop>
+vnoremap <Bs>    <nop>
 inoremap <Up>    <nop>
 inoremap <Down>  <nop>
 inoremap <Left>  <nop>
 inoremap <Right> <nop>
+inoremap <Bs>    <nop>
 nnoremap <Up>    <nop>
 nnoremap <Down>  <nop>
 nnoremap <Left>  <nop>
 nnoremap <Right> <nop>
-vnoremap <Bs>    <nop>
-inoremap <Bs>    <nop>
 nnoremap <Bs>    <nop>
+tnoremap <Up>    <nop>
+tnoremap <Down>  <nop>
+tnoremap <Left>  <nop>
+tnoremap <Right> <nop>
+tnoremap <Bs>    <nop>
 
 " ビジュアルモードで単語の最後まで選択する
 vnoremap E $h
