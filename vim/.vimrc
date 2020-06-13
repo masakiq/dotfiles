@@ -323,11 +323,10 @@ vnoremap <leader><space> c <C-r>" <Esc>b
 " 選択した両側を一文字ずつ削除
 vnoremap <leader>d c<Bs><C-r>"<Esc>wxb
 
-" キャメルケースをスネークケースに変換
-" https://superuser.com/questions/271471/vim-macro-to-convert-camelcase-to-lowercase-with-underscores
-vnoremap S :s/\<\@!\([A-Z]\)/\_\l\1/g<CR>gul \| :noh<CR>w
-" スネークケースをキャメルケースに変換
-vnoremap C :s/_\([a-z]\)/\u\1/g<CR>gUl \| :noh<CR>w
+" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga に変換
+vnoremap <leader>s :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V::/\//ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+" hoge_hoge/fuga_fuga の形式を HogeHoge::FugaFuga に変換
+vnoremap <leader>c :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V\/(\l)/::\U\1\e/ge<CR> \| :s/\v%V<(\l)/\U\1\e/ge<CR> \| :noh<CR>w
 
 " 選択した文字を小文字にしてコピーする
 vnoremap Z :call ChangeDowncaseAndCopy()<cr>w
