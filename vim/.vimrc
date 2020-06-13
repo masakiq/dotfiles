@@ -359,8 +359,8 @@ nnoremap N :call RenameFile()<cr>
 " 開いているファイルのパスをコピーする
 " https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
 " http://intothelambda.com/archives/4
-nnoremap <space>C :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
-nnoremap <space>c :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
+nnoremap <space>P :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
+nnoremap <space>p :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
 
 if has('nvim')
   " ~/.vimrc を開く
