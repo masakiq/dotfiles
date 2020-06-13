@@ -403,15 +403,26 @@ nnoremap <space>= <c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c
 " ウインドウ高さを低くする
 nnoremap <space>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 
-" }}}
+nnoremap <space>f :Files<CR>
+" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
+vnoremap <space>f :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>w
 
-" ### プラグインマッピング ---------------------- {{{
+nnoremap <space>b :Buffers<CR>
+" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Buffers を開く
+vnoremap <space>b :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>w
 
-" fzf キーバインド
-nnoremap <silent> F :Files<CR>
-nnoremap <silent> B :Buffers<CR>
+" 前のバッファに戻る
+nnoremap <space><left> :bprevious<CR>
+" 次のバッファに進む
+nnoremap <space><right> :bnext<CR>
+
 nnoremap <silent> H :History<CR>
+
+" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :History を開く
+vnoremap <space>h :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>w
+
 nnoremap <space>/ :execute 'Rg ' . input('Rg/')<CR>
+vnoremap <space>/ :<C-u>call RgBySelectedText()<CR>
 
 " }}}
 
