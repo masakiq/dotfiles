@@ -1,8 +1,8 @@
 " ## Vimscript file settings ---------------------- {{{
 
 augroup filetype_vim
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker
 augroup END
 
 " }}}
@@ -67,9 +67,9 @@ hi VertSplit ctermbg=240 ctermfg=240 guibg=#d0d0d0 guifg=#444444
 hi StatusLine ctermbg=Black ctermfg=Cyan
 hi StatusLineNC ctermbg=252 ctermfg=240 guibg=#d0d0d0 guifg=#444444
 augroup BgHighlight
-    autocmd!
-    autocmd WinEnter * set cul
-    autocmd WinLeave * set nocul
+  autocmd!
+  autocmd WinEnter * set cul
+  autocmd WinLeave * set nocul
 augroup END
 
 " シンタックスエラーを下線にする
@@ -190,17 +190,17 @@ let g:NetrwIsOpen=0
 function! ToggleNetrw()
   if g:NetrwIsOpen
     let i = bufnr("$")
-        while (i >= 1)
-            if (getbufvar(i, "&filetype") == "netrw")
-                silent exe "bwipeout " . i
-            endif
-            let i-=1
-        endwhile
-        let g:NetrwIsOpen=0
-    else
-        let g:NetrwIsOpen=1
-        silent Vex
-    endif
+    while (i >= 1)
+      if (getbufvar(i, "&filetype") == "netrw")
+        silent exe "bwipeout " . i
+      endif
+      let i-=1
+    endwhile
+    let g:NetrwIsOpen=0
+  else
+    let g:NetrwIsOpen=1
+    silent Vex
+  endif
 endfunction
 
 " ショートカットの設定
@@ -385,6 +385,7 @@ nnoremap <space>l <c-w>l
 
 " ウィンドウスワップ
 nnoremap <space>r <c-w><c-r>
+
 " 画面分割
 nnoremap <space>v :vs<CR><c-w>l
 nnoremap <space>s :sp<CR><c-w>j
@@ -493,63 +494,63 @@ function! RocketToHash() range
 endfunction
 
 function! RenameFile()
-    let old_name = expand('%')
-    let new_name = input('New file name: ', expand('%'), 'file')
-    if new_name != '' && new_name != old_name
-        exec ':saveas ' . new_name
-        exec ':silent !rm ' . old_name
-        redraw!
-    endif
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
 endfunction
 
 function! SelectedVisualModeText()
-    let [line_start, column_start] = getpos("'<")[1:2]
-    let [line_end, column_end] = getpos("'>")[1:2]
-    let lines = getline(line_start, line_end)
-    if len(lines) == 0
-        return ''
-    endif
-    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
-    let lines[0] = lines[0][column_start - 1:]
-    return join(lines, "\n")
+  let [line_start, column_start] = getpos("'<")[1:2]
+  let [line_end, column_end] = getpos("'>")[1:2]
+  let lines = getline(line_start, line_end)
+  if len(lines) == 0
+    return ''
+  endif
+  let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[0] = lines[0][column_start - 1:]
+  return join(lines, "\n")
 endfunction
 
 function! ChangeToFileFormat(text)
-    let snake_case = substitute(substitute(a:text, '\(\l\)\(\u\)', '\1_\L\2\e', "g"), '\(\u\)\(\u\)', '\1_\L\2\e', "g")
-    let down_case = tolower(snake_case)
-    let file_format = substitute(down_case, '::', '/', "g")
-    return file_format
+  let snake_case = substitute(substitute(a:text, '\(\l\)\(\u\)', '\1_\L\2\e', "g"), '\(\u\)\(\u\)', '\1_\L\2\e', "g")
+  let down_case = tolower(snake_case)
+  let file_format = substitute(down_case, '::', '/', "g")
+  return file_format
 endfunction
 
 function! ChangeToFileFormatAndCopyAndSearchFiles()
-    let selected_text = SelectedVisualModeText()
-    let file_format = ChangeToFileFormat(selected_text)
-    let @+=file_format
-    echom 'Copyed! ' . file_format
-    execute 'Files'
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+  execute 'Files'
 endfunction
 
 function! ChangeToFileFormatAndCopyAndSearchBuffers()
-    let selected_text = SelectedVisualModeText()
-    let file_format = ChangeToFileFormat(selected_text)
-    let @+=file_format
-    echom 'Copyed! ' . file_format
-    execute 'Buffers'
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+  execute 'Buffers'
 endfunction
 
 function! ChangeToFileFormatAndCopyAndSearchHistory()
-    let selected_text = SelectedVisualModeText()
-    let file_format = ChangeToFileFormat(selected_text)
-    let @+=file_format
-    echom 'Copyed! ' . file_format
-    execute 'History'
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+  execute 'History'
 endfunction
 
 function! RgBySelectedText()
-    let selected = SelectedVisualModeText()
-    let @+=selected
-    echom 'Copyed! ' . selected
-    execute 'Rg ' . selected
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  echom 'Copyed! ' . selected
+  execute 'Rg ' . selected
 endfunction
 
 " }}}
