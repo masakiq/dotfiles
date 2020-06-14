@@ -328,6 +328,8 @@ vnoremap <leader>s :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e
 " hoge_hoge/fuga_fuga の形式を HogeHoge::FugaFuga に変換
 vnoremap <leader>c :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V\/(\l)/::\U\1\e/ge<CR> \| :s/\v%V<(\l)/\U\1\e/ge<CR> \| :noh<CR>w
 
+" An Hoge fuga を a_hoge_fuga に変換
+vnoremap <leader>_ :s/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
 
 " 行頭の空白を削除
 vnoremap <leader>= :s/\v^ *//g<CR> \| :noh<CR>
