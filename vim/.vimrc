@@ -432,9 +432,9 @@ vnoremap <space>/ :<C-u>call RgBySelectedText()<CR>
 " nnoremap <space>c :terminal<CR>
 
 if has('nvim')
-  tnoremap jk <C-\><C-n>
+  tnoremap jf <C-\><C-n>
 else
-  tnoremap jk <C-w>N
+  tnoremap jf <C-w>N
 endif
 
 nnoremap <space>c :execute 'Buffers fish'<CR>
