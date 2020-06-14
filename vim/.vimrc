@@ -383,6 +383,8 @@ nnoremap <space>j <c-w>j
 nnoremap <space>k <c-w>k
 nnoremap <space>l <c-w>l
 
+" ウィンドウスワップ
+nnoremap <space>r <c-w><c-r>
 " 画面分割
 nnoremap <space>v :vs<CR><c-w>l
 nnoremap <space>s :sp<CR><c-w>j
