@@ -304,6 +304,9 @@ vnoremap x "+x
 " ビジュアルモードで選択した箇所の末尾までカットしてクリップボードにコピー
 " vnoremap <leader>x $h"+x
 
+" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れる
+vnoremap fy :call ChangeToFileFormatAndCopy()<cr>w
+
 " }}}
 
 " ### 変換系 ---------------------- {{{
@@ -525,6 +528,13 @@ function! ChangeToFileFormat(text)
   let down_case = tolower(snake_case)
   let file_format = substitute(down_case, '::', '/', "g")
   return file_format
+endfunction
+
+function! ChangeToFileFormatAndCopy()
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
 endfunction
 
 function! ChangeToFileFormatAndCopyAndSearchFiles()
