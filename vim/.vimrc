@@ -324,29 +324,29 @@ vnoremap * c*<C-r>"*<Esc>b
 vnoremap ~ c~<C-r>"~<Esc>b
 vnoremap <leader><space> c <C-r>" <Esc>b
 " 選択した両側を一文字ずつ削除
-vnoremap <leader>d c<Bs><C-r>"<Esc>wxb
+vnoremap D c<Bs><C-r>"<Esc>wxb
 
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga に変換
-vnoremap <leader>s :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V::/\//ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+vnoremap S :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V::/\//ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
 " hoge_hoge/fuga_fuga の形式を HogeHoge::FugaFuga に変換
-vnoremap <leader>c :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V\/(\l)/::\U\1\e/ge<CR> \| :s/\v%V<(\l)/\U\1\e/ge<CR> \| :noh<CR>w
+vnoremap C :s/\v%V<(\l)/\U\1\e/ge<CR> \| :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V(\l)\/(\u)/\1::\2/ge<CR> \| :noh<CR>w
 
 " An Hoge fuga を a_hoge_fuga に変換
-vnoremap <leader>_ :s/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+vnoremap _ :s/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
 
 " 行頭の空白を削除
 vnoremap <leader>= :s/\v^ *//g<CR> \| :noh<CR>
 
 " `class` と `::` を `module` にする置換
 " vnoremap M :s/\v%V(class \|\:\:)+/\rmodule /g \| :noh<CR>
-vnoremap <leader>m :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
+vnoremap M :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
 
 " 改行
-vnoremap <leader>b :s/\v%V,/,\r/ge<cr> \| :normal! gg=G<CR> \| :noh<CR>
+vnoremap B :s/\v%V,/,\r/ge<cr> \| :normal! gg=G<CR> \| :noh<CR>
 
 " JSON から Hash に変換
 " vnoremap <leader>j :s/\v%V^(\s*)"(\w+)"\s*:\s*/\1\2: /ge<CR> \| :s/\v%V^(\s*)"(\w+)"\s+:/\1\2:/ge<CR> \| :s/\v%V^(\s*)"(\w+)":/\1\2:/ge<CR> \| :s/%V'/\\'/ge<CR> \| :s/%V\"/\'/ge<CR> \| :normal! gg=G<CR> \| :noh<CR>
-vnoremap <leader>j :call JsonToHash()<cr>
+vnoremap J :call JsonToHash()<cr>
 
 " スペースを 2 つ開けて `*` を入力して開始
 " nnoremap <leader>2 i<space><space>*<space>
@@ -358,13 +358,13 @@ vnoremap <leader>j :call JsonToHash()<cr>
 " ### ファイル操作系 ---------------------- {{{
 
 " 開いているファイルの名前を変更する
-nnoremap N :call RenameFile()<cr>
+nnoremap <space>en :call RenameFile()<cr>
 
 " 開いているファイルのパスをコピーする
 " https://stackoverflow.com/questions/916875/yank-file-name-path-of-current-buffer-in-vim
 " http://intothelambda.com/archives/4
-nnoremap <space>P :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
-nnoremap <space>p :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
+nnoremap <space>cP :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
+nnoremap <space>cp :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
 
 if has('nvim')
   " ~/.vimrc を開く
@@ -389,17 +389,17 @@ nnoremap <space>k <c-w>k
 nnoremap <space>l <c-w>l
 
 " ウィンドウスワップ
-nnoremap <space>r <c-w><c-r>
+nnoremap <space>ws <c-w><c-r>
 
 " 画面分割
-nnoremap <space>v :vs<CR><c-w>l
-nnoremap <space>s :sp<CR><c-w>j
+nnoremap <space>sv :vs<CR><c-w>l
+nnoremap <space>sh :sp<CR><c-w>j
 
 " For Rails
 " 実装ファイルからテストファイルを開く
-nnoremap <space>t :execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')<CR><c-w>l
+nnoremap <space>et :execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')<CR><c-w>l
 " テストファイルから実装ファイルを開く
-nnoremap <space>i :execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')<CR><c-w>l
+nnoremap <space>ei :execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')<CR><c-w>l
 
 " ウインドウ幅を右に広げる
 nnoremap <space>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
@@ -410,23 +410,23 @@ nnoremap <space>= <c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c
 " ウインドウ高さを低くする
 nnoremap <space>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
 
-nnoremap <space>f :Files<CR>
+nnoremap <space>ff :Files<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
-vnoremap <space>f :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>w
+vnoremap <space>ff :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
 
-nnoremap <space>b :Buffers<CR>
+nnoremap <space>fb :Buffers<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Buffers を開く
-vnoremap <space>b :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>w
+vnoremap <space>fb :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
 
 " 前のバッファに戻る
 nnoremap <space><left> :bprevious<CR>
 " 次のバッファに進む
 nnoremap <space><right> :bnext<CR>
 
-nnoremap <silent> H :History<CR>
+nnoremap <space>fh :History<CR>
 
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :History を開く
-vnoremap <space>h :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>w
+vnoremap <space>fh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>w
 
 nnoremap <space>/ :execute 'Rg ' . input('Rg/')<CR>
 vnoremap <space>/ :<C-u>call RgBySelectedText()<CR>
