@@ -98,6 +98,9 @@ set hlsearch
 " ビジュアルモードで選択したときに、検索した単語をハイライトにする
 " syn match cppSTL /\(::.*\)\@<=\<find\>/
 
+" :vim(grep) したときに自動的にquickfix-windowを開く
+autocmd QuickFixCmdPost *grep* cwindow
+
 " }}}
 
 " ## カーソル移動に関する設定 ---------------------- {{{
