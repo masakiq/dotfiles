@@ -434,6 +434,9 @@ vnoremap <space>fh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>w
 nnoremap <space>/ :execute 'Rg ' . input('Rg/')<CR>
 vnoremap <space>/ :<C-u>call RgBySelectedText()<CR>
 
+" Buffer を削除
+nnoremap <space>db :BD<CR>
+
 " }}}
 
 " ### ターミナルモード ---------------------- {{{
@@ -567,6 +570,25 @@ function! RgBySelectedText()
   echom 'Copyed! ' . selected
   execute 'Rg ' . selected
 endfunction
+
+" Delete Buffer
+" https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
+
+function! s:delete_buffers(lines)
+  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! BD call fzf#run(fzf#wrap({
+  \ 'source': s:list_buffers(),
+  \ 'sink*': { lines -> s:delete_buffers(lines) },
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+\ }))
 
 " }}}
 
