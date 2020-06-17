@@ -405,13 +405,13 @@ nnoremap <space>et :execute ':vs ' . substitute(substitute(expand('%'), '^app', 
 nnoremap <space>ei :execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')<CR><c-w>l
 
 " ウインドウ幅を右に広げる
-nnoremap <space>. <c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>><c-w>>
+nnoremap <space>. 41<c-w>>
 " ウインドウ幅を左に広げる
-nnoremap <space>, <c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><<c-w><
+nnoremap <space>, 41<c-w><
 " ウインドウ高さを高くする
-nnoremap <space>= <c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+<c-w>+
+nnoremap <space>= 9<c-w>+
 " ウインドウ高さを低くする
-nnoremap <space>- <c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-<c-w>-
+nnoremap <space>- 9<c-w>-
 
 nnoremap <space>ff :Files<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
