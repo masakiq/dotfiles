@@ -358,6 +358,16 @@ vnoremap J :call JsonToHash()<cr>
 
 " }}}
 
+" ### 検索系 ---------------------- {{{
+
+nnoremap <space>/ :execute 'Rg ' . input('Rg/')<CR>
+vnoremap <space>/ :<C-u>call RgBySelectedText()<CR>
+
+nnoremap <space>? :execute 'vimgrep ' . input('vimgrep/') . ' app/** lib/** config/** spec/**'<CR>
+vnoremap <space>? :call VimGrepBySelectedText()<CR>
+
+" }}}
+
 " ### ファイル操作系 ---------------------- {{{
 
 " 開いているファイルの名前を変更する
@@ -569,6 +579,13 @@ function! RgBySelectedText()
   let @+=selected
   echom 'Copyed! ' . selected
   execute 'Rg ' . selected
+endfunction
+
+function! VimGrepBySelectedText()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  echom 'Copyed! ' . selected
+  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/**"
 endfunction
 
 " Delete Buffer
