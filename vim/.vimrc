@@ -100,6 +100,8 @@ set hlsearch
 
 " :vim(grep) したときに自動的にquickfix-windowを開く
 autocmd QuickFixCmdPost *grep* cwindow
+" quickfix-window のサイズ調整
+autocmd FileType qf 13wincmd_
 
 " }}}
 
@@ -440,9 +442,6 @@ nnoremap <space>fh :History<CR>
 
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :History を開く
 vnoremap <space>fh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>w
-
-nnoremap <space>/ :execute 'Rg ' . input('Rg/')<CR>
-vnoremap <space>/ :<C-u>call RgBySelectedText()<CR>
 
 " Buffer を削除
 nnoremap <space>db :BD<CR>
