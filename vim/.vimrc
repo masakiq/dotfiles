@@ -241,6 +241,7 @@ set timeout timeoutlen=800 ttimeoutlen=100
 
 inoremap jk <esc>
 inoremap <C-c> <esc>
+vnoremap <C-c> <esc>
 " 以下はクリップボードが正常に働かなくなる
 " :inoremap <esc> <nop>
 " :inoremap <c-[> <nop>
@@ -308,6 +309,21 @@ vnoremap x "+x
 
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れる
 vnoremap fy :call ChangeToFileFormatAndCopy()<cr>w
+
+" }}}
+
+" ### 移動系 ---------------------- {{{
+
+nnoremap j gj
+vnoremap j gj
+nnoremap k gk
+vnoremap k gk
+nnoremap 0 g0
+vnoremap 0 g0
+nnoremap ^ g^
+vnoremap ^ g^
+nnoremap $ g$
+vnoremap $ g$
 
 " }}}
 
