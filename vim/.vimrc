@@ -343,31 +343,40 @@ vnoremap < c<<C-r>"><Esc>b
 vnoremap > c<<C-r>"><Esc>b
 vnoremap * c*<C-r>"*<Esc>b
 vnoremap ~ c~<C-r>"~<Esc>b
-vnoremap <leader><space> c <C-r>" <Esc>b
+vnoremap <space> c <C-r>" <Esc>b
 " 選択した両側を一文字ずつ削除
-vnoremap D c<Bs><C-r>"<Esc>wxb
+vnoremap <bs> c<Bs><C-r>"<Esc>wxb
 
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga に変換
-vnoremap S :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V::/\//ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+vnoremap mu :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V::/\//ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
 " hoge_hoge/fuga_fuga の形式を HogeHoge::FugaFuga に変換
-vnoremap C :s/\v%V<(\l)/\U\1\e/ge<CR> \| :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V(\l)\/(\u)/\1::\2/ge<CR> \| :noh<CR>w
+vnoremap mU :s/\v%V<(\l)/\U\1\e/ge<CR> \| :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V(\l)\/(\u)/\1::\2/ge<CR> \| :noh<CR>w
 
 " An Hoge fuga を a_hoge_fuga に変換
-vnoremap _ :s/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+vnoremap m_ :s/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+
+" a_hoge_fuga を an hoge fuga に変換
+vnoremap m- :s/\v%V_/ /ge<CR> \| :noh<CR>w
 
 " 行頭の空白を削除
-vnoremap <leader>= :s/\v^ *//g<CR> \| :noh<CR>
+vnoremap md :s/\v^ *//g<CR> \| :noh<CR>
+
+" `class` と `module` を `::` にする置換
+vnoremap mm :s/\v%Vmodule (.+)\n/::\1/ge<CR> \| :s/\v%Vclass (.+)\n/::\1/ge<CR> \| :s/\v%V \< .*//ge<CR> \| :s/\v%V\s//ge<CR> \| :s/\v%V^:://ge<CR> \| :noh<CR>
 
 " `class` と `::` を `module` にする置換
 " vnoremap M :s/\v%V(class \|\:\:)+/\rmodule /g \| :noh<CR>
-vnoremap M :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
+vnoremap mM :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
 
-" 改行
-vnoremap B :s/\v%V,/,\r/ge<cr> \| :normal! gg=G<CR> \| :noh<CR>
+ " , で改行
+vnoremap m, :s/\v%V,/,\r/ge<cr> \| :noh<CR>
 
 " JSON から Hash に変換
 " vnoremap <leader>j :s/\v%V^(\s*)"(\w+)"\s*:\s*/\1\2: /ge<CR> \| :s/\v%V^(\s*)"(\w+)"\s+:/\1\2:/ge<CR> \| :s/\v%V^(\s*)"(\w+)":/\1\2:/ge<CR> \| :s/%V'/\\'/ge<CR> \| :s/%V\"/\'/ge<CR> \| :normal! gg=G<CR> \| :noh<CR>
-vnoremap J :call JsonToHash()<cr>
+vnoremap mj :call JsonToHash()<cr>
+
+" イメージURLをサイズ調整できる形式に修正
+vnoremap mi :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\>/\<img alt\="\1" src\="\2" width\="300">/ge<cr> \| :noh<cr>
 
 " スペースを 2 つ開けて `*` を入力して開始
 " nnoremap <leader>2 i<space><space>*<space>
@@ -426,6 +435,7 @@ nnoremap <space>ws <c-w><c-r>
 nnoremap <space>sv :vs<CR><c-w>l
 nnoremap <space>sh :sp<CR><c-w>j
 
+nnoremap <space>sx :sp<cr>:vs<cr><c-w>k:vs<cr><c-w>h15<c-w>+
 " For Rails
 " 実装ファイルからテストファイルを開く
 nnoremap <space>et :execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')<CR><c-w>l
