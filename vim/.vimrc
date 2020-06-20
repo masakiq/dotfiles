@@ -81,6 +81,12 @@ hi SpellLocal cterm=underline
 
 " autocmd TerminalOpen * set nonu
 
+" タブ表示カスタム
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='simple'
+" https://vi.stackexchange.com/questions/5622/how-do-i-configure-the-vim-airline-plugin-to-look-like-its-own-project-screensho
+let g:airline_powerline_fonts = 1
+" set t_Co=256
 
 " }}}
 
@@ -456,16 +462,25 @@ nnoremap <space>= 9<c-w>+
 nnoremap <space>- 9<c-w>-
 
 " 前のバッファに戻る
-nnoremap <space><left> :bprevious<CR>
+nnoremap <space>; :bprevious<CR>
 " 次のバッファに進む
-nnoremap <space><right> :bnext<CR>
+nnoremap <space>' :bnext<CR>
+
+" }}}
+
+" ### タブ操作系 ---------------------- {{{
+
+" 新規タブを開く
+nnoremap <space>t :tabnew<CR>
+nnoremap <space><right> :normal gt<CR>
+nnoremap <space><left> :normal gT<CR>
 
 " }}}
 
 " ### ターミナルモード ---------------------- {{{
 
 " カレントウィンドウでターミナルを開く
-nnoremap <space>t :ter ++curwin<CR>
+nnoremap <space>ec :ter ++curwin<CR>
 
 if has('nvim')
   tnoremap jf <C-\><C-n>
@@ -613,6 +628,8 @@ Plug 'tpope/vim-markdown'
 Plug 'kannokanno/previm'
 Plug 'tyru/open-browser.vim'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 " }}}
