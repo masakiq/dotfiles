@@ -621,24 +621,26 @@ call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.85, 'height': 0.85, 'xoffset': 0.5, 'yoffset': 0.5 } }
 " let g:fzf_preview_window = 'right:60%'
-  let g:fzf_colors =
-  \ { 'fg':      ['fg', 'Normal'],
-    \ 'bg':      ['bg', 'Clear'],
-    \ 'hl':      ['fg', 'Comment'],
-    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-    \ 'hl+':     ['fg', 'Statement'],
+" This is default settings
+let g:fzf_action = {
+    \ 'ctrl-v': 'vsplit',
+    \ 'ctrl-x': 'split',
+    \ 'ctrl-t': 'tab split',
+  \ }
+let g:fzf_colors =
+  \ {
     \ 'info':    ['fg', 'PreProc'],
-    \ 'prompt':  ['fg', 'Conditional'],
-    \ 'pointer': ['fg', 'Exception'],
-    \ 'marker':  ['fg', 'Keyword'],
-    \ 'spinner': ['fg', 'Label'],
-    \ 'header':  ['fg', 'Comment'] }
+    \ 'spinner': ['fg', 'PreProc'],
+    \ 'marker':  ['fg', 'PreProc'],
+    \ 'pointer': ['fg', 'PreProc'],
+    \ 'border':  ['fg', 'PreProc'],
+    \ 'header':  ['fg', 'PreProc'],
+ \  }
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 command! -bang -nargs=? -complete=dir Buffers
     \ call fzf#vim#buffers(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
-command! -bang -nargs=? History
+command! -bang -nargs=? -complete=dir History
     \ call fzf#vim#history(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
 " Rg でカラー出力しない
