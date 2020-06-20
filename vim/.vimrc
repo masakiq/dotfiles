@@ -390,7 +390,7 @@ vnoremap mi :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\>/\<img
 nnoremap <space>/ :execute 'Rg ' . input('Rg/')<CR>
 vnoremap <space>/ :<C-u>call RgBySelectedText()<CR>
 
-nnoremap <space>? :execute 'vimgrep ' . input('vimgrep/') . ' app/** lib/** config/** spec/**'<CR>
+nnoremap <space>? :execute 'vimgrep ' . input('vimgrep/') . ' app/** lib/** config/** spec/** apidoc/**'<CR>
 vnoremap <space>? :call VimGrepBySelectedText()<CR>
 
 " }}}
@@ -436,6 +436,7 @@ nnoremap <space>sv :vs<CR><c-w>l
 nnoremap <space>sh :sp<CR><c-w>j
 
 nnoremap <space>sx :sp<cr>:vs<cr><c-w>k:vs<cr><c-w>h15<c-w>+
+
 " For Rails
 " 実装ファイルからテストファイルを開く
 nnoremap <space>et :execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')<CR><c-w>l
@@ -624,6 +625,7 @@ endfunction
 
 function! s:delete_buffers(lines)
   execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
 endfunction
 
 command! BD call fzf#run(fzf#wrap({
