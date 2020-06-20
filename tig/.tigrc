@@ -1,0 +1,4 @@
+# commit 時に `-v` オプションを付与
+bind status C !git commit -v
+# commit hash をクリップボードに保存
+bind main C !@sh -c "printf `git rev-parse %(commit)` | pbcopy"
