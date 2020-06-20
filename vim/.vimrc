@@ -452,26 +452,10 @@ nnoremap <space>= 9<c-w>+
 " ウインドウ高さを低くする
 nnoremap <space>- 9<c-w>-
 
-nnoremap <space>ff :Files<CR>
-" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
-vnoremap <space>ff :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
-
-nnoremap <space>fb :Buffers<CR>
-" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Buffers を開く
-vnoremap <space>fb :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
-
 " 前のバッファに戻る
 nnoremap <space><left> :bprevious<CR>
 " 次のバッファに進む
 nnoremap <space><right> :bnext<CR>
-
-nnoremap <space>fh :History<CR>
-
-" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :History を開く
-vnoremap <space>fh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>w
-
-" Buffer を削除
-nnoremap <space>db :BD<CR>
 
 " }}}
 
@@ -484,8 +468,6 @@ if has('nvim')
 else
   tnoremap jf <C-w>N
 endif
-
-nnoremap <space>c :execute 'Buffers fish'<CR>
 
 " }}}
 
@@ -613,26 +595,8 @@ function! VimGrepBySelectedText()
   echom 'Copyed! ' . selected
   execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/**"
 endfunction
-
-" Delete Buffer
-" https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
-function! s:list_buffers()
-  redir => list
-  silent ls
-  redir END
-  return split(list, "\n")
-endfunction
-
-function! s:delete_buffers(lines)
-  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
   execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
 endfunction
-
-command! BD call fzf#run(fzf#wrap({
-  \ 'source': s:list_buffers(),
-  \ 'sink*': { lines -> s:delete_buffers(lines) },
-  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
-\ }))
 
 " }}}
 
@@ -654,5 +618,61 @@ Plug 'kannokanno/previm'
 Plug 'tyru/open-browser.vim'
 Plug 'terryma/vim-multiple-cursors'
 call plug#end()
+
+" }}}
+
+" ## fzf 設定 ---------------------- {{{
+
+let g:fzf_layout = { 'window': { 'width': 0.85, 'height': 0.85, 'xoffset': 0.5, 'yoffset': 0.5 } }
+" let g:fzf_preview_window = 'right:60%'
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+command! -bang -nargs=? -complete=dir Buffers
+    \ call fzf#vim#buffers(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+command! -bang -nargs=* History
+    \ call fzf#vim#history(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+
+nnoremap <space>ff :Files<CR>
+" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
+vnoremap <space>ff :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
+
+nnoremap <space>fb :Buffers<CR>
+" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Buffers を開く
+vnoremap <space>fb :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
+
+nnoremap <space>fh :History<CR>
+" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :History を開く
+vnoremap <space>fh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>w
+
+" ターミナルを開く
+nnoremap <space>ft :execute 'Buffers fish'<CR>
+
+" 単語補完
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
+" ファイル名補完
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
+
+
+" Buffer を削除
+nnoremap <space>db :BD<CR>
+
+" Delete Buffer
+" https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
+
+function! s:delete_buffers(lines)
+  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! BD call fzf#run(fzf#wrap({
+  \ 'source': s:list_buffers(),
+  \ 'sink*': { lines -> s:delete_buffers(lines) },
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+\ }))
 
 " }}}
