@@ -591,8 +591,6 @@ function! VimGrepBySelectedText()
   let selected = SelectedVisualModeText()
   let @+=selected
   echom 'Copyed! ' . selected
-  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/**"
-endfunction
   execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
 endfunction
 
