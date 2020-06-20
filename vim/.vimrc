@@ -625,7 +625,7 @@ command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 command! -bang -nargs=? -complete=dir Buffers
     \ call fzf#vim#buffers(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
-command! -bang -nargs=* History
+command! -bang -nargs=? History
     \ call fzf#vim#history(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
 " Rg でカラー出力しない
@@ -633,8 +633,8 @@ command! -bang -nargs=* History
 " https://github.com/junegunn/fzf.vim/pull/696
 " command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-number --no-heading --no-require-git '.shellescape(<q-args>), 1, <bang>0)
 " デフォルト rg --column --line-number --no-heading --color=always --smart-case --
-" command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-number --no-heading --smart-case -- '.shellescape(<q-args>), 1, <bang>0)
-command! -bang -nargs=* Rg call fzf#vim#grep('rg --line-number --no-heading '.shellescape(<q-args>), 0,fzf#vim#with_preview({'options': '--exact --reverse'}, 'right:50%:wrap'))
+command! -bang -nargs=? Rg
+    \ call fzf#vim#grep('rg --line-number --color=always --smart-case '.shellescape(<q-args>), 1, fzf#vim#with_preview({'options': ['--layout=reverse']}))
 
 nnoremap <space>ff :Files<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
@@ -646,7 +646,7 @@ vnoremap <space>fb :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
 
 nnoremap <space>fh :History<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :History を開く
-vnoremap <space>fh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>w
+vnoremap <space>fh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>
 
 " ターミナルを開く
 nnoremap <space>ft :execute 'Buffers fish'<CR>
