@@ -498,12 +498,6 @@ command! -range=% JsonToHash :<line1>,<line2>call JsonToHash()
 command! -range=% RocketToHash :<line1>,<line2>call RocketToHash()
 command! BreakLine %s/\v}\s*,/},\r/ge | %s/\v]\s*,/],\r/ge | %s/\v"\s*,/",\r/ge | %s/{/{\r/ge | %s/}/\r}/ge | %s/\[/\[\r/ge | %s/\]/\r]/ge
 
-" Rg でカラー出力しない
-" https://github.com/junegunn/fzf.vim/issues/488#issuecomment-350523157
-" https://github.com/junegunn/fzf.vim/pull/696
-" command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-number --no-heading --no-require-git '.shellescape(<q-args>), 1, <bang>0)
-" デフォルト rg --column --line-number --no-heading --color=always --smart-case --
-" command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-number --no-heading --smart-case -- '.shellescape(<q-args>), 1, <bang>0)
 
 " }}}
 
@@ -636,6 +630,14 @@ command! -bang -nargs=? -complete=dir Buffers
 command! -bang -nargs=* History
     \ call fzf#vim#history(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
+" Rg でカラー出力しない
+" https://github.com/junegunn/fzf.vim/issues/488#issuecomment-350523157
+" https://github.com/junegunn/fzf.vim/pull/696
+" command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-number --no-heading --no-require-git '.shellescape(<q-args>), 1, <bang>0)
+" デフォルト rg --column --line-number --no-heading --color=always --smart-case --
+" command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-number --no-heading --smart-case -- '.shellescape(<q-args>), 1, <bang>0)
+command! -bang -nargs=* Rg call fzf#vim#grep('rg --line-number --no-heading '.shellescape(<q-args>), 0,fzf#vim#with_preview({'options': '--exact --reverse'}, 'right:50%:wrap'))
+
 nnoremap <space>ff :Files<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
 vnoremap <space>ff :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
@@ -655,7 +657,6 @@ nnoremap <space>ft :execute 'Buffers fish'<CR>
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
 " ファイル名補完
 inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
-
 
 " Buffer を削除
 nnoremap <space>db :BD<CR>
