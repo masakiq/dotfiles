@@ -79,6 +79,9 @@ hi SpellCap cterm=underline
 hi SpellRare cterm=underline
 hi SpellLocal cterm=underline
 
+" autocmd TerminalOpen * set nonu
+
+
 " }}}
 
 " ## 検索の挙動に関する設定 ---------------------- {{{
@@ -461,7 +464,8 @@ nnoremap <space><right> :bnext<CR>
 
 " ### ターミナルモード ---------------------- {{{
 
-" nnoremap <space>c :terminal<CR>
+" カレントウィンドウでターミナルを開く
+nnoremap <space>t :ter ++curwin<CR>
 
 if has('nvim')
   tnoremap jf <C-\><C-n>
