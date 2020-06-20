@@ -267,7 +267,7 @@ inoremap <Up>    <nop>
 inoremap <Down>  <nop>
 inoremap <Left>  <nop>
 inoremap <Right> <nop>
-inoremap <Bs>    <nop>
+" inoremap <Bs>    <nop> for multi cursor
 nnoremap <Up>    <nop>
 nnoremap <Down>  <nop>
 nnoremap <Left>  <nop>
@@ -650,6 +650,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-markdown'
 Plug 'kannokanno/previm'
 Plug 'tyru/open-browser.vim'
+Plug 'terryma/vim-multiple-cursors'
 call plug#end()
 
 " }}}
