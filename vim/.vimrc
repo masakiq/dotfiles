@@ -778,7 +778,7 @@ function! s:list_windows()
     let winnumber = 1
     for buf in buflist
       silent! let file = expandcmd('#'. buf .'<.rb')
-      let file = substitute(file, '#.*', '[No Name]', '')
+      let file = substitute(file, '#.*', '[No-Name]', '')
       let line = tabnumber . ' ' . winnumber . ' ' . file . ' ' . buf
       call add(list, line)
       let winnumber = winnumber + 1
