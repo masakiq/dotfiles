@@ -82,11 +82,15 @@ hi SpellLocal cterm=underline
 " autocmd TerminalOpen * set nonu
 
 " タブ表示カスタム
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='simple'
+let g:airline_theme='cool'
 " https://vi.stackexchange.com/questions/5622/how-do-i-configure-the-vim-airline-plugin-to-look-like-its-own-project-screensho
 let g:airline_powerline_fonts = 1
 " set t_Co=256
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#tabline#show_splits = 1
+let g:airline#extensions#tabline#show_buffers = 1
 
 " }}}
 
