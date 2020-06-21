@@ -706,6 +706,8 @@ command! -bang -nargs=? -complete=dir Buffers
     \ call fzf#vim#buffers(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 command! -bang -nargs=? -complete=dir History
     \ call fzf#vim#history(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+command! -bang -nargs=? -complete=dir Windows
+    \ call fzf#vim#windows(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
 " Rg でカラー出力しない
 " https://github.com/junegunn/fzf.vim/issues/488#issuecomment-350523157
@@ -726,6 +728,8 @@ vnoremap <space>fb :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
 nnoremap <space>fh :History<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :History を開く
 vnoremap <space>fh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>
+
+nnoremap <space>fw :Windows<CR>
 
 " ターミナルを開く
 nnoremap <space>ft :execute 'Buffers fish'<CR>
