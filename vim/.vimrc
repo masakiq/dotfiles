@@ -693,9 +693,8 @@ inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'hei
 inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
 
 " Buffer を削除
-nnoremap <space>db :BD<CR>
+nnoremap <space>db :DeleteBuf<CR>
 
-" Delete Buffer
 " https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
 function! s:list_buffers()
   redir => list
@@ -708,9 +707,43 @@ function! s:delete_buffers(lines)
   execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[0]}))
 endfunction
 
-command! BD call fzf#run(fzf#wrap({
+command! DeleteBuf call fzf#run(fzf#wrap({
   \ 'source': s:list_buffers(),
   \ 'sink*': { lines -> s:delete_buffers(lines) },
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+\ }))
+
+" Window を削除
+nnoremap <space>dw :DeleteWindow<CR>
+
+" https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
+function! s:list_windows()
+  let list = []
+  let tabnumber = 1
+
+  while tabnumber <= tabpagenr('$')
+    let buflist = tabpagebuflist(tabnumber)
+    let winnumber = 1
+    for buf in buflist
+      silent! let file = expandcmd('#'. buf .'<.rb')
+      let file = substitute(file, '#.*', '[No Name]', '')
+      let line = tabnumber . ' ' . winnumber . ' ' . file . ' ' . buf
+      call add(list, line)
+      let winnumber = winnumber + 1
+    endfor
+    let tabnumber = tabnumber + 1
+  endwhile
+
+  return list
+endfunction
+
+function! s:delete_windows(lines)
+  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[3]}))
+endfunction
+
+command! DeleteWindow call fzf#run(fzf#wrap({
+  \ 'source': s:list_windows(),
+  \ 'sink*': { lines -> s:delete_windows(lines) },
   \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
 \ }))
 
