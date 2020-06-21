@@ -700,6 +700,9 @@ let g:fzf_colors =
     \ 'border':  ['fg', 'PreProc'],
     \ 'header':  ['fg', 'PreProc'],
  \  }
+
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 command! -bang -nargs=? -complete=dir Buffers
