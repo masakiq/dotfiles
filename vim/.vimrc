@@ -479,7 +479,9 @@ nnoremap <space>' :bnext<CR>
 
 " 新規タブを開く
 nnoremap <space>t :tabnew<CR>
+" 右のタブに移動
 nnoremap <space><right> :normal gt<CR>
+" 左のタブに移動
 nnoremap <space><left> :normal gT<CR>
 
 " }}}
