@@ -419,6 +419,9 @@ nnoremap <space>en :call RenameFile()<cr>
 nnoremap <space>cP :<C-u>echo "copied full path: " . expand('%:p') \| let @+=expand('%:p')<CR>
 nnoremap <space>cp :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
 
+" 開いているウィンドウ以外のバッファを削除
+nnoremap <space>D :call DeleteBufsWithoutExistingWindows()<cr>
+
 if has('nvim')
   " ~/.vimrc を開く
   nnoremap <space>ev :vsplit ~/.config/nvim/init.vim<cr>
@@ -611,6 +614,46 @@ function! VimGrepBySelectedText()
   let @+=selected
   echom 'Copyed! ' . selected
   execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
+endfunction
+
+function! ListBufNums()
+  let list = []
+  let tabnumber = 1
+
+  while tabnumber <= tabpagenr('$')
+    let buflist = tabpagebuflist(tabnumber)
+    for buf in buflist
+      call add(list, buf)
+    endfor
+    let tabnumber = tabnumber + 1
+  endwhile
+
+  return list
+endfunction
+
+function! ListAllBufNums()
+  redir => bufs
+  silent ls
+  redir END
+  let buflist = split(bufs, "\n")
+  let listbufnums = []
+  for buf in buflist
+    " echo substitute('  34 hoge hoge', '^\s*\(\d*\)\s*.*', '\1', '')
+    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
+    call add(listbufnums, num)
+  endfor
+  return listbufnums
+endfunction
+
+function! DeleteBufsWithoutExistingWindows()
+  let allbufnums = ListAllBufNums()
+  let bufnums = ListBufNums()
+  for num in allbufnums
+    if (index(bufnums, num) < 0)
+      execute 'bwipeout! ' . num
+      echom num . ' is deleted!'
+    endif
+  endfor
 endfunction
 
 " }}}
