@@ -400,8 +400,8 @@ vnoremap mi :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\>/\<img
 
 " ### 検索系 ---------------------- {{{
 
-nnoremap <space>/ :execute 'AG ' . input('AG/')<CR>
-vnoremap <space>/ :<C-u>call AGBySelectedText()<CR>
+nnoremap <space>/ :execute 'RG ' . input('RG/')<CR>
+vnoremap <space>/ :<C-u>call RGBySelectedText()<CR>
 
 nnoremap <space>? :execute 'Rg ' . input('Rg/')<CR>
 vnoremap <space>? :<C-u>call RgBySelectedText()<CR>
@@ -614,11 +614,11 @@ function! RgBySelectedText()
   execute 'Rg ' . selected
 endfunction
 
-function! AGBySelectedText()
+function! RGBySelectedText()
   let selected = SelectedVisualModeText()
   let @+=selected
   echom 'Copyed! ' . selected
-  execute 'AG ' . selected
+  execute 'RG ' . selected
 endfunction
 
 function! VimGrepBySelectedText()
@@ -809,7 +809,7 @@ command! DeleteWindow call fzf#run(fzf#wrap({
   \ 'options': '--multi --reverse --bind ctrl-a:select-all,ctrl-d:deselect-all'
 \ }))
 
-" Rg, Ag が遅いので代わりにカスタムした AG を使う
+" Rg, Ag が遅いので代わりにカスタムした RG を使う
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)#narrow-ag-results-within-vim
 function! s:ag_to_qf(line)
   let parts = split(a:line, ':')
@@ -837,8 +837,8 @@ function! s:ag_handler(lines)
   endif
 endfunction
 
-command! -nargs=* AG call fzf#run({
-\ 'source':  printf('ag --nogroup --column --color "%s"',
+command! -nargs=* RG call fzf#run({
+\ 'source':  printf('rg --column --no-heading --color always --smart-case "%s"',
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
 \ 'sink*':    function('<sid>ag_handler'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-t,ctrl-v,ctrl-x '.
