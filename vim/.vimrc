@@ -705,6 +705,12 @@ let g:fzf_action = {
   \ }
 let g:fzf_colors =
   \ {
+    \ "fg":      ["fg", "CursorColumn"],
+    \ "bg":      ["bg", "Normal"],
+    \ "hl":      ["fg", "IncSearch"],
+    \ "fg+":     ["fg", "CursorLine", "CursorColumn", "Normal"],
+    \ "bg+":     ["bg", "CursorLine", "CursorColumn"],
+    \ "hl+":     ["fg", "IncSearch"],
     \ 'info':    ['fg', 'PreProc'],
     \ 'spinner': ['fg', 'PreProc'],
     \ 'marker':  ['fg', 'PreProc'],
