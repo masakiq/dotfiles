@@ -695,7 +695,7 @@ call plug#end()
 
 " ## fzf 設定 ---------------------- {{{
 
-let g:fzf_layout = { 'window': { 'width': 0.85, 'height': 0.85, 'xoffset': 0.5, 'yoffset': 0.5 } }
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 } }
 " let g:fzf_preview_window = 'right:60%'
 " This is default settings
 let g:fzf_action = {
@@ -722,7 +722,19 @@ let g:fzf_colors =
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+    \ call fzf#vim#files(
+    \   <q-args>,
+    \   fzf#vim#with_preview(
+    \     {
+    \       'options': [
+    \         '--layout=reverse',
+    \         '--info=inline',
+    \         '--bind=ctrl-u:toggle,ctrl-p:toggle-preview'
+    \       ]
+    \     }
+    \   ),
+    \   <bang>0
+    \ )
 command! -bang -nargs=? -complete=dir Buffers
     \ call fzf#vim#buffers(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 command! -bang -nargs=? -complete=dir History
@@ -843,14 +855,16 @@ function! s:ag_handler(lines)
   endif
 endfunction
 
-command! -nargs=* RG call fzf#run({
+" bind は selection を参考に。http://manpages.ubuntu.com/manpages/focal/man1/fzf.1.html
+command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source':  printf('rg --column --no-heading --color always --smart-case "%s"',
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
 \ 'sink*':    function('<sid>ag_handler'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-t,ctrl-v,ctrl-x '.
-\            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
+\            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-\ 'window': { 'width': 0.85, 'height': 0.85, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ })
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ })))
 
 " }}}
+
