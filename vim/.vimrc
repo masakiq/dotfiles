@@ -868,3 +868,32 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 
 " }}}
 
+" ## LSP 設定 ---------------------- {{{
+
+let g:lsp_auto_enable = 1
+let g:lsp_signs_enabled = 1         " enable diagnostic signs / we use ALE for now
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:lsp_signs_error = {'text': '✖'}
+let g:lsp_signs_warning = {'text': '~'}
+let g:lsp_signs_hint = {'text': '?'}
+let g:lsp_signs_information = {'text': '!!'}
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/.vim/vim-lsp.log')
+
+ if executable('solargraph')
+    " gem install solargraph
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'solargraph',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+        \ 'initialization_options': {"diagnostics": "true"},
+        \ 'whitelist': ['ruby'],
+        \ })
+endif
+
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ asyncomplete#force_refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" }}}
