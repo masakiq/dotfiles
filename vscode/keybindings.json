@@ -1,0 +1,18 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "ctrl+f",
+        "command": "cursorRight",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+p",
+        "command": "cursorUp",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+n",
+        "command": "cursorDown",
+        "when": "terminalFocus"
+    },
+]
