@@ -1,18 +1,74 @@
 // Place your key bindings in this file to override the defaults
 [
+    // {
+    //     "key": "ctrl+f",
+    //     "command": "cursorRight",
+    //     "when": "textInputFocus"
+    // },
+    // {
+    //     "key": "ctrl+p",
+    //     "command": "cursorUp",
+    //     "when": "textInputFocus"
+    // },
+    // {
+    //     "key": "ctrl+n",
+    //     "command": "cursorDown",
+    //     "when": "textInputFocus"
+    // },
     {
-        "key": "ctrl+f",
-        "command": "cursorRight",
-        "when": "terminalFocus"
+        "key": "ctrl+a",
+        "command": "cursorHome",
+        "when": "textInputFocus"
     },
     {
-        "key": "ctrl+p",
-        "command": "cursorUp",
-        "when": "terminalFocus"
+        "key": "ctrl+e",
+        "command": "cursorEnd",
+        "when": "textInputFocus"
     },
     {
         "key": "ctrl+n",
-        "command": "cursorDown",
-        "when": "terminalFocus"
+        "command": "selectNextSuggestion",
+        "when": "editorTextFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+p",
+        "command": "selectPrevSuggestion",
+        "when": "editorTextFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+c",
+        "command": "closeReferenceSearch",
+        "when": "inReferenceSearchEditor && !config.editor.stablePeek"
+    },
+    {
+        "key": "ctrl+c",
+        "command": "closeReferenceSearch",
+        "when": "referenceSearchVisible && !config.editor.stablePeek"
+    },
+    {
+        "key": "ctrl+c",
+        "command": "closeReferenceSearchEditor"
+    },
+    {
+        "key": "ctrl+c",
+        "command": "workbench.action.closeQuickOpen",
+        "when": "inQuickOpen"
+    },
+    {
+        "key": "ctrl+c",
+        "command": "extension.vim_escape",
+        "when": "editorTextFocus && vim.active && !inDebugRepl"
+    },
+    {
+        "key": "ctrl+[Quote]",
+        "command": "workbench.action.nextEditor"
+    },
+    {
+        "key": "ctrl+[Semicolon]",
+        "command": "workbench.action.previousEditor"
+    },
+    {
+        "key": "ctrl+t",
+        "command": "workbench.action.terminal.toggleTerminal"
     },
 ]

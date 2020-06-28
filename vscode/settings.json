@@ -15,11 +15,87 @@
     },
     {
       "before": [
-        "=",
-        "="
+        "<space>",
+        "o",
+        "f",
       ],
-      "after": [
-        "cmd-b"
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "/",
+      ],
+      "commands": [
+        "workbench.action.findInFiles"
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "'",
+      ],
+      "commands": [
+        "workbench.action.nextEditor"
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        ";",
+      ],
+      "commands": [
+        "workbench.action.previousEditor"
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "b",
+      ],
+      "commands": [
+        "workbench.action.toggleSidebarVisibility"
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "<space>",
+      ],
+      "commands": [
+        "editor.action.commentLine"
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "o",
+        "e",
+      ],
+      "commands": [
+        "workbench.view.explorer"
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "c",
+        "p",
+      ],
+      "commands": [
+        "copyRelativeFilePath"
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "o",
+        "t",
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal"
       ]
     },
   ],
@@ -32,6 +108,24 @@
       "after": [
         "g",
         "b"
+      ]
+    },
+    {
+      "before": [
+        "m",
+        "u"
+      ],
+      "commands": [
+        "extension.changeCase.snake"
+      ]
+    },
+    {
+      "before": [
+        "m",
+        "U"
+      ],
+      "commands": [
+        "extension.changeCase.pascal"
       ]
     },
   ],
@@ -56,7 +150,24 @@
     "statusBar.debuggingBackground": "#8FBCBB",
     "statusBar.foreground": "#434C5E"
   },
-  "terminal.integrated.shell.osx": "/bin/bash",
+  "terminal.integrated.shell.osx": "/usr/local/bin/fish",
+  "vim.camelCaseMotion.enable": true,
+  "solargraph.autoformat": true,
+  "solargraph.diagnostics": true,
+  "solargraph.formatting": true,
+  "solargraph.useBundler": false,
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "editor.cursorBlinking": "solid",
+  "editor.multiCursorModifier": "alt",
+  "workbench.statusBar.visible": true,
+  "workbench.activityBar.visible": false,
+  "editor.columnSelection": false,
+  "rufo.exe": "rufo",
+  "rufo.useBundler": false,
+  "terminal.integrated.fontFamily": "Source Code Pro for Powerline",
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "none",
   // "ruby.intellisense": "rubyLocate",
   // "ruby.useLanguageServer": true,
   // "solargraph.definitions": true,
