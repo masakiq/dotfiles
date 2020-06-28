@@ -413,6 +413,8 @@ vnoremap <space>? :<C-u>call RgBySelectedText()<CR>
 
 " ### ファイル操作系 ---------------------- {{{
 
+nnoremap <space>q :q!<cr>
+
 " 開いているファイルの名前を変更する
 nnoremap <space>en :call RenameFile()<cr>
 
