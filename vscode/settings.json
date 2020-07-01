@@ -26,11 +26,23 @@
     {
       "before": [
         "<space>",
-        "/",
+        "o",
+        "s",
       ],
       "commands": [
-        "workbench.action.findInFiles"
-      ]
+        "search.action.openNewEditor",
+        "workbench.action.search.toggleQueryDetails",
+      ],
+    },
+    {
+      "before": [
+        "<space>",
+        "f",
+        "s",
+      ],
+      "commands": [
+        "search.action.focusQueryEditorWidget",
+      ],
     },
     {
       "before": [
@@ -48,15 +60,6 @@
       ],
       "commands": [
         "workbench.action.previousEditor"
-      ]
-    },
-    {
-      "before": [
-        "<space>",
-        "b",
-      ],
-      "commands": [
-        "workbench.action.toggleSidebarVisibility"
       ]
     },
     {
@@ -96,6 +99,16 @@
       ],
       "commands": [
         "workbench.action.terminal.toggleTerminal"
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "o",
+        "r",
+      ],
+      "commands": [
+        "workbench.action.replaceInFiles"
       ]
     },
   ],
@@ -163,11 +176,25 @@
   "workbench.statusBar.visible": true,
   "workbench.activityBar.visible": false,
   "editor.columnSelection": false,
-  "rufo.exe": "rufo",
-  "rufo.useBundler": false,
   "terminal.integrated.fontFamily": "Source Code Pro for Powerline",
   "editor.minimap.enabled": false,
   "editor.renderWhitespace": "none",
+  "ruby.lint": {
+    "rubocop": true
+  },
+  "[ruby]": {
+    "editor.formatOnSave": true
+  },
+  "ruby.format": "rubocop",
+  "editor.formatOnSaveTimeout": 3000,
+  "editor.folding": false,
+  "editor.glyphMargin": false,
+  "timeline.excludeSources": [
+    "git-history"
+  ],
+  "window.zoomLevel": 1,
+  "search.searchEditor.defaultNumberOfContextLines": 5,
+  // "editor.scrollbar.verticalScrollbarSize": 15,
   // "ruby.intellisense": "rubyLocate",
   // "ruby.useLanguageServer": true,
   // "solargraph.definitions": true,
