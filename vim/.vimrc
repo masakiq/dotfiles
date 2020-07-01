@@ -356,7 +356,7 @@ vnoremap < c<<C-r>"><Esc>b
 vnoremap > c<<C-r>"><Esc>b
 vnoremap * c*<C-r>"*<Esc>b
 vnoremap ~ c~<C-r>"~<Esc>b
-vnoremap <space> c <C-r>" <Esc>b
+vnoremap <space> c<space><C-r>" <Esc>b
 " 選択した両側を一文字ずつ削除
 vnoremap <bs> c<Bs><C-r>"<Esc>wxb
 
@@ -400,8 +400,10 @@ vnoremap mi :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\>/\<img
 
 " ### 検索系 ---------------------- {{{
 
-nnoremap <space>/ :execute 'RG ' . input('RG/')<CR>
-vnoremap <space>/ :<C-u>call RGBySelectedText()<CR>
+" nnoremap <space>/ :execute 'RG ' . input('RG/')<CR>
+nnoremap <space>os :execute 'RG ' . input('RG/')<CR>
+" vnoremap <space>/ :<C-u>call RGBySelectedText()<CR>
+vnoremap <space>os :<C-u>call RGBySelectedText()<CR>
 
 nnoremap <space>? :execute 'Rg ' . input('Rg/')<CR>
 vnoremap <space>? :<C-u>call RgBySelectedText()<CR>
@@ -474,9 +476,9 @@ nnoremap <space>= 9<c-w>+
 nnoremap <space>- 9<c-w>-
 
 " 前のバッファに戻る
-nnoremap <space>; :bprevious<CR>
+nnoremap <space><left> :bprevious<CR>
 " 次のバッファに進む
-nnoremap <space>' :bnext<CR>
+nnoremap <space><right> :bnext<CR>
 
 " }}}
 
@@ -484,10 +486,14 @@ nnoremap <space>' :bnext<CR>
 
 " 新規タブを開く
 nnoremap <space>t :tabnew<CR>
-" 右のタブに移動
-nnoremap <space><right> :normal gt<CR>
-" 左のタブに移動
-nnoremap <space><left> :normal gT<CR>
+
+if has('gui_running')
+else
+  " 右のタブに移動
+  nnoremap <space>' :normal gt<CR>
+  " 左のタブに移動
+  nnoremap <space>; :normal gT<CR>
+endif
 
 " }}}
 
@@ -752,22 +758,25 @@ command! -bang -nargs=? -complete=dir Windows
 command! -bang -nargs=? Rg
     \ call fzf#vim#grep('rg --line-number --color=always --smart-case '.shellescape(<q-args>), 1, fzf#vim#with_preview({'options': ['--layout=reverse']}))
 
-nnoremap <space>ff :Files<CR>
-" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
-vnoremap <space>ff :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
+if has('gui_running')
+else
+  nnoremap <space>of :Files<CR>
+  " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
+  vnoremap <space>of :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
+endif
 
-nnoremap <space>fb :Buffers<CR>
+nnoremap <space>ob :Buffers<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Buffers を開く
-vnoremap <space>fb :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
+vnoremap <space>ob :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
 
-nnoremap <space>fh :History<CR>
+nnoremap <space>oh :History<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :History を開く
-vnoremap <space>fh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>
+vnoremap <space>oh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>
 
-nnoremap <space>fw :Windows<CR>
+nnoremap <space>ow :Windows<CR>
 
 " ターミナルを開く
-nnoremap <space>ft :execute 'Buffers fish'<CR>
+nnoremap <space>ot :execute 'Buffers fish'<CR>
 
 " 単語補完
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
