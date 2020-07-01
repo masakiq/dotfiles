@@ -2,6 +2,8 @@
   "vim.vimrc.enable": true,
   "vim.vimrc.path": "~/.vimrc",
   "vim.autoindent": true,
+  "vim.hlsearch": true,
+  // "vim.foldfix": true,
   "vim.normalModeKeyBindingsNonRecursive": [
     // カーソル位置の単語をマルチカーソルで選択
     {
@@ -194,6 +196,7 @@
   ],
   "window.zoomLevel": 1,
   "search.searchEditor.defaultNumberOfContextLines": 5,
+  "editor.cursorSurroundingLines": 10,
   // "editor.scrollbar.verticalScrollbarSize": 15,
   // "ruby.intellisense": "rubyLocate",
   // "ruby.useLanguageServer": true,
