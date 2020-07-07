@@ -34,6 +34,9 @@
       "commands": [
         "search.action.openNewEditor",
         "workbench.action.search.toggleQueryDetails",
+        "toggleSearchEditorCaseSensitive",
+        "toggleSearchEditorRegex",
+        "toggleSearchEditorWholeWord",
       ],
     },
     {
@@ -110,7 +113,58 @@
         "r",
       ],
       "commands": [
-        "workbench.action.replaceInFiles"
+        "workbench.action.replaceInFiles",
+        "workbench.action.search.toggleQueryDetails",
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "a",
+        "q",
+      ],
+      "commands": [
+        "workbench.action.closeOtherEditors",
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "m",
+        "'",
+      ],
+      "commands": [
+        "workbench.action.moveEditorRightInGroup",
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "m",
+        ";",
+      ],
+      "commands": [
+        "workbench.action.moveEditorLeftInGroup",
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "p",
+        "a",
+      ],
+      "commands": [
+        "workbench.action.pinEditor",
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "p",
+        "u",
+      ],
+      "commands": [
+        "workbench.action.unpinEditor",
       ]
     },
   ],
@@ -143,12 +197,40 @@
         "extension.changeCase.pascal"
       ]
     },
+    {
+      "before": [
+        "<space>",
+        "o",
+        "s",
+      ],
+      "commands": [
+        "search.action.openNewEditor",
+        "workbench.action.search.toggleQueryDetails",
+        "toggleSearchEditorCaseSensitive",
+        "toggleSearchEditorRegex",
+        "toggleSearchEditorWholeWord",
+      ],
+    },
+    {
+      "before": [
+        "<space>",
+        "o",
+        "r",
+      ],
+      "commands": [
+        "workbench.action.replaceInFiles",
+        "workbench.action.search.toggleQueryDetails",
+      ]
+    },
   ],
   "vim.leader": "<space>",
   "vim.incsearch": true,
   "vim.useCtrlKeys": true,
   "vim.statusBarColorControl": true,
-  "vim.statusBarColors.normal": ["#8FBCBB", "#434C5E"],
+  "vim.statusBarColors.normal": [
+    "#8FBCBB",
+    "#434C5E"
+  ],
   "vim.statusBarColors.insert": "#BF616A",
   "vim.statusBarColors.visual": "#B48EAD",
   "vim.statusBarColors.visualline": "#B48EAD",
@@ -195,8 +277,14 @@
     "git-history"
   ],
   "window.zoomLevel": 1,
-  "search.searchEditor.defaultNumberOfContextLines": 5,
-  "editor.cursorSurroundingLines": 10,
+  "search.searchEditor.defaultNumberOfContextLines": 2,
+  "editor.cursorSurroundingLines": 15,
+  "explorer.confirmDelete": false,
+  "search.collapseResults": "alwaysCollapse",
+  "workbench.editor.highlightModifiedTabs": true,
+  "editor.wordWrap": "on",
+  // "CodeActionOnParticipant": false,
+  // "ExtHostSaveParticipant": false,
   // "editor.scrollbar.verticalScrollbarSize": 15,
   // "ruby.intellisense": "rubyLocate",
   // "ruby.useLanguageServer": true,
