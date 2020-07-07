@@ -232,7 +232,10 @@ noremap <silent>== :call ToggleNetrw()<CR>
 autocmd BufRead,BufNewFile *.mkd  set filetype=markdown
 autocmd BufRead,BufNewFile *.md  set filetype=markdown
 " Need: kannokanno/previm
-nnoremap <space>m :PrevimOpen<CR>
+if has('gui_running')
+else
+  nnoremap <space>m :PrevimOpen<CR>
+endif
 " 自動で折りたたまないようにする
 let g:vim_markdown_folding_disabled=1
 let g:previm_enable_realtime = 1
