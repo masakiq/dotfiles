@@ -263,13 +263,9 @@
   "terminal.integrated.fontFamily": "Source Code Pro for Powerline",
   "editor.minimap.enabled": false,
   "editor.renderWhitespace": "none",
-  "ruby.lint": {
-    "rubocop": true
-  },
   "[ruby]": {
     "editor.formatOnSave": true
   },
-  "ruby.format": "rubocop",
   "editor.formatOnSaveTimeout": 3000,
   "editor.folding": false,
   "editor.glyphMargin": false,
