@@ -167,6 +167,26 @@
         "workbench.action.unpinEditor",
       ]
     },
+    {
+      "before": [
+        "<space>",
+        "o",
+        "p",
+      ],
+      "commands": [
+        "workbench.action.openRecent",
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "d",
+        "n",
+      ],
+      "commands": [
+        "notifications.clearAll",
+      ]
+    },
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
     // カーソル位置の単語をマルチカーソルで選択
