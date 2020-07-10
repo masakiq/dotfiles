@@ -2,3 +2,11 @@
 bind status C !git commit -v
 # commit hash をクリップボードに保存
 bind main C !@sh -c "printf `git rev-parse %(commit)` | pbcopy"
+bind diff C !@sh -c "printf `git rev-parse %(commit)` | pbcopy"
+bind log C !@sh -c "printf `git rev-parse %(commit)` | pbcopy"
+bind blame C !@sh -c "printf `git rev-parse %(commit)` | pbcopy"
+
+bind main G !@hub browse -- commit/%(commit)
+bind diff G !@hub browse -- commit/%(commit)
+bind log G !@hub browse -- commit/%(commit)
+bind blame G !@hub browse -- commit/%(commit)
