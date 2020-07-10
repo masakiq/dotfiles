@@ -140,4 +140,9 @@
         "command": "editor.action.moveLinesUpAction",
         "when": "editorTextFocus && !editorReadonly"
     },
+    {
+        "key": "ctrl+c",
+        "command": "cancelRenameInput",
+        "when": "editorFocus && renameInputVisible"
+    },
 ]
