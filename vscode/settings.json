@@ -222,6 +222,32 @@
         "workbench.action.search.toggleQueryDetails",
       ]
     },
+    {
+      "before": [
+        "=",
+      ],
+      "commands": [
+        "editor.action.formatDocument",
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "=",
+      ],
+      "commands": [
+        "editor.action.formatSelection",
+      ]
+    },
+    {
+      "before": [
+        "m",
+        "n",
+      ],
+      "commands": [
+        "editor.action.rename",
+      ]
+    },
   ],
   "vim.leader": "<space>",
   "vim.incsearch": true,
