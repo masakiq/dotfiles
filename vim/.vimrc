@@ -515,6 +515,13 @@ endif
 
 " }}}
 
+" ### tig plugin(tig-explorer.vim) ---------------------- {{{
+
+nnoremap <space>gb :TigBlame<CR>
+vnoremap <space>gg y:TigGrep<Space><C-R>"<CR>
+
+" }}}
+
 " }}}
 
 " ## スニペット設定 ---------------------- {{{
@@ -702,6 +709,7 @@ Plug 'tyru/open-browser.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'iberianpig/tig-explorer.vim'
 call plug#end()
 
 " }}}
