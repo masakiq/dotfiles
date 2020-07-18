@@ -517,8 +517,12 @@ endif
 
 " ### tig plugin(tig-explorer.vim) ---------------------- {{{
 
-nnoremap <space>gb :TigBlame<CR>
-vnoremap <space>gg y:TigGrep<Space><C-R>"<CR>
+if has('gui_running')
+else
+  nnoremap <space>gb :TigBlame<CR>
+  nnoremap <space>gh :TigOpenCurrentFile<CR>
+  vnoremap <space>gg y:TigGrep<Space><C-R>"<CR>
+endif
 
 " }}}
 
