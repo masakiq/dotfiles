@@ -187,6 +187,36 @@
         "notifications.clearAll",
       ]
     },
+    {
+      "before": [
+        "<space>",
+        "g",
+        "b",
+      ],
+      "commands": [
+        "openInGithub.openInGitHubBlame",
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "g",
+        "f",
+      ],
+      "commands": [
+        "openInGithub.openInGitHubFile",
+      ]
+    },
+    {
+      "before": [
+        "<space>",
+        "g",
+        "h",
+      ],
+      "commands": [
+        "openInGithub.openInGitHubHistory",
+      ]
+    },
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
     // カーソル位置の単語をマルチカーソルで選択
@@ -266,6 +296,15 @@
       ],
       "commands": [
         "editor.action.rename",
+      ]
+    },
+    {
+      "before": [
+        "m",
+        "-",
+      ],
+      "commands": [
+        "extension.changeCase.no",
       ]
     },
   ],
