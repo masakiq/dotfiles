@@ -4,6 +4,8 @@
   "vim.autoindent": true,
   "vim.hlsearch": true,
   // "vim.foldfix": true,
+  "vim.easymotion": true,
+  "vim.easymotionKeys": "hklasdgjf",
   "vim.normalModeKeyBindingsNonRecursive": [
     // カーソル位置の単語をマルチカーソルで選択
     {
@@ -217,6 +219,16 @@
         "openInGithub.openInGitHubHistory",
       ]
     },
+    {
+      "before": [
+        "f"
+      ],
+      "after": [
+        "<space>",
+        "<space>",
+        "s",
+      ]   
+    },
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
     // カーソル位置の単語をマルチカーソルで選択
@@ -325,6 +337,7 @@
   "vim.statusBarColors.searchinprogressmode": "#007ACC",
   "vim.statusBarColors.easymotionmode": "#007ACC",
   "vim.statusBarColors.easymotioninputmode": "#007ACC",
+  "vim.easymotionMarkerBackgroundColor": "#007ACC",
   "vim.statusBarColors.surroundinputmode": "#007ACC",
   "workbench.colorCustomizations": {
     "statusBar.background": "#8FBCBB",
