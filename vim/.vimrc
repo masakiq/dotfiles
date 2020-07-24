@@ -343,6 +343,8 @@ vnoremap ^ g^
 nnoremap $ g$
 vnoremap $ g$
 
+nmap f <Plug>(easymotion-s2)
+
 " }}}
 
 " ### 変換系 ---------------------- {{{
@@ -714,6 +716,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'iberianpig/tig-explorer.vim'
+Plug 'easymotion/vim-easymotion'
 call plug#end()
 
 " }}}
