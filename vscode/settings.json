@@ -7,7 +7,6 @@
   "vim.easymotion": true,
   "vim.easymotionKeys": "hklasdgjf",
   "vim.normalModeKeyBindingsNonRecursive": [
-    // カーソル位置の単語をマルチカーソルで選択
     {
       "before": [
         "<C-n>"
@@ -21,7 +20,7 @@
       "before": [
         "<space>",
         "o",
-        "f",
+        "f"
       ],
       "commands": [
         "workbench.action.quickOpen"
@@ -31,30 +30,30 @@
       "before": [
         "<space>",
         "o",
-        "s",
+        "s"
       ],
       "commands": [
         "search.action.openNewEditor",
         "workbench.action.search.toggleQueryDetails",
         "toggleSearchEditorCaseSensitive",
         "toggleSearchEditorRegex",
-        "toggleSearchEditorWholeWord",
-      ],
+        "toggleSearchEditorWholeWord"
+      ]
     },
     {
       "before": [
         "<space>",
         "f",
-        "s",
+        "s"
       ],
       "commands": [
-        "search.action.focusQueryEditorWidget",
-      ],
+        "search.action.focusQueryEditorWidget"
+      ]
     },
     {
       "before": [
         "<space>",
-        "'",
+        "'"
       ],
       "commands": [
         "workbench.action.nextEditor"
@@ -63,7 +62,7 @@
     {
       "before": [
         "<space>",
-        ";",
+        ";"
       ],
       "commands": [
         "workbench.action.previousEditor"
@@ -72,7 +71,7 @@
     {
       "before": [
         "<space>",
-        "<space>",
+        "<space>"
       ],
       "commands": [
         "editor.action.commentLine"
@@ -82,7 +81,7 @@
       "before": [
         "<space>",
         "o",
-        "e",
+        "e"
       ],
       "commands": [
         "workbench.view.explorer"
@@ -92,7 +91,7 @@
       "before": [
         "<space>",
         "c",
-        "p",
+        "p"
       ],
       "commands": [
         "copyRelativeFilePath"
@@ -102,7 +101,7 @@
       "before": [
         "<space>",
         "o",
-        "t",
+        "t"
       ],
       "commands": [
         "workbench.action.terminal.toggleTerminal"
@@ -112,111 +111,111 @@
       "before": [
         "<space>",
         "o",
-        "r",
+        "r"
       ],
       "commands": [
         "workbench.action.replaceInFiles",
-        "workbench.action.search.toggleQueryDetails",
+        "workbench.action.search.toggleQueryDetails"
       ]
     },
     {
       "before": [
         "<space>",
         "a",
-        "q",
+        "q"
       ],
       "commands": [
-        "workbench.action.closeOtherEditors",
+        "workbench.action.closeOtherEditors"
       ]
     },
     {
       "before": [
         "<space>",
         "m",
-        "'",
+        "'"
       ],
       "commands": [
-        "workbench.action.moveEditorRightInGroup",
+        "workbench.action.moveEditorRightInGroup"
       ]
     },
     {
       "before": [
         "<space>",
         "m",
-        ";",
+        ";"
       ],
       "commands": [
-        "workbench.action.moveEditorLeftInGroup",
+        "workbench.action.moveEditorLeftInGroup"
       ]
     },
     {
       "before": [
         "<space>",
         "p",
-        "a",
+        "a"
       ],
       "commands": [
-        "workbench.action.pinEditor",
+        "workbench.action.pinEditor"
       ]
     },
     {
       "before": [
         "<space>",
         "p",
-        "u",
+        "u"
       ],
       "commands": [
-        "workbench.action.unpinEditor",
+        "workbench.action.unpinEditor"
       ]
     },
     {
       "before": [
         "<space>",
         "o",
-        "p",
+        "p"
       ],
       "commands": [
-        "workbench.action.openRecent",
+        "workbench.action.openRecent"
       ]
     },
     {
       "before": [
         "<space>",
         "d",
-        "n",
+        "n"
       ],
       "commands": [
-        "notifications.clearAll",
+        "notifications.clearAll"
       ]
     },
     {
       "before": [
         "<space>",
         "g",
-        "b",
+        "b"
       ],
       "commands": [
-        "openInGithub.openInGitHubBlame",
+        "openInGithub.openInGitHubBlame"
       ]
     },
     {
       "before": [
         "<space>",
         "g",
-        "f",
+        "f"
       ],
       "commands": [
-        "openInGithub.openInGitHubFile",
+        "openInGithub.openInGitHubFile"
       ]
     },
     {
       "before": [
         "<space>",
         "g",
-        "h",
+        "h"
       ],
       "commands": [
-        "openInGithub.openInGitHubHistory",
+        "openInGithub.openInGitHubHistory"
       ]
     },
     {
@@ -226,9 +225,9 @@
       "after": [
         "<space>",
         "<space>",
-        "s",
-      ]   
-    },
+        "s"
+      ]
+    }
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
     // カーソル位置の単語をマルチカーソルで選択
@@ -377,6 +376,7 @@
   "search.collapseResults": "alwaysCollapse",
   "workbench.editor.highlightModifiedTabs": true,
   "editor.wordWrap": "on",
+  "editor.formatOnSave": true,
   // "CodeActionOnParticipant": false,
   // "ExtHostSaveParticipant": false,
   // "editor.scrollbar.verticalScrollbarSize": 15,
