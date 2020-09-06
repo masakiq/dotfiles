@@ -483,9 +483,9 @@ nnoremap <space>= 9<c-w>+
 nnoremap <space>- 9<c-w>-
 
 " 前のバッファに戻る
-nnoremap <space><left> :bprevious<CR>
+" nnoremap <space><left> :bprevious<CR>
 " 次のバッファに進む
-nnoremap <space><right> :bnext<CR>
+" nnoremap <space><right> :bnext<CR>
 
 " }}}
 
@@ -729,7 +729,7 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'y
 let g:fzf_action = {
     \ 'ctrl-v': 'vsplit',
     \ 'ctrl-x': 'split',
-    \ 'ctrl-t': 'tab split',
+    \ 'enter': 'tab split',
   \ }
 let g:fzf_colors =
   \ {

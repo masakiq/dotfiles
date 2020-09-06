@@ -361,7 +361,8 @@
   "editor.minimap.enabled": false,
   "editor.renderWhitespace": "none",
   "[ruby]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "castwide.solargraph"
   },
   "editor.formatOnSaveTimeout": 3000,
   "editor.folding": false,
