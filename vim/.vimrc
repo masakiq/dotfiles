@@ -521,9 +521,21 @@ endif
 
 if has('gui_running')
 else
-  nnoremap <space>gb :TigBlame<CR>
-  nnoremap <space>gh :TigOpenCurrentFile<CR>
-  vnoremap <space>gg y:TigGrep<Space><C-R>"<CR>
+  nnoremap <space>gtb :TigBlame<CR>
+  nnoremap <space>gth :TigOpenCurrentFile<CR>
+  vnoremap <space>gtg y:TigGrep<Space><C-R>"<CR>
+endif
+
+" }}}
+
+" ### plugin(ruanyl/vim-gh-line) ---------------------- {{{
+
+if has('gui_running')
+else
+  let g:gh_line_map_default = 0
+  let g:gh_line_blame_map_default = 1
+  let g:gh_line_map = '<space>gf'
+  let g:gh_line_blame_map = '<space>gb'
 endif
 
 " }}}
@@ -716,6 +728,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'iberianpig/tig-explorer.vim'
+Plug 'ruanyl/vim-gh-line'
 Plug 'easymotion/vim-easymotion'
 call plug#end()
 
