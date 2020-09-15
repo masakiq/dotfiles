@@ -407,13 +407,9 @@ vnoremap <leader>i :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\
 
 " ### 検索系 ---------------------- {{{
 
-" nnoremap <space>/ :execute 'RG ' . input('RG/')<CR>
-nnoremap <space>os :execute 'RG ' . input('RG/')<CR>
+nnoremap <space>os :call SearchByRG()<CR>
 " vnoremap <space>/ :<C-u>call RGBySelectedText()<CR>
 vnoremap <space>os :<C-u>call RGBySelectedText()<CR>
-
-nnoremap <space>? :execute 'Rg ' . input('Rg/')<CR>
-vnoremap <space>? :<C-u>call RgBySelectedText()<CR>
 
 " nnoremap <space>? :execute 'vimgrep ' . input('vimgrep/') . ' app/** lib/** config/** spec/** apidoc/**'<CR>
 " vnoremap <space>? :call VimGrepBySelectedText()<CR>
@@ -570,6 +566,16 @@ command! BreakLine %s/\v}\s*,/},\r/ge | %s/\v]\s*,/],\r/ge | %s/\v"\s*,/",\r/ge 
 
 " ## カスタムファンクション ---------------------- {{{
 
+function! CopyCurrentPath()
+  echo "copied current path: " . expand('%')
+  let @+=expand('%')
+endfunction
+
+function! CopyAbsolutePath()
+  echo "copied absolute path: " . expand('%:p')
+  let @+=expand('%:p')
+endfunction
+
 function! JsonToHash() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)"\s*:\s*/\1\2: /g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)"\s+:/\1\2:/g'
@@ -647,11 +653,15 @@ function! ChangeToFileFormatAndCopyAndSearchHistory()
   execute 'History'
 endfunction
 
-function! RgBySelectedText()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  echom 'Copyed! ' . selected
-  execute 'Rg ' . selected
+function! SearchByRG()
+  if mode() == 'n'
+    execute 'RG ' . input('RG/')
+  else
+    let selected = SelectedVisualModeText()
+    let @+=selected
+    echom 'Copyed! ' . selected
+    execute 'RG ' . selected
+  endif
 endfunction
 
 function! RGBySelectedText()
@@ -734,6 +744,33 @@ Plug 'ruanyl/vim-gh-line'
 Plug 'easymotion/vim-easymotion'
 Plug 'liuchengxu/vim-which-key'
 call plug#end()
+
+" }}}
+
+" ### Plug 'liuchengxu/vim-which-key' ---------------------- {{{
+
+if has('gui_running')
+else
+  let g:which_key_map =  {}
+  call which_key#register('<Space>', "g:which_key_map")
+  nnoremap <silent> <space> :WhichKey '<Space>'<CR>
+  nnoremap <silent> <leader> :WhichKey '<leader>'<CR>
+  vnoremap <silent> <space> :<c-u>WhichKeyVisual '<Space>'<CR>
+  vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<leader>'<CR>
+  set timeoutlen=500
+  let g:which_key_use_floating_win = 1
+  highlight WhichKeyFloating ctermbg=232
+  let g:which_key_map.o = {
+      \ 'name' : '+open' ,
+      \ 's' : ['SearchByRG()' , 'Search']            ,
+      \ 't' : { 'name' : 'which_key_ignore' }
+      \ }
+  let g:which_key_map.c = {
+      \ 'name' : '+copy' ,
+      \ 'p' : ['CopyCurrentPath()' , 'Current path']            ,
+      \ 'P' : ['CopyAbsolutePath()' , 'Absolute path']            ,
+      \ }
+endif
 
 " }}}
 
