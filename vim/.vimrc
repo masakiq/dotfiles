@@ -498,8 +498,10 @@ if has('gui_running')
 else
   " 右のタブに移動
   nnoremap <space>' :normal gt<CR>
+  nnoremap ' :normal gt<CR>
   " 左のタブに移動
   nnoremap <space>; :normal gT<CR>
+  nnoremap ; :normal gT<CR>
 endif
 
 " }}}
