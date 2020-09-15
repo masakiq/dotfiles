@@ -730,6 +730,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'iberianpig/tig-explorer.vim'
 Plug 'ruanyl/vim-gh-line'
 Plug 'easymotion/vim-easymotion'
+Plug 'liuchengxu/vim-which-key'
 call plug#end()
 
 " }}}
