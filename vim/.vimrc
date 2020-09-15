@@ -368,35 +368,35 @@ vnoremap <space> c<space><C-r>" <Esc>b
 vnoremap <bs> c<Bs><C-r>"<Esc>wxb
 
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga に変換
-vnoremap mu :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V::/\//ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+vnoremap <leader>u :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V::/\//ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
 " hoge_hoge/fuga_fuga の形式を HogeHoge::FugaFuga に変換
-vnoremap mU :s/\v%V<(\l)/\U\1\e/ge<CR> \| :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V(\l)\/(\u)/\1::\2/ge<CR> \| :noh<CR>w
+vnoremap <leader>U :s/\v%V<(\l)/\U\1\e/ge<CR> \| :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V(\l)\/(\u)/\1::\2/ge<CR> \| :noh<CR>w
 
 " An Hoge fuga を a_hoge_fuga に変換
-vnoremap m_ :s/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+vnoremap <leader>_ :s/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
 
 " a_hoge_fuga を an hoge fuga に変換
-vnoremap m- :s/\v%V_/ /ge<CR> \| :noh<CR>w
+vnoremap <leader>- :s/\v%V_/ /ge<CR> \| :noh<CR>w
 
 " 行頭の空白を削除
-vnoremap md :s/\v^ *//g<CR> \| :noh<CR>
+vnoremap <leader>d :s/\v^ *//g<CR> \| :noh<CR>
 
 " `class` と `module` を `::` にする置換
-vnoremap mm :s/\v%Vmodule (.+)\n/::\1/ge<CR> \| :s/\v%Vclass (.+)\n/::\1/ge<CR> \| :s/\v%V \< .*//ge<CR> \| :s/\v%V\s//ge<CR> \| :s/\v%V^:://ge<CR> \| :noh<CR>
+vnoremap <leader>m :s/\v%Vmodule (.+)\n/::\1/ge<CR> \| :s/\v%Vclass (.+)\n/::\1/ge<CR> \| :s/\v%V \< .*//ge<CR> \| :s/\v%V\s//ge<CR> \| :s/\v%V^:://ge<CR> \| :noh<CR>
 
 " `class` と `::` を `module` にする置換
 " vnoremap M :s/\v%V(class \|\:\:)+/\rmodule /g \| :noh<CR>
-vnoremap mM :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
+vnoremap <leader>M :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
 
  " , で改行
-vnoremap m, :s/\v%V,/,\r/ge<cr> \| :noh<CR>
+vnoremap <leader>, :s/\v%V,/,\r/ge<cr> \| :noh<CR>
 
 " JSON から Hash に変換
 " vnoremap <leader>j :s/\v%V^(\s*)"(\w+)"\s*:\s*/\1\2: /ge<CR> \| :s/\v%V^(\s*)"(\w+)"\s+:/\1\2:/ge<CR> \| :s/\v%V^(\s*)"(\w+)":/\1\2:/ge<CR> \| :s/%V'/\\'/ge<CR> \| :s/%V\"/\'/ge<CR> \| :normal! gg=G<CR> \| :noh<CR>
-vnoremap mj :call JsonToHash()<cr>
+vnoremap <leader>j :call JsonToHash()<cr>
 
 " イメージURLをサイズ調整できる形式に修正
-vnoremap mi :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\>/\<img alt\="\1" src\="\2" width\="300">/ge<cr> \| :noh<cr>
+vnoremap <leader>i :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\>/\<img alt\="\1" src\="\2" width\="300">/ge<cr> \| :noh<cr>
 
 " スペースを 2 つ開けて `*` を入力して開始
 " nnoremap <leader>2 i<space><space>*<space>
