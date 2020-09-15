@@ -781,8 +781,8 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'y
 " This is default settings
 let g:fzf_action = {
     \ 'ctrl-v': 'vsplit',
-    \ 'ctrl-x': 'split',
-    \ 'enter': 'tab split',
+    \ 'ctrl-h': 'split',
+    \ 'ctrl-t': 'tab split',
   \ }
 let g:fzf_colors =
   \ {
