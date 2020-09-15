@@ -405,17 +405,6 @@ vnoremap <leader>i :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\
 
 " }}}
 
-" ### 検索系 ---------------------- {{{
-
-nnoremap <space>os :call SearchByRG()<CR>
-" vnoremap <space>/ :<C-u>call RGBySelectedText()<CR>
-vnoremap <space>os :<C-u>call RGBySelectedText()<CR>
-
-" nnoremap <space>? :execute 'vimgrep ' . input('vimgrep/') . ' app/** lib/** config/** spec/** apidoc/**'<CR>
-" vnoremap <space>? :call VimGrepBySelectedText()<CR>
-
-" }}}
-
 " ### ファイル操作系 ---------------------- {{{
 
 nnoremap <space>q :q!<cr>
@@ -515,29 +504,6 @@ endif
 
 " }}}
 
-" ### tig plugin(tig-explorer.vim) ---------------------- {{{
-
-if has('gui_running')
-else
-  nnoremap <space>gtb :TigBlame<CR>
-  nnoremap <space>gth :TigOpenCurrentFile<CR>
-  vnoremap <space>gtg y:TigGrep<Space><C-R>"<CR>
-endif
-
-" }}}
-
-" ### plugin(ruanyl/vim-gh-line) ---------------------- {{{
-
-if has('gui_running')
-else
-  let g:gh_line_map_default = 0
-  let g:gh_line_blame_map_default = 1
-  let g:gh_line_map = '<space>gf'
-  let g:gh_line_blame_map = '<space>gb'
-endif
-
-" }}}
-
 " }}}
 
 " ## スニペット設定 ---------------------- {{{
@@ -560,7 +526,6 @@ iabbrev yar # @param options [String] description <CR>@return [String] descripti
 command! -range=% JsonToHash :<line1>,<line2>call JsonToHash()
 command! -range=% RocketToHash :<line1>,<line2>call RocketToHash()
 command! BreakLine %s/\v}\s*,/},\r/ge | %s/\v]\s*,/],\r/ge | %s/\v"\s*,/",\r/ge | %s/{/{\r/ge | %s/}/\r}/ge | %s/\[/\[\r/ge | %s/\]/\r]/ge
-
 
 " }}}
 
@@ -747,7 +712,7 @@ call plug#end()
 
 " }}}
 
-" ### Plug 'liuchengxu/vim-which-key' ---------------------- {{{
+" ### plugin liuchengxu/vim-which-key ---------------------- {{{
 
 if has('gui_running')
 else
@@ -774,7 +739,33 @@ endif
 
 " }}}
 
+" ### plugin tig-explorer.vim ---------------------- {{{
+
+if has('gui_running')
+else
+  nnoremap <space>gtb :TigBlame<CR>
+  nnoremap <space>gth :TigOpenCurrentFile<CR>
+  vnoremap <space>gtg y:TigGrep<Space><C-R>"<CR>
+endif
+
+" }}}
+
+" ### plugin ruanyl/vim-gh-line ---------------------- {{{
+
+if has('gui_running')
+else
+  let g:gh_line_map_default = 0
+  let g:gh_line_blame_map_default = 1
+  let g:gh_line_map = '<space>gf'
+  let g:gh_line_blame_map = '<space>gb'
+endif
+
+" }}}
+
 " ## fzf 設定 ---------------------- {{{
+
+nnoremap <space>os :call SearchByRG()<CR>
+vnoremap <space>os :<C-u>call RGBySelectedText()<CR>
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 } }
 " let g:fzf_preview_window = 'right:60%'
