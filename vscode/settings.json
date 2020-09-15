@@ -227,6 +227,15 @@
         "<space>",
         "s"
       ]
+    },
+    {
+      "before": [
+        "<space>",
+        "w"
+      ],
+      "commands": [
+        "whichkey.show"
+      ]
     }
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
@@ -398,5 +407,13 @@
     "editor.suggestSelection": "first",
     "editor.tabCompletion": "onlySnippets",
     "editor.wordBasedSuggestions": false,
-  }
+  },
+  "whichkey.bindingOverrides": [
+    {
+      "keys": "f",
+      "name": "Open file",
+      "type": "command",
+      "command": "workbench.action.quickOpen",
+    }
+  ]
 }
