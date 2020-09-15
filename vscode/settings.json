@@ -371,7 +371,10 @@
   "editor.renderWhitespace": "none",
   "[ruby]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "castwide.solargraph"
+    "editor.defaultFormatter": "castwide.solargraph",
+    "editor.detectIndentation": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
   },
   "editor.formatOnSaveTimeout": 3000,
   "editor.folding": false,
