@@ -343,8 +343,6 @@ vnoremap ^ g^
 nnoremap $ g$
 vnoremap $ g$
 
-nmap f <Plug>(easymotion-s2)
-
 " }}}
 
 " ### 変換系 ---------------------- {{{
@@ -368,35 +366,43 @@ vnoremap <space> c<space><C-r>" <Esc>b
 vnoremap <bs> c<Bs><C-r>"<Esc>wxb
 
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga に変換
-vnoremap <leader>u :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V::/\//ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+" vnoremap <leader>u :s/\v%V(\l)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V(\u)(\u)/\1_\L\2\e/ge<CR> \| :s/\v%V::/\//ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+vnoremap <leader>u :call ToSnakeCase()<cr>
 " hoge_hoge/fuga_fuga の形式を HogeHoge::FugaFuga に変換
-vnoremap <leader>U :s/\v%V<(\l)/\U\1\e/ge<CR> \| :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V(\l)\/(\u)/\1::\2/ge<CR> \| :noh<CR>w
+" vnoremap <leader>U :s/\v%V<(\l)/\U\1\e/ge<CR> \| :s/\v%V_([a-z])/\u\1/ge<CR> \| :s/\v%V(\l)\/(\u)/\1::\2/ge<CR> \| :noh<CR>w
+vnoremap <leader>U :call ToPascalCase()<cr>
 
 " An Hoge fuga を a_hoge_fuga に変換
-vnoremap <leader>_ :s/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+" vnoremap <leader>_ :s/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/ge<CR> \| :s/\v%V(\u)/\L\1\e/ge<CR> \| :noh<CR>w
+vnoremap <leader>_ :call CapitalCaseToSnakeCase()<cr>
 
 " a_hoge_fuga を an hoge fuga に変換
-vnoremap <leader>- :s/\v%V_/ /ge<CR> \| :noh<CR>w
+" vnoremap <leader>- :s/\v%V_/ /ge<CR> \| :noh<CR>w
+vnoremap <leader>- :call RemoveUnderBar()<cr>
 
 " 行頭の空白を削除
-vnoremap <leader>d :s/\v^ *//g<CR> \| :noh<CR>
+" vnoremap <leader>d :s/\v^ *//g<CR> \| :noh<CR>
+vnoremap <leader>d :call RemoveBeginningOfLineSpace()<cr>
 
 " `class` と `module` を `::` にする置換
-vnoremap <leader>m :s/\v%Vmodule (.+)\n/::\1/ge<CR> \| :s/\v%Vclass (.+)\n/::\1/ge<CR> \| :s/\v%V \< .*//ge<CR> \| :s/\v%V\s//ge<CR> \| :s/\v%V^:://ge<CR> \| :noh<CR>
+" vnoremap <leader>m :s/\v%Vmodule (.+)\n/::\1/ge<CR> \| :s/\v%Vclass (.+)\n/::\1/ge<CR> \| :s/\v%V \< .*//ge<CR> \| :s/\v%V\s//ge<CR> \| :s/\v%V^:://ge<CR> \| :noh<CR>
+vnoremap <leader>m :call ClassAndModuleToColon()<cr>
 
 " `class` と `::` を `module` にする置換
 " vnoremap M :s/\v%V(class \|\:\:)+/\rmodule /g \| :noh<CR>
-vnoremap <leader>M :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
+" vnoremap <leader>M :s/\v%Vclass /module /ge<CR> \| :s/\v%V::/ module /ge<CR> \| :s/\v%V module /\rmodule /ge<CR> \| :noh<CR>
+vnoremap <leader>M :call ColonToClassAndModule()<cr>
 
- " , で改行
-vnoremap <leader>, :s/\v%V,/,\r/ge<cr> \| :noh<CR>
+" , で改行
+" vnoremap <leader>, :s/\v%V,/,\r/ge<cr> \| :noh<CR>
+vnoremap <leader>, :call CommaToBreakline()<cr>
 
 " JSON から Hash に変換
 " vnoremap <leader>j :s/\v%V^(\s*)"(\w+)"\s*:\s*/\1\2: /ge<CR> \| :s/\v%V^(\s*)"(\w+)"\s+:/\1\2:/ge<CR> \| :s/\v%V^(\s*)"(\w+)":/\1\2:/ge<CR> \| :s/%V'/\\'/ge<CR> \| :s/%V\"/\'/ge<CR> \| :normal! gg=G<CR> \| :noh<CR>
 vnoremap <leader>j :call JsonToHash()<cr>
 
 " イメージURLをサイズ調整できる形式に修正
-vnoremap <leader>i :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\>/\<img alt\="\1" src\="\2" width\="300">/ge<cr> \| :noh<cr>
+" vnoremap <leader>i :s/\v%V\<img width\="\d+" alt\="(.+)" src\="(https\:\/\/.+)"\>/\<img alt\="\1" src\="\2" width\="300">/ge<cr> \| :noh<cr>
 
 " スペースを 2 つ開けて `*` を入力して開始
 " nnoremap <leader>2 i<space><space>*<space>
@@ -419,7 +425,7 @@ nnoremap <space>cP :<C-u>echo "copied full path: " . expand('%:p') \| let @+=exp
 nnoremap <space>cp :<C-u>echo "copied current path: " . expand('%') \| let @+=expand('%')<CR>
 
 " 開いているウィンドウ以外のバッファを削除
-nnoremap <space>D :call DeleteBufsWithoutExistingWindows()<cr>
+" nnoremap <space>D :call DeleteBufsWithoutExistingWindows()<cr>
 
 if has('nvim')
   " ~/.vimrc を開く
@@ -449,8 +455,7 @@ nnoremap <space>ws <c-w><c-r>
 " 画面分割
 nnoremap <space>sv :vs<CR><c-w>l
 nnoremap <space>sh :sp<CR><c-w>j
-
-nnoremap <space>sx :sp<cr>:vs<cr><c-w>k:vs<cr><c-w>h15<c-w>+
+" nnoremap <space>sx :sp<cr>:vs<cr><c-w>k:vs<cr><c-w>h15<c-w>+
 
 " For Rails
 " 実装ファイルからテストファイルを開く
@@ -459,13 +464,13 @@ nnoremap <space>et :execute ':vs ' . substitute(substitute(expand('%'), '^app', 
 nnoremap <space>ei :execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')<CR><c-w>l
 
 " ウインドウ幅を右に広げる
-nnoremap <space>. 41<c-w>>
+nnoremap <space><right> 41<c-w>>
 " ウインドウ幅を左に広げる
-nnoremap <space>, 41<c-w><
+nnoremap <space><left> 41<c-w><
 " ウインドウ高さを高くする
-nnoremap <space>= 9<c-w>+
+nnoremap <space><down> 9<c-w>+
 " ウインドウ高さを低くする
-nnoremap <space>- 9<c-w>-
+nnoremap <space><up> 9<c-w>-
 
 " 前のバッファに戻る
 " nnoremap <space><left> :bprevious<CR>
@@ -482,10 +487,10 @@ nnoremap <space>t :tabnew<CR>
 if has('gui_running')
 else
   " 右のタブに移動
-  nnoremap <space>' :normal gt<CR>
+  " nnoremap <space>' :normal gt<CR>
   nnoremap ' :normal gt<CR>
   " 左のタブに移動
-  nnoremap <space>; :normal gT<CR>
+  " nnoremap <space>; :normal gT<CR>
   nnoremap ; :normal gT<CR>
 endif
 
@@ -494,7 +499,7 @@ endif
 " ### ターミナルモード ---------------------- {{{
 
 " カレントウィンドウでターミナルを開く
-nnoremap <space>ec :ter ++curwin<CR>
+" nnoremap <space>ec :ter ++curwin<CR>
 
 if has('nvim')
   tnoremap jf <C-\><C-n>
@@ -539,6 +544,72 @@ endfunction
 function! CopyAbsolutePath()
   echo "copied absolute path: " . expand('%:p')
   let @+=expand('%:p')
+endfunction
+
+function! SourceVIMRC()
+  source $MYVIMRC
+  :noh
+endfunction
+
+function! EditVIMRC()
+  vsplit $MYVIMRC
+  :noh
+endfunction
+
+function! OpenImplementationFile()
+  execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')
+endfunction
+
+function! OpenTestFile()
+  execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')
+endfunction
+
+function! SwapWindow()
+  silent! exec "normal \<c-w>\<c-r>"
+endfunction
+
+function! ToSnakeCase() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/\//g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
+endfunction
+
+function! ToPascalCase() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)\/(\u)/\1::\2/g'
+endfunction
+
+function! CapitalCaseToSnakeCase() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
+endfunction
+
+function! RemoveUnderBar() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
+endfunction
+
+function! RemoveBeginningOfLineSpace() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
+endfunction
+
+function! ClassAndModuleToColon() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%Vclass (.+)\n/::\1/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V \< .*//g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s//g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^:://g'
+endfunction
+
+function! ColonToClassAndModule() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%Vclass /module /g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/ module /g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V module /\rmodule /g'
+endfunction
+
+function! CommaToBreakline() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V,/,\r/g'
 endfunction
 
 function! JsonToHash() range
@@ -626,6 +697,7 @@ function! SearchByRG()
     let @+=selected
     echom 'Copyed! ' . selected
     execute 'RG ' . selected
+    silent! exec "normal \<c-c>"
   endif
 endfunction
 
@@ -719,22 +791,65 @@ else
   let g:which_key_map =  {}
   call which_key#register('<Space>', "g:which_key_map")
   nnoremap <silent> <space> :WhichKey '<Space>'<CR>
-  nnoremap <silent> <leader> :WhichKey '<leader>'<CR>
+  " nnoremap <silent> <leader> :WhichKey '<leader>'<CR>
   vnoremap <silent> <space> :<c-u>WhichKeyVisual '<Space>'<CR>
   vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<leader>'<CR>
-  set timeoutlen=500
+  set timeoutlen=1
   let g:which_key_use_floating_win = 1
+  " let g:which_key_vertical = 1
   highlight WhichKeyFloating ctermbg=232
+  autocmd FileType which_key highlight WhichKey ctermfg=13
+  autocmd FileType which_key highlight WhichKeySeperator ctermfg=14
+  autocmd FileType which_key highlight WhichKeyGroup ctermfg=11
+  autocmd FileType which_key highlight WhichKeyDesc ctermfg=10
   let g:which_key_map.o = {
       \ 'name' : '+open' ,
-      \ 's' : ['SearchByRG()' , 'Search']            ,
+      \ 's' : ['SearchByRG()' , 'Search'],
       \ 't' : { 'name' : 'which_key_ignore' }
       \ }
   let g:which_key_map.c = {
       \ 'name' : '+copy' ,
-      \ 'p' : ['CopyCurrentPath()' , 'Current path']            ,
-      \ 'P' : ['CopyAbsolutePath()' , 'Absolute path']            ,
+      \ 'p' : ['CopyCurrentPath()' , 'Copy current path'],
+      \ 'P' : ['CopyAbsolutePath()' , 'Copy absolute path'],
       \ }
+  let g:which_key_map.r = {
+      \ 'name' : '+read',
+      \ 'v' : ['SourceVIMRC()' , 'Read vimrc']
+      \ }
+  let g:which_key_map.d = {
+      \ 'name' : '+delete',
+      \ 'a' : ['DeleteBufsWithoutExistingWindows()' , 'Delete all bufs']
+      \ }
+  let g:which_key_map.e = {
+      \ 'name' : '+edit',
+      \ 'i' : ['OpenImplementationFile()' , 'Edit implementation file'],
+      \ 't' : ['OpenTestFile()' , 'Edit test file'],
+      \ 'v' : ['EditVIMRC()' , 'Edit vimrc'],
+      \ 'c' : { 'name' : 'which_key_ignore' }
+      \ }
+  let g:which_key_map.g = {
+      \ 'name' : '+git',
+      \ 't' : { 'name' : '+tig' }
+      \ }
+  let g:which_key_map.q = 'Quit'
+  let g:which_key_map.s = {
+      \ 'name' : '+split',
+      \ 'h' : [ 'sp', 'Split horizontal' ],
+      \ 'v' : [ 'vs', 'Split virtical' ]
+      \ }
+  let g:which_key_map.w = {
+      \ 'name' : '+window',
+      \ 's' : [ 'SwapWindow()', 'Swap window' ]
+      \ }
+  let g:which_key_map.h = 'Move left'
+  let g:which_key_map.j = 'Move down'
+  let g:which_key_map.k = 'Move up'
+  let g:which_key_map.l = 'Move right'
+  let g:which_key_map.t = 'Tab new'
+  let g:which_key_map['<Right>'] = 'Expand right'
+  let g:which_key_map['<Left>'] = 'Expand left'
+  let g:which_key_map['<Up>'] = 'Expand up'
+  let g:which_key_map['<Down>'] = 'Expand down'
 endif
 
 " }}}
@@ -762,10 +877,17 @@ endif
 
 " }}}
 
+" ### plugin easymotion/vim-easymotion ---------------------- {{{
+
+map  f <Plug>(easymotion-bd-f)
+let g:EasyMotion_smartcase = 1
+
+" }}}
+
 " ## fzf 設定 ---------------------- {{{
 
-nnoremap <space>os :call SearchByRG()<CR>
-vnoremap <space>os :<C-u>call RGBySelectedText()<CR>
+" nnoremap <space>os :call SearchByRG()<CR>
+" vnoremap <space>os :<C-u>call RGBySelectedText()<CR>
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 } }
 " let g:fzf_preview_window = 'right:60%'
@@ -840,7 +962,7 @@ vnoremap <space>oh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>
 nnoremap <space>ow :Windows<CR>
 
 " ターミナルを開く
-nnoremap <space>ot :execute 'Buffers fish'<CR>
+" nnoremap <space>ot :execute 'Buffers fish'<CR>
 
 " 単語補完
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
