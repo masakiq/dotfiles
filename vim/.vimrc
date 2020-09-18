@@ -781,6 +781,9 @@ Plug 'iberianpig/tig-explorer.vim'
 Plug 'ruanyl/vim-gh-line'
 Plug 'easymotion/vim-easymotion'
 Plug 'liuchengxu/vim-which-key'
+Plug 'osyo-manga/vim-over'
+Plug 'voldikss/vim-floaterm'
+Plug 'voldikss/fzf-floaterm'
 call plug#end()
 
 " }}}
