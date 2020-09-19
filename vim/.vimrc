@@ -477,17 +477,17 @@ function! CopyAbsolutePath()
   let @+=expand('%:p')
 endfunction
 
-if exists('*SourceVIMRC')
+if exists('*LoadVIMRC')
 else
-  command! SourceVIMRC call SourceVIMRC()
-  function! SourceVIMRC()
+  command! LoadVIMRC call LoadVIMRC()
+  function! LoadVIMRC()
     source $MYVIMRC
     :noh
   endfunction
 endif
 
-command! EditVIMRC call EditVIMRC()
-function! EditVIMRC()
+command! OpenVIMRC call OpenVIMRC()
+function! OpenVIMRC()
   vsplit $MYVIMRC
   :noh
 endfunction
@@ -521,8 +521,8 @@ function! SaveSession()
   echom 'saved current session'
 endfunction
 
-command! SourceSession call SourceSession()
-function! SourceSession()
+command! LoadSession call LoadSession()
+function! LoadSession()
   silent! execute 'source ~/.vim/sessions/default.vim'
   silent! execute 'source $MYVIMRC'
   echom 'loaded current session'
@@ -722,6 +722,14 @@ function! DeleteBufsWithoutExistingWindows()
       execute 'bwipeout! ' . num
       echom num . ' is deleted!'
     endif
+  endfor
+endfunction
+
+command! DeleteAllBuffers call DeleteAllBuffers()
+function! DeleteAllBuffers()
+  let allbufnums = ListAllBufNums()
+  for num in allbufnums
+    execute 'bwipeout! ' . num
   endfor
 endfunction
 
@@ -961,7 +969,7 @@ function! s:delete_buffers(lines)
   execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[0]}))
 endfunction
 
-command! DeleteBuf call fzf#run(fzf#wrap({
+command! DeleteBuffers call fzf#run(fzf#wrap({
   \ 'source': s:list_buffers(),
   \ 'sink*': { lines -> s:delete_buffers(lines) },
   \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
@@ -1046,7 +1054,7 @@ command! -nargs=0 OpenProject call fzf#run(fzf#wrap({
 
 nnoremap <space><space> :SelectFunction<CR>
 command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
-\ 'source': 'cat ~/.vim/tmp/functions',
+\ 'source': 'cat ~/.vim/functions/normal',
 \ 'sink': '',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
@@ -1056,7 +1064,7 @@ function! SelectVisualFunction() range
   execute 'SelectVidualFunction'
 endfunction
 command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
-\ 'source': 'cat ~/.vim/tmp/visual_functions' . <q-args>,
+\ 'source': 'cat ~/.vim/functions/visual',
 \ 'sink*':  function('<sid>select_visual_function_handler'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
