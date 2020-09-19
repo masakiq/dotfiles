@@ -785,6 +785,7 @@ else
       \ 's' : ['SearchByRG()' , 'Search file from text'],
       \ 'p' : ['OpenProject' , 'Open project'],
       \ 'e' : ['ToggleNetrw()' , 'Open explore'],
+      \ 'm' : ['PrevimOpen' , 'Open markdowexploren'],
       \ }
   let g:which_key_map.q = 'Quit'
   let g:which_key_map.s = {
