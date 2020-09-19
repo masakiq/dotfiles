@@ -224,7 +224,7 @@ endfunction
 
 " ショートカットの設定
 " = を 2 回連続押下で toggle
-noremap <silent>== :call ToggleNetrw()<CR>
+noremap <silent><c-w> :call ToggleNetrw()<CR>
 
 " }}}
 
@@ -791,7 +791,6 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'mattn/vim-goimports'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-" For markdown
 Plug 'tpope/vim-markdown'
 Plug 'kannokanno/previm'
 Plug 'tyru/open-browser.vim'
@@ -834,8 +833,8 @@ else
       \ 'v' : ['EditVIMRC()' , 'Open vimrc'],
       \ 't' : ['Floaterms' , 'Open terminal search view'],
       \ 'n' : ['FloatermNew' , 'Open new terminal'],
+      \ 'p' : ['OpenProject' , 'Open project'],
       \ }
-      "\   'n' : ['FloatermNew' , 'Open new terminal'],
   let g:which_key_map.r = {
       \ 'name' : '+rails' ,
       \ 'i' : ['OpenImplementationFile()' , 'Open implementation file'],
@@ -942,8 +941,8 @@ let g:floaterm_keymap_new = '<F12>'
 let g:floaterm_height = 0.9
 let g:floaterm_width = 0.9
 nnoremap <space>ot :Floaterms<cr>
-nnoremap <space>dt :FloatermKill<cr>
-let g:floaterm_keymap_kill = '<c-s>'
+nnoremap <space>dt :FloatermKill!<cr>
+let g:floaterm_keymap_kill = '<c-q>'
 
 " }}}
 
@@ -1138,6 +1137,14 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
+
+nnoremap <space>op :OpenProject<CR>
+
+command! -nargs=0 OpenProject call fzf#run(fzf#wrap({
+\ 'source': 'ghq list --full-path',
+\ 'sink': 'cd',
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
 
 " }}}
 
