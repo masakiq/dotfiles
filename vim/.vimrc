@@ -580,6 +580,17 @@ function! MoveTabLeft()
   silent! execute '-tabm'
 endfunction
 
+function! SaveSession()
+  silent! execute 'mks! ~/.vim/sessions/default.vim'
+  echom 'saved current session'
+endfunction
+
+function! SourceSession()
+  silent! execute 'source ~/.vim/sessions/default.vim'
+  silent! execute 'source $MYVIMRC'
+  echom 'loaded current session'
+endfunction
+
 function! ToSnakeCase() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
@@ -847,11 +858,16 @@ else
       \ }
   let g:which_key_map.f = {
       \ 'name' : '+fetch',
-      \ 'v' : ['SourceVIMRC()' , 'Fetch vimrc']
+      \ 'v' : ['SourceVIMRC()' , 'Fetch vimrc'],
+      \ 's' : ['SourceSession()' , 'Fetch session'],
       \ }
   let g:which_key_map.d = {
       \ 'name' : '+delete',
       \ 'a' : ['DeleteBufsWithoutExistingWindows()' , 'Delete all bufs']
+      \ }
+  let g:which_key_map.p = {
+      \ 'name' : '+persist',
+      \ 's' : ['SaveSession()' , 'Persists session']
       \ }
   let g:which_key_map.e = {
       \ 'name' : '+edit',
