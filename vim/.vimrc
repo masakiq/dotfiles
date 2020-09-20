@@ -462,6 +462,12 @@ function! CopyAbsolutePath()
   let @+=expand('%:p')
 endfunction
 
+command! -nargs=0 GitAdd call GitAdd()
+function! GitAdd()
+  echo system('git add .')
+  echom 'executed "git add ."'
+endfunction
+
 if exists('*LoadVIMRC')
 else
   command! LoadVIMRC call LoadVIMRC()
@@ -475,6 +481,16 @@ command! OpenVIMRC call OpenVIMRC()
 function! OpenVIMRC()
   vsplit $MYVIMRC
   :noh
+endfunction
+
+command! OpenGitHub call OpenGitHub()
+function! OpenGitHub()
+  GHInteractive
+endfunction
+
+command! OpenGitHubBlame call OpenGitHubBlame()
+function! OpenGitHubBlame()
+  GBInteractive
 endfunction
 
 command! OpenImplementationFile call OpenImplementationFile()
@@ -1076,6 +1092,11 @@ function! s:open_project(project)
   call DeleteAllTerms()
   call DeleteAllBuffers()
   silent! execute 'cd ' . a:project[0]
+  FloatermNew
+  FloatermNew
+  FloatermNew
+  sleep 100m
+  FloatermHide
 endfunction
 
 nnoremap <space><space> :SelectFunction<CR>
@@ -1096,7 +1117,7 @@ command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
 \ }))
 
 function! s:select_visual_function_handler(lines) range
-  execute 'call '. a:lines[0]
+  execute 'call '. a:lines[0] . '()'
 endfunction
 
 command! -nargs=0 SwitchSession call fzf#run(fzf#wrap({
@@ -1110,6 +1131,11 @@ function! s:load_session(session)
   call DeleteAllTerms()
   silent! execute 'source ~/.vim/sessions/' . a:session[0]
   silent! execute 'source $MYVIMRC'
+  FloatermNew
+  FloatermNew
+  FloatermNew
+  sleep 100m
+  FloatermHide
 endfunction
 
 " }}}
