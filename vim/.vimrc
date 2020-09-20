@@ -502,15 +502,23 @@ endfunction
 
 command! SaveSession call SaveSession()
 function! SaveSession()
-  silent! execute 'mks! ~/.vim/sessions/default.vim'
-  echom 'saved current session'
+  let current_dir = s:getCurrentDirectory()
+  if current_dir == '/'
+    return
+  endif
+  silent! execute 'mks! ~/.vim/sessions/' . current_dir
+  echom 'saved current session : ' .current_dir
 endfunction
 
-command! LoadSession call LoadSession()
-function! LoadSession()
-  silent! execute 'source ~/.vim/sessions/default.vim'
-  silent! execute 'source $MYVIMRC'
-  echom 'loaded current session'
+function! s:getCurrentDirectory()
+  let current_path = '/' . expand('%')
+  if current_path == '/'
+    return current_path
+  endif
+  let absolute_path= expand('%:p')
+  let replaced = substitute(absolute_path, current_path, '', 'g')
+  let splited = split(replaced, '/')
+  return splited[-1]
 endfunction
 
 function! ToSnakeCase() range
@@ -723,24 +731,25 @@ function! DeleteAllTerms()
   execute 'FloatermKill!'
 endfunction
 
-command! DeleteAllTermsSaveSessionDeleteAllBuffersOpenProject call SaveSessionDeleteAllBuffersOpenProject()
-function! SaveSessionDeleteAllBuffersOpenProject()
-  call DeleteAllTerms()
+command! SwitchProject call SwitchProject()
+function! SwitchProject()
   call SaveSession()
+  call DeleteAllTerms()
   call DeleteAllBuffers()
   OpenProject
 endfunction
 
-command! DeleteAllTermsLoadSession call DeleteAllTermsLoadSession()
-function! DeleteAllTermsLoadSession()
+command! SwitchSession call SwitchSession()
+function! SwitchSession()
+  call SaveSession()
   call DeleteAllTerms()
-  call LoadSession()
+  SelectSession
 endfunction
 
 command! QuitAll call QuitAll()
 function! QuitAll()
-  call DeleteAllTerms()
   call SaveSession()
+  call DeleteAllTerms()
   call DeleteAllBuffers()
   normal ZQ
 endfunction
@@ -1098,6 +1107,17 @@ command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
 
 function! s:select_visual_function_handler(lines) range
   execute 'call '. a:lines[0]
+endfunction
+
+command! -nargs=0 SelectSession call fzf#run(fzf#wrap({
+\ 'source': 'ls ~/.vim/sessions',
+\ 'sink*':  function('<sid>load_session'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:load_session(session)
+  silent! execute 'source ~/.vim/sessions/' . a:session[0]
+  silent! execute 'source $MYVIMRC'
 endfunction
 
 " }}}

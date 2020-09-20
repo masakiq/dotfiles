@@ -13,13 +13,12 @@ LoadVIMRC
 Floaterms
 RenameFile
 SaveSession
-LoadSession
 SwapWindow
 GBInteractive
 GHInteractive
 TigBlame
 TigOpenCurrentFile
 TigGrep
-DeleteAllTermsSaveSessionDeleteAllBuffersOpenProject
-DeleteAllTermsLoadSession
+SwitchProject
+SwitchSession
 QuitAll
