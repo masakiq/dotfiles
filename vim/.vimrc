@@ -731,21 +731,6 @@ function! DeleteAllTerms()
   execute 'FloatermKill!'
 endfunction
 
-command! SwitchProject call SwitchProject()
-function! SwitchProject()
-  call SaveSession()
-  call DeleteAllTerms()
-  call DeleteAllBuffers()
-  OpenProject
-endfunction
-
-command! SwitchSession call SwitchSession()
-function! SwitchSession()
-  call SaveSession()
-  call DeleteAllTerms()
-  SelectSession
-endfunction
-
 command! QuitAll call QuitAll()
 function! QuitAll()
   call SaveSession()
@@ -804,7 +789,6 @@ else
   let g:which_key_map.o = {
       \ 'name' : '+open' ,
       \ 's' : ['SearchByRG()' , 'Search file from text'],
-      \ 'p' : ['OpenProject' , 'Open project'],
       \ 'e' : ['ToggleNetrw()' , 'Open explore'],
       \ 'm' : ['PrevimOpen' , 'Open markdowexploren'],
       \ }
@@ -1081,12 +1065,18 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
 
-nnoremap <space>op :OpenProject<CR>
-command! -nargs=0 OpenProject call fzf#run(fzf#wrap({
+command! -nargs=0 SwitchProject call fzf#run(fzf#wrap({
 \ 'source': 'ghq list --full-path',
-\ 'sink': 'cd',
+\ 'sink*':  function('<sid>open_project'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
+
+function! s:open_project(project)
+  call SaveSession()
+  call DeleteAllTerms()
+  call DeleteAllBuffers()
+  silent! execute 'cd ' . a:project[0]
+endfunction
 
 nnoremap <space><space> :SelectFunction<CR>
 command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
@@ -1109,13 +1099,15 @@ function! s:select_visual_function_handler(lines) range
   execute 'call '. a:lines[0]
 endfunction
 
-command! -nargs=0 SelectSession call fzf#run(fzf#wrap({
+command! -nargs=0 SwitchSession call fzf#run(fzf#wrap({
 \ 'source': 'ls ~/.vim/sessions',
 \ 'sink*':  function('<sid>load_session'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
 function! s:load_session(session)
+  call SaveSession()
+  call DeleteAllTerms()
   silent! execute 'source ~/.vim/sessions/' . a:session[0]
   silent! execute 'source $MYVIMRC'
 endfunction
