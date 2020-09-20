@@ -1,14 +1,15 @@
 OpenImplementationFile
 OpenTestFile
 OpenProject
-DeleteBuffers
+OpenMarkdown
 DeleteAllBuffers
+DeleteAllTerms
+DeleteBuffers
 DeleteWindow
 CopyCurrentPath
 CopyAbsolutePath
 OpenVIMRC
 LoadVIMRC
-FloatermKill!
 Floaterms
 RenameFile
 SaveSession
@@ -19,3 +20,6 @@ GHInteractive
 TigBlame
 TigOpenCurrentFile
 TigGrep
+DeleteAllTermsSaveSessionDeleteAllBuffersOpenProject
+DeleteAllTermsLoadSession
+QuitAll

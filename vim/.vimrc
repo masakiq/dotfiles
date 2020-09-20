@@ -227,21 +227,6 @@ noremap <space>oe :call ToggleNetrw()<CR>
 
 " }}}
 
-" ## Markdown 設定 ---------------------- {{{
-
-autocmd BufRead,BufNewFile *.mkd  set filetype=markdown
-autocmd BufRead,BufNewFile *.md  set filetype=markdown
-" Need: kannokanno/previm
-if has('gui_running')
-else
-  nnoremap <space>om :PrevimOpen<CR>
-endif
-" 自動で折りたたまないようにする
-let g:vim_markdown_folding_disabled=1
-let g:previm_enable_realtime = 1
-
-" }}}
-
 " ## カスタムマッピング ---------------------- {{{
 
 " ### マップ基本設定 ---------------------- {{{
@@ -733,6 +718,33 @@ function! DeleteAllBuffers()
   endfor
 endfunction
 
+command! DeleteAllTerms call DeleteAllTerms()
+function! DeleteAllTerms()
+  execute 'FloatermKill!'
+endfunction
+
+command! DeleteAllTermsSaveSessionDeleteAllBuffersOpenProject call SaveSessionDeleteAllBuffersOpenProject()
+function! SaveSessionDeleteAllBuffersOpenProject()
+  call DeleteAllTerms()
+  call SaveSession()
+  call DeleteAllBuffers()
+  OpenProject
+endfunction
+
+command! DeleteAllTermsLoadSession call DeleteAllTermsLoadSession()
+function! DeleteAllTermsLoadSession()
+  call DeleteAllTerms()
+  call LoadSession()
+endfunction
+
+command! QuitAll call QuitAll()
+function! QuitAll()
+  call DeleteAllTerms()
+  call SaveSession()
+  call DeleteAllBuffers()
+  normal ZQ
+endfunction
+
 " }}}
 
 " ## プラグイン設定 ---------------------- {{{
@@ -857,6 +869,20 @@ let g:floaterm_keymap_new = '<F12>'
 let g:floaterm_height = 0.9
 let g:floaterm_width = 0.9
 let g:floaterm_keymap_kill = '<c-q>'
+
+" }}}
+
+" ## plugin kannokanno/previm ---------------------- {{{
+
+autocmd BufRead,BufNewFile *.mkd  set filetype=markdown
+autocmd BufRead,BufNewFile *.md  set filetype=markdown
+command! -nargs=0 OpenMarkdown call OpenMarkdown()
+function! OpenMarkdown()
+  PrevimOpen
+endfunction
+" 自動で折りたたまないようにする
+let g:vim_markdown_folding_disabled=1
+let g:previm_enable_realtime = 1
 
 " }}}
 
