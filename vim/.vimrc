@@ -1099,6 +1099,18 @@ function! s:open_project(project)
   FloatermHide
 endfunction
 
+command! -nargs=0 SwitchProjectWithKeepingTerminal call fzf#run(fzf#wrap({
+\ 'source': 'ghq list --full-path',
+\ 'sink*':  function('<sid>switch_project_with_keeping_terminal'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:switch_project_with_keeping_terminal(project)
+  call SaveSession()
+  call DeleteAllBuffers()
+  silent! execute 'cd ' . a:project[0]
+endfunction
+
 nnoremap <space><space> :SelectFunction<CR>
 command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
 \ 'source': 'cat ~/.vim/functions/normal',
@@ -1136,6 +1148,18 @@ function! s:load_session(session)
   FloatermNew
   sleep 100m
   FloatermHide
+endfunction
+
+command! -nargs=0 SwitchSessionWithKeepingTerminal call fzf#run(fzf#wrap({
+\ 'source': 'ls ~/.vim/sessions',
+\ 'sink*':  function('<sid>switch_session_with_keeping_terminal'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:switch_session_with_keeping_terminal(session)
+  call SaveSession()
+  silent! execute 'source ~/.vim/sessions/' . a:session[0]
+  silent! execute 'source $MYVIMRC'
 endfunction
 
 " }}}

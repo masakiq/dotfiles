@@ -1,13 +1,16 @@
 GitAdd
 SwitchSession
+SwitchSessionWithKeepingTerminal
 SwitchProject
+SwitchProjectWithKeepingTerminal
 CopyCurrentPath
 CopyAbsolutePath
 OpenGitHub
 OpenGitHubBlame
 QuitAll
-TigBlame
+TigOpenProjectRootDir
 TigOpenCurrentFile
+TigBlame
 TigGrep
 LoadVIMRC
 OpenVIMRC
@@ -19,6 +22,7 @@ DeleteAllTerms
 DeleteBuffers
 DeleteWindow
 Floaterms
+FloatermNew
 RenameFile
 SaveSession
 SwapWindow
