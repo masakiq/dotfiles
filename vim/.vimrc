@@ -81,6 +81,9 @@ hi SpellLocal cterm=underline
 
 " autocmd TerminalOpen * set nonu
 
+" ファイルを読み込み
+set autoread
+
 " タブ表示カスタム
 let g:airline_theme='cool'
 " https://vi.stackexchange.com/questions/5622/how-do-i-configure-the-vim-airline-plugin-to-look-like-its-own-project-screensho
@@ -518,23 +521,26 @@ endfunction
 
 command! SaveSession call SaveSession()
 function! SaveSession()
-  let current_dir = s:getCurrentDirectory()
-  if current_dir == '/'
+  if s:actuality_tab_count() == 0
     return
   endif
+  let current_dir = s:getCurrentDirectory()
   silent! execute 'mks! ~/.vim/sessions/' . current_dir
   echom 'saved current session : ' .current_dir
 endfunction
 
 function! s:getCurrentDirectory()
-  let current_path = '/' . expand('%')
-  if current_path == '/'
-    return current_path
-  endif
-  let absolute_path= expand('%:p')
-  let replaced = substitute(absolute_path, current_path, '', 'g')
-  let splited = split(replaced, '/')
+  redir => path
+  silent pwd
+  redir END
+  let splited = split(path, '/')
   return splited[-1]
+endfunction
+
+command! CreateFloaterm call CreateFloaterm()
+function! CreateFloaterm()
+  let current_dir = s:getCurrentDirectory()
+  execute 'FloatermNew --title=' . current_dir . '($1/$2) ' . '--name=' . current_dir
 endfunction
 
 function! ToSnakeCase() range
@@ -782,6 +788,7 @@ Plug 'liuchengxu/vim-which-key'
 Plug 'osyo-manga/vim-over'
 Plug 'voldikss/vim-floaterm'
 Plug 'voldikss/fzf-floaterm'
+Plug 'dart-lang/dart-vim-plugin'
 call plug#end()
 
 " }}}
@@ -871,13 +878,23 @@ let g:EasyMotion_smartcase = 1
 
 " ### plugin voldikss/vim-floaterm ---------------------- {{{
 
-let g:floaterm_keymap_toggle = '<c-t>'
+" let g:floaterm_keymap_toggle = '<c-t>'
 let g:floaterm_keymap_prev = '<S-left>'
 let g:floaterm_keymap_next = '<S-right>'
 let g:floaterm_keymap_new = '<F12>'
 let g:floaterm_height = 0.9
 let g:floaterm_width = 0.9
 let g:floaterm_keymap_kill = '<c-q>'
+
+noremap <c-t> :call TermToggle()<cr>
+
+function! TermToggle()
+  if len(ListTermBufNums()) == 0
+    CreateFloaterm
+  else
+    FloatermToggle
+  endif
+endfunction
 
 " }}}
 
@@ -892,6 +909,14 @@ endfunction
 " 自動で折りたたまないようにする
 let g:vim_markdown_folding_disabled=1
 let g:previm_enable_realtime = 1
+
+" }}}
+
+" ## dart-lang/dart-vim-plugin ---------------------- {{{
+
+let dart_html_in_string = v:true
+let g:dart_style_guide = 2
+let g:dart_format_on_save = 1
 
 " }}}
 
@@ -1032,6 +1057,20 @@ function! s:list_windows()
   return list
 endfunction
 
+function! s:actuality_tab_count()
+  let ws = s:list_windows()
+  let tab_count = 0
+  let non_tab_count = 0
+  for win in ws
+    if win =~ '^.*\s\[No\-Name\]\s.*'
+      let non_tab_count = non_tab_count + 1
+    else
+      let tab_count = tab_count + 1
+    endif
+  endfor
+  return tab_count
+endfunction
+
 function! s:delete_windows(lines)
   execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[3]}))
 endfunction
@@ -1092,9 +1131,9 @@ function! s:open_project(project)
   call DeleteAllTerms()
   call DeleteAllBuffers()
   silent! execute 'cd ' . a:project[0]
-  FloatermNew
-  FloatermNew
-  FloatermNew
+  CreateFloaterm
+  CreateFloaterm
+  CreateFloaterm
   sleep 100m
   FloatermHide
 endfunction
@@ -1143,9 +1182,10 @@ function! s:load_session(session)
   call DeleteAllTerms()
   silent! execute 'source ~/.vim/sessions/' . a:session[0]
   silent! execute 'source $MYVIMRC'
-  FloatermNew
-  FloatermNew
-  FloatermNew
+  sleep 100m
+  CreateFloaterm
+  CreateFloaterm
+  CreateFloaterm
   sleep 100m
   FloatermHide
 endfunction
@@ -1160,6 +1200,46 @@ function! s:switch_session_with_keeping_terminal(session)
   call SaveSession()
   silent! execute 'source ~/.vim/sessions/' . a:session[0]
   silent! execute 'source $MYVIMRC'
+endfunction
+
+command! -bang DeleteFloaterms call fzf#run(fzf#wrap({
+\ 'source': s:fetch_term_names(),
+\ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
+\ 'sink*': function('s:delete_floaterms'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+\ },
+\ <bang>0
+\ ))
+
+function! s:fetch_term_names()
+  let bufnums = ListTermBufNums()
+  let bufs = []
+  for num in bufnums
+    let opts = getbufvar(num, 'floaterm_opts', {})
+    let name = opts['name'] . ' : ' . num
+    call add(bufs, name)
+  endfor
+  return bufs
+endfunction
+
+function! s:delete_floaterms(line) abort
+  for buf in a:line
+    let num = str2nr(substitute(buf, '^.*\s\:\s\(\d*\)', '\1', ''))
+    execute 'bwipeout! ' . num
+  endfor
+endfunction
+
+function! ListTermBufNums()
+  redir => bufs
+  silent ls!('R')
+  redir END
+  let buflist = split(bufs, "\n")
+  let listbufnums = []
+  for buf in buflist
+    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
+    call add(listbufnums, num)
+  endfor
+  return listbufnums
 endfunction
 
 " }}}

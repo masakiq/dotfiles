@@ -17,12 +17,11 @@ OpenVIMRC
 OpenMarkdown
 OpenImplementationFile
 OpenTestFile
-DeleteAllBuffers
-DeleteAllTerms
 DeleteBuffers
-DeleteWindow
 Floaterms
-FloatermNew
+CreateFloaterm
+DeleteFloaterms
 RenameFile
 SaveSession
 SwapWindow
+PlugUpdate
