@@ -789,6 +789,7 @@ Plug 'osyo-manga/vim-over'
 Plug 'voldikss/vim-floaterm'
 Plug 'voldikss/fzf-floaterm'
 Plug 'dart-lang/dart-vim-plugin'
+Plug 'dense-analysis/ale'
 call plug#end()
 
 " }}}
@@ -916,7 +917,20 @@ let g:previm_enable_realtime = 1
 
 let dart_html_in_string = v:true
 let g:dart_style_guide = 2
-let g:dart_format_on_save = 1
+" let g:dart_format_on_save = 1
+
+" }}}
+
+" ## dense-analysis/ale ---------------------- {{{
+
+let g:ale_lint_on_text_changed = 0
+let g:ale_linters = {
+\ 'dart': ['dartfmt'],
+\ }
+let g:ale_fixers = {
+\ 'dart': ['dartfmt'],
+\}
+let g:ale_fix_on_save = 1
 
 " }}}
 
@@ -1120,9 +1134,42 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
 
+command! -nargs=0 OpenMemo call fzf#run(fzf#wrap({
+\ 'source': 'ls ~/.vim/memo',
+\ 'sink':  function('s:open_memo'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:open_memo(line)
+  try
+    call fzf#run(fzf#wrap({
+    \ 'source':  'cat ~/.vim/memo/' . a:line,
+    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+    \ 'sink':   function('s:open_memo_detail')}))
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:open_memo_detail(line)
+  execute 'vs ' . a:line
+endfunction
+
+command! -nargs=0 DiffFiles call fzf#run(fzf#wrap({
+\ 'source': 'rg --files',
+\ 'sink':  function('<sid>diff_files'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:diff_files(line)
+  execute 'vertical diffsplit ' . a:line
+endfunction
+
 command! -nargs=0 SwitchProject call fzf#run(fzf#wrap({
 \ 'source': 'ghq list --full-path',
-\ 'sink*':  function('<sid>open_project'),
+\ 'sink':  function('<sid>open_project'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1130,7 +1177,7 @@ function! s:open_project(project)
   call SaveSession()
   call DeleteAllTerms()
   call DeleteAllBuffers()
-  silent! execute 'cd ' . a:project[0]
+  silent! execute 'cd ' . a:project
   CreateFloaterm
   CreateFloaterm
   CreateFloaterm
@@ -1173,14 +1220,14 @@ endfunction
 
 command! -nargs=0 SwitchSession call fzf#run(fzf#wrap({
 \ 'source': 'ls ~/.vim/sessions',
-\ 'sink*':  function('<sid>load_session'),
+\ 'sink':  function('<sid>load_session'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
 function! s:load_session(session)
   call SaveSession()
   call DeleteAllTerms()
-  silent! execute 'source ~/.vim/sessions/' . a:session[0]
+  silent! execute 'source ~/.vim/sessions/' . a:session
   silent! execute 'source $MYVIMRC'
   sleep 100m
   CreateFloaterm
@@ -1188,6 +1235,19 @@ function! s:load_session(session)
   CreateFloaterm
   sleep 100m
   FloatermHide
+endfunction
+
+command! -nargs=0 DeleteSessions call fzf#run(fzf#wrap({
+\ 'source': 'ls ~/.vim/sessions',
+\ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
+\ 'sink*':  function('<sid>delete_sessions'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:delete_sessions(sessions)
+  for session in a:sessions
+    call delete(expand('~/.vim/sessions/' . session))
+  endfor
 endfunction
 
 command! -nargs=0 SwitchSessionWithKeepingTerminal call fzf#run(fzf#wrap({
