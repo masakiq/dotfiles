@@ -790,6 +790,7 @@ Plug 'voldikss/vim-floaterm'
 Plug 'voldikss/fzf-floaterm'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'dense-analysis/ale'
+Plug 'tpope/vim-fugitive'
 call plug#end()
 
 " }}}
@@ -1134,18 +1135,18 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
 
-command! -nargs=0 OpenMemo call fzf#run(fzf#wrap({
-\ 'source': 'ls ~/.vim/memo',
-\ 'sink':  function('s:open_memo'),
+command! -nargs=0 OpenNote call fzf#run(fzf#wrap({
+\ 'source': 'ls ~/.vim/note',
+\ 'sink':  function('<sid>open_note'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
-function! s:open_memo(line)
+function! s:open_note(line)
   try
     call fzf#run(fzf#wrap({
-    \ 'source':  'cat ~/.vim/memo/' . a:line,
+    \ 'source':  'cat ~/.vim/note/' . a:line,
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'sink':   function('s:open_memo_detail')}))
+    \ 'sink':   function('s:open_note_detail')}))
   catch
     echohl WarningMsg
     echom v:exception
@@ -1153,11 +1154,11 @@ function! s:open_memo(line)
   endtry
 endfunction
 
-function! s:open_memo_detail(line)
+function! s:open_note_detail(line)
   execute 'vs ' . a:line
 endfunction
 
-command! -nargs=0 DiffFiles call fzf#run(fzf#wrap({
+command! -nargs=0 DiffFile call fzf#run(fzf#wrap({
 \ 'source': 'rg --files',
 \ 'sink':  function('<sid>diff_files'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
@@ -1265,7 +1266,7 @@ endfunction
 command! -bang DeleteFloaterms call fzf#run(fzf#wrap({
 \ 'source': s:fetch_term_names(),
 \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
-\ 'sink*': function('s:delete_floaterms'),
+\ 'sink*': function('<sid>delete_floaterms'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
 \ },
 \ <bang>0
@@ -1300,6 +1301,19 @@ function! ListTermBufNums()
     call add(listbufnums, num)
   endfor
   return listbufnums
+endfunction
+
+command! -bang DiffFileGitBranch call fzf#run(fzf#wrap({
+\ 'source': 'git --no-pager branch',
+\ 'sink': function('<sid>diff_file_git_branch'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+\ },
+\ <bang>0
+\ ))
+
+function! s:diff_file_git_branch(branch)
+  execute 'Gvdiff ' . a:branch
+  SwapWindow
 endfunction
 
 " }}}

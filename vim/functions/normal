@@ -17,7 +17,7 @@ OpenVIMRC
 OpenMarkdown
 OpenImplementationFile
 OpenTestFile
-OpenMemo
+OpenNote
 Floaterms
 CreateFloaterm
 DeleteBuffers
@@ -27,4 +27,5 @@ RenameFile
 SaveSession
 SwapWindow
 PlugUpdate
-DiffFiles
+DiffFile
+DiffFileGitBranch
