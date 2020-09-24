@@ -3,6 +3,7 @@ SwitchSession
 SwitchSessionWithKeepingTerminal
 SwitchProject
 SwitchProjectWithKeepingTerminal
+OpenAnotherProjectFile
 CopyCurrentPath
 CopyAbsolutePath
 OpenGitHub

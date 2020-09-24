@@ -755,6 +755,7 @@ endfunction
 
 command! QuitAll call QuitAll()
 function! QuitAll()
+  call DeleteBufsWithoutExistingWindows()
   call SaveSession()
   call DeleteAllTerms()
   call DeleteAllBuffers()
@@ -1048,7 +1049,7 @@ endfunction
 command! DeleteBuffers call fzf#run(fzf#wrap({
   \ 'source': s:list_buffers(),
   \ 'sink*': { lines -> s:delete_buffers(lines) },
-  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all'
 \ }))
 
 " https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
@@ -1146,7 +1147,7 @@ function! s:open_note(line)
     call fzf#run(fzf#wrap({
     \ 'source':  'cat ~/.vim/note/' . a:line,
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'sink':   function('s:open_note_detail')}))
+    \ 'sink':   function('s:open_selected_file')}))
   catch
     echohl WarningMsg
     echom v:exception
@@ -1154,7 +1155,7 @@ function! s:open_note(line)
   endtry
 endfunction
 
-function! s:open_note_detail(line)
+function! s:open_selected_file(line)
   execute 'vs ' . a:line
 endfunction
 
@@ -1168,6 +1169,25 @@ function! s:diff_files(line)
   execute 'vertical diffsplit ' . a:line
 endfunction
 
+command! -nargs=0 OpenAnotherProjectFile call fzf#run(fzf#wrap({
+\ 'source': 'ghq list --full-path',
+\ 'sink':  function('<sid>open_another_project_file'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:open_another_project_file(line)
+  try
+    call fzf#run(fzf#wrap({
+    \ 'source':  'rg --files ' . a:line,
+    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+    \ 'sink':   function('s:open_selected_file')}))
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
 command! -nargs=0 SwitchProject call fzf#run(fzf#wrap({
 \ 'source': 'ghq list --full-path',
 \ 'sink':  function('<sid>open_project'),
@@ -1175,6 +1195,7 @@ command! -nargs=0 SwitchProject call fzf#run(fzf#wrap({
 \ }))
 
 function! s:open_project(project)
+  call DeleteBufsWithoutExistingWindows()
   call SaveSession()
   call DeleteAllTerms()
   call DeleteAllBuffers()
@@ -1193,6 +1214,7 @@ command! -nargs=0 SwitchProjectWithKeepingTerminal call fzf#run(fzf#wrap({
 \ }))
 
 function! s:switch_project_with_keeping_terminal(project)
+  call DeleteBufsWithoutExistingWindows()
   call SaveSession()
   call DeleteAllBuffers()
   silent! execute 'cd ' . a:project[0]
@@ -1226,8 +1248,10 @@ command! -nargs=0 SwitchSession call fzf#run(fzf#wrap({
 \ }))
 
 function! s:load_session(session)
+  call DeleteBufsWithoutExistingWindows()
   call SaveSession()
   call DeleteAllTerms()
+  call DeleteAllBuffers()
   silent! execute 'source ~/.vim/sessions/' . a:session
   silent! execute 'source $MYVIMRC'
   sleep 100m
