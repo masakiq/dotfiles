@@ -96,6 +96,12 @@ let g:airline#extensions#tabline#show_splits = 0
 let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
+" diff のカラー設定
+hi DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+hi DiffDelete cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+hi DiffChange cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+hi DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
+
 " }}}
 
 " ## 検索の挙動に関する設定 ---------------------- {{{
@@ -120,12 +126,15 @@ autocmd QuickFixCmdPost *grep* cwindow
 " quickfix-window のサイズ調整
 autocmd FileType qf 13wincmd_
 
+" 検索時のハイライトを無効化
+set nohlsearch
+
 " }}}
 
 " ## カーソル移動に関する設定 ---------------------- {{{
 
 " スクロールオフ
-set scrolloff=10
+set scrolloff=15
 
 " マウススクロール
 set mouse=a
@@ -331,6 +340,9 @@ vnoremap ^ g^
 nnoremap $ g$
 vnoremap $ g$
 
+" 検索ハイライトをトグル
+nnoremap <space>n :set hlsearch!<CR>
+
 " }}}
 
 " ### 変換系 ---------------------- {{{
@@ -463,12 +475,6 @@ command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
 function! CopyAbsolutePath()
   echo "copied absolute path: " . expand('%:p')
   let @+=expand('%:p')
-endfunction
-
-command! -nargs=0 GitAdd call GitAdd()
-function! GitAdd()
-  echo system('git add .')
-  echom 'executed "git add ."'
 endfunction
 
 if exists('*LoadVIMRC')
@@ -785,6 +791,9 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'iberianpig/tig-explorer.vim'
 Plug 'ruanyl/vim-gh-line'
 Plug 'easymotion/vim-easymotion'
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-fuzzy.vim'
+Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'liuchengxu/vim-which-key'
 Plug 'osyo-manga/vim-over'
 Plug 'voldikss/vim-floaterm'
@@ -792,6 +801,7 @@ Plug 'voldikss/fzf-floaterm'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'dense-analysis/ale'
 Plug 'tpope/vim-fugitive'
+Plug 'skywind3000/asyncrun.vim'
 call plug#end()
 
 " }}}
@@ -816,7 +826,6 @@ else
       \ 'name' : '+open' ,
       \ 's' : ['SearchByRG()' , 'Search file from text'],
       \ 'e' : ['ToggleNetrw()' , 'Open explore'],
-      \ 'm' : ['PrevimOpen' , 'Open markdowexploren'],
       \ }
   let g:which_key_map.q = 'Quit'
   let g:which_key_map.s = {
@@ -867,8 +876,23 @@ endif
 
 " ### plugin easymotion/vim-easymotion ---------------------- {{{
 
-map  f <Plug>(easymotion-bd-f)
+" map  f <Plug>(easymotion-bd-f)
+" nmap <space>f <Plug>(easymotion-overwin-f)
+" nmap f <Plug>(easymotion-overwin-f2)
+" nmap f <Plug>(easymotion-sn)
 let g:EasyMotion_smartcase = 1
+
+function! s:config_easyfuzzymotion(...) abort
+  return extend(copy({
+  \   'converters': [incsearch#config#fuzzyword#converter()],
+  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+  \   'keymap': {"\<CR>": '<Over>(easymotion)'},
+  \   'is_expr': 0,
+  \   'is_stay': 1
+  \ }), get(a:, 1, {}))
+endfunction
+
+noremap <silent><expr> f incsearch#go(<SID>config_easyfuzzymotion())
 
 " }}}
 
@@ -928,11 +952,23 @@ let g:dart_style_guide = 2
 let g:ale_lint_on_text_changed = 0
 let g:ale_linters = {
 \ 'dart': ['dartfmt'],
+\ 'ruby': ['rubocop'],
 \ }
 let g:ale_fixers = {
 \ 'dart': ['dartfmt'],
+\ 'ruby': ['rubocop'],
 \}
 let g:ale_fix_on_save = 1
+
+" }}}
+
+" ## skywind3000/asyncrun.vim ---------------------- {{{
+
+command! -nargs=0 GitAdd call GitAdd()
+function! GitAdd()
+  AsyncRun -silent git add .
+  echom 'executed "git add ."'
+endfunction
 
 " }}}
 
@@ -1177,10 +1213,10 @@ command! -nargs=0 OpenAnotherProjectFile call fzf#run(fzf#wrap({
 
 function! s:open_another_project_file(line)
   try
-    call fzf#run(fzf#wrap({
-    \ 'source':  'rg --files ' . a:line,
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+    \ 'source':  printf('rg --files ' . a:line),
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'sink':   function('s:open_selected_file')}))
+    \ 'sink':   function('s:open_selected_file')})))
   catch
     echohl WarningMsg
     echom v:exception
@@ -1329,15 +1365,41 @@ endfunction
 
 command! -bang DiffFileGitBranch call fzf#run(fzf#wrap({
 \ 'source': 'git --no-pager branch',
-\ 'sink': function('<sid>diff_file_git_branch'),
+\ 'sink': function('<sid>select_diff_files'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
 \ },
 \ <bang>0
 \ ))
 
-function! s:diff_file_git_branch(branch)
-  execute 'Gvdiff ' . a:branch
-  SwapWindow
+function! s:get_current_branch()
+  return substitute(FugitiveStatusline(), '^\[Git(\(.*\))\]', '\1', '')
+endfunction
+
+function! s:select_diff_files(branch)
+  let current_branch = s:get_current_branch()
+  let g:selected_branch = a:branch
+  try
+    call fzf#run(fzf#wrap({
+    \ 'source':  printf('git diff' . a:branch . '...' . current_branch . ' --name-only'),
+    \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
+    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+    \ 'sink*':   function('s:open_selected_files_with_another_tab')}))
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:open_selected_files_with_another_tab(files)
+  let current_branch = s:get_current_branch()
+  for file in a:files
+    echom 'file:' . file
+    silent execute '$tabnew ' . file
+    execute 'Gvdiff ' . g:selected_branch . '...' . current_branch
+    SwapWindow
+  endfor
+  unlet g:selected_branch
 endfunction
 
 " }}}
