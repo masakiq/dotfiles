@@ -9,3 +9,4 @@ ColonToClassAndModule
 CommaToBreakline
 JsonToHash
 RocketToHash
+SearchByRGFromAllFiles

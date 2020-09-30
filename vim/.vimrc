@@ -97,9 +97,9 @@ let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 " diff のカラー設定
-hi DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
-hi DiffDelete cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
-hi DiffChange cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+hi DiffAdd    cterm=bold ctermfg=10 ctermbg=19 gui=none guifg=bg guibg=Red
+hi DiffDelete cterm=bold ctermfg=10 ctermbg=19 gui=none guifg=bg guibg=Red
+hi DiffChange cterm=bold ctermfg=10 ctermbg=19 gui=none guifg=bg guibg=Red
 hi DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
 
 " }}}
@@ -212,7 +212,7 @@ let g:netrw_banner = 0
 "window サイズ
 let g:netrw_winsize = 25
 "Netrw で Enter 押下時の挙動設定
-let g:netrw_browse_split = 4
+let g:netrw_browse_split = 3
 let g:netrw_alto = 1
 
 "Netrw を toggle する関数を設定
@@ -699,6 +699,18 @@ function! RGBySelectedText()
   execute 'RG ' . selected
 endfunction
 
+command! SearchByRGFromAllFiles call SearchByRGFromAllFiles()
+function! SearchByRGFromAllFiles()
+  if mode() == 'n'
+    execute 'RGFromAllFiles ' . input('RG/')
+  else
+    let selected = SelectedVisualModeText()
+    let @+=selected
+    execute 'RGFromAllFiles ' . selected
+    silent! exec "normal \<c-c>"
+  endif
+endfunction
+
 function! VimGrepBySelectedText()
   let selected = SelectedVisualModeText()
   let @+=selected
@@ -763,6 +775,13 @@ command! QuitAll call QuitAll()
 function! QuitAll()
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
+  call DeleteAllTerms()
+  call DeleteAllBuffers()
+  normal ZQ
+endfunction
+
+command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
+function! QuitAllWithoutSaveSession()
   call DeleteAllTerms()
   call DeleteAllBuffers()
   normal ZQ
@@ -1037,6 +1056,20 @@ command! -bang -nargs=? -complete=dir History
 command! -bang -nargs=? -complete=dir Windows
     \ call fzf#vim#windows(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
+command! -bang FindAllFiles call fzf#run(fzf#wrap({
+\ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
+\ 'sink*': function('<sid>open_file_with_tab'),
+\ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview ',
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+\ }))
+
+function! s:open_file_with_tab(files)
+  for file in a:files
+    exec "tab drop " . file
+  endfor
+endfunction
+
+
 " Rg でカラー出力しない
 " https://github.com/junegunn/fzf.vim/issues/488#issuecomment-350523157
 " https://github.com/junegunn/fzf.vim/pull/696
@@ -1047,7 +1080,7 @@ command! -bang -nargs=? -complete=dir Windows
 
 if has('gui_running')
 else
-  nnoremap <space>of :Files<CR>
+  nnoremap <space>of :FindAllFiles<CR>
   " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
   vnoremap <space>of :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
 endif
@@ -1163,7 +1196,17 @@ endfunction
 
 " bind は selection を参考に。http://manpages.ubuntu.com/manpages/focal/man1/fzf.1.html
 command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
-\ 'source':  printf('rg --column --no-heading --color always --smart-case "%s"',
+\ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
+\                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+\ 'sink*':    function('<sid>ag_handler'),
+\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e '.
+\            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+\            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ })))
+
+command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
+\ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
 \ 'sink*':    function('<sid>ag_handler'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e '.
@@ -1196,10 +1239,11 @@ function! s:open_selected_file(line)
 endfunction
 
 command! -nargs=0 DiffFile call fzf#run(fzf#wrap({
-\ 'source': 'rg --files',
+\ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
 \ 'sink':  function('<sid>diff_files'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
+" \ 'source': 'rg --files',
 
 function! s:diff_files(line)
   execute 'vertical diffsplit ' . a:line
@@ -1214,7 +1258,7 @@ command! -nargs=0 OpenAnotherProjectFile call fzf#run(fzf#wrap({
 function! s:open_another_project_file(line)
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
-    \ 'source':  printf('rg --files ' . a:line),
+    \ 'source':  printf('find ' . a:line . ' -not -path "./.git/*" -type f'),
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
     \ 'sink':   function('s:open_selected_file')})))
   catch
@@ -1318,7 +1362,9 @@ command! -nargs=0 SwitchSessionWithKeepingTerminal call fzf#run(fzf#wrap({
 \ }))
 
 function! s:switch_session_with_keeping_terminal(session)
+  call DeleteBufsWithoutExistingWindows()
   call SaveSession()
+  call DeleteAllBuffers()
   silent! execute 'source ~/.vim/sessions/' . a:session[0]
   silent! execute 'source $MYVIMRC'
 endfunction
@@ -1364,7 +1410,7 @@ function! ListTermBufNums()
 endfunction
 
 command! -bang DiffFileGitBranch call fzf#run(fzf#wrap({
-\ 'source': 'git --no-pager branch',
+\ 'source': 'git --no-pager branch | sed "/* /d"',
 \ 'sink': function('<sid>select_diff_files'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
 \ },
@@ -1394,12 +1440,21 @@ endfunction
 function! s:open_selected_files_with_another_tab(files)
   let current_branch = s:get_current_branch()
   for file in a:files
-    echom 'file:' . file
     silent execute '$tabnew ' . file
     execute 'Gvdiff ' . g:selected_branch . '...' . current_branch
     SwapWindow
   endfor
   unlet g:selected_branch
+endfunction
+
+command! Sandbox call fzf#run(fzf#wrap({
+\ 'source': 'ls ~/.vim/sandbox',
+\ 'sink':   function('<sid>open_selected_sandbox'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:open_selected_sandbox(line)
+  execute 'vs ~/.vim/sandbox/' . a:line
 endfunction
 
 " }}}

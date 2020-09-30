@@ -3,12 +3,14 @@ SwitchSession
 SwitchSessionWithKeepingTerminal
 SwitchProject
 SwitchProjectWithKeepingTerminal
+SearchByRGFromAllFiles
 OpenAnotherProjectFile
 CopyCurrentPath
 CopyAbsolutePath
 OpenGitHub
 OpenGitHubBlame
 QuitAll
+QuitAllWithoutSaveSession
 TigOpenProjectRootDir
 TigOpenCurrentFile
 TigBlame
@@ -30,3 +32,4 @@ SwapWindow
 PlugUpdate
 DiffFile
 DiffFileGitBranch
+Sandbox
