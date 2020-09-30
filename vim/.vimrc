@@ -97,9 +97,9 @@ let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 " diff のカラー設定
-hi DiffAdd    cterm=bold ctermfg=10 ctermbg=19 gui=none guifg=bg guibg=Red
-hi DiffDelete cterm=bold ctermfg=10 ctermbg=19 gui=none guifg=bg guibg=Red
-hi DiffChange cterm=bold ctermfg=10 ctermbg=19 gui=none guifg=bg guibg=Red
+hi DiffAdd    cterm=bold ctermfg=10 ctermbg=18 gui=none guifg=bg guibg=Red
+hi DiffDelete cterm=bold ctermfg=10 ctermbg=18 gui=none guifg=bg guibg=Red
+hi DiffChange cterm=bold ctermfg=10 ctermbg=18 gui=none guifg=bg guibg=Red
 hi DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
 
 " }}}
@@ -1455,6 +1455,25 @@ command! Sandbox call fzf#run(fzf#wrap({
 
 function! s:open_selected_sandbox(line)
   execute 'vs ~/.vim/sandbox/' . a:line
+endfunction
+
+command! -nargs=0 DiffAnotherProjectFile call fzf#run(fzf#wrap({
+\ 'source': 'ghq list --full-path',
+\ 'sink':  function('<sid>diff_another_project_file'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:diff_another_project_file(line)
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+    \ 'source':  printf('find ' . a:line . ' -not -path "./.git/*" -type f'),
+    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+    \ 'sink':   function('s:diff_files')})))
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
 endfunction
 
 " }}}

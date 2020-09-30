@@ -32,4 +32,5 @@ SwapWindow
 PlugUpdate
 DiffFile
 DiffFileGitBranch
+DiffAnotherProjectFile
 Sandbox
