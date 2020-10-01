@@ -134,7 +134,7 @@ set nohlsearch
 " ## カーソル移動に関する設定 ---------------------- {{{
 
 " スクロールオフ
-set scrolloff=15
+set scrolloff=20
 
 " マウススクロール
 set mouse=a
@@ -1058,14 +1058,19 @@ command! -bang -nargs=? -complete=dir Windows
 
 command! -bang FindAllFiles call fzf#run(fzf#wrap({
 \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-\ 'sink*': function('<sid>open_file_with_tab'),
-\ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview ',
+\ 'sink*': function('<sid>find_all_files'),
+\ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
 \ }))
 
-function! s:open_file_with_tab(files)
-  for file in a:files
-    exec "tab drop " . file
+function! s:find_all_files(lines)
+  if len(a:lines) < 2 | return | endif
+
+  let cmd = get({'ctrl-e': 'edit ',
+               \ 'ctrl-v': 'vertical split ',
+               \ 'enter': 'tab drop '}, a:lines[0], 'e ')
+  for file in a:lines[1:]
+    exec cmd . file
   endfor
 endfunction
 
