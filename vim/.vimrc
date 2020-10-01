@@ -793,11 +793,11 @@ endfunction
 
 " プラグラインインストールコマンド `:PlugUpdate`
 call plug#begin('~/.vim/plugged')
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/asyncomplete.vim'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'mattn/vim-lsp-settings'
 Plug 'mattn/vim-goimports'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -821,6 +821,8 @@ Plug 'dart-lang/dart-vim-plugin'
 Plug 'dense-analysis/ale'
 Plug 'tpope/vim-fugitive'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'natebosch/vim-lsc'
+Plug 'natebosch/vim-lsc-dart'
 call plug#end()
 
 " }}}
@@ -1519,31 +1521,32 @@ endfunction
 
 " ## LSP 設定 ---------------------- {{{
 
-let g:lsp_auto_enable = 1
-let g:lsp_signs_enabled = 1         " enable diagnostic signs / we use ALE for now
-let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-let g:lsp_signs_error = {'text': '✖'}
-let g:lsp_signs_warning = {'text': '~'}
-let g:lsp_signs_hint = {'text': '?'}
-let g:lsp_signs_information = {'text': '!!'}
+" let g:lsp_auto_enable = 1
+" let g:lsp_signs_enabled = 1         " enable diagnostic signs / we use ALE for now
+" let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+" let g:lsp_signs_error = {'text': '✖'}
+" let g:lsp_signs_warning = {'text': '~'}
+" let g:lsp_signs_hint = {'text': '?'}
+" let g:lsp_signs_information = {'text': '!!'}
+
 " let g:lsp_log_verbose = 1
 " let g:lsp_log_file = expand('~/.vim/vim-lsp.log')
 
- if executable('solargraph')
-    " gem install solargraph
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'solargraph',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-        \ 'initialization_options': {"diagnostics": "true"},
-        \ 'whitelist': ['ruby'],
-        \ })
-endif
+"  if executable('solargraph')
+"     " gem install solargraph
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'solargraph',
+"         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+"         \ 'initialization_options': {"diagnostics": "true"},
+"         \ 'whitelist': ['ruby'],
+"         \ })
+" endif
 
-inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
-  \ asyncomplete#force_refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" inoremap <silent><expr> <TAB>
+"   \ pumvisible() ? "\<C-n>" :
+"   \ <SID>check_back_space() ? "\<TAB>" :
+"   \ asyncomplete#force_refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " function! s:on_lsp_buffer_enabled() abort
 "   setlocal omnifunc=lsp#complete
@@ -1565,6 +1568,36 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " let g:asyncomplete_auto_completeopt = 0
 " let g:asyncomplete_popup_delay = 200
 " let g:lsp_text_edit_enabled = 1
+
+" Dart
+let g:lsc_auto_map = v:true
+let g:lsc_server_commands = {'dart': 'dart_language_server'}
+let g:lsc_enable_autocomplete = v:true
+" Use all the defaults (recommended):
+
+" Apply the defaults with a few overrides:
+let g:lsc_auto_map = {'defaults': v:true, 'FindReferences': '<leader>r'}
+
+" Setting a value to a blank string leaves that command unmapped:
+" let g:lsc_auto_map = {'defaults': v:true, 'FindImplementations': ''}
+
+" ... or set only the commands you want mapped without defaults.
+" Complete default mappings are:
+let g:lsc_auto_map = {
+    \ 'GoToDefinition': 'gd',
+    \ 'GoToDefinitionSplit': ['<C-W>]', '<C-W><C-]>'],
+    \ 'FindReferences': 'gr',
+    \ 'NextReference': '<C-n>',
+    \ 'PreviousReference': '<C-p>',
+    \ 'FindImplementations': 'gI',
+    \ 'FindCodeActions': 'ga',
+    \ 'Rename': 'gR',
+    \ 'ShowHover': v:true,
+    \ 'DocumentSymbol': 'go',
+    \ 'WorkspaceSymbol': 'gS',
+    \ 'SignatureHelp': 'gm',
+    \ 'Completion': 'completefunc',
+    \}
 
 " }}}
 
