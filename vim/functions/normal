@@ -4,6 +4,7 @@ SwitchSessionWithKeepingTerminal
 SwitchProject
 SwitchProjectWithKeepingTerminal
 SearchByRGFromAllFiles
+RGInAnotherProject
 OpenAnotherProjectFile
 CopyCurrentPath
 CopyAbsolutePath

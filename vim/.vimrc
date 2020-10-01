@@ -1263,8 +1263,9 @@ command! -nargs=0 OpenAnotherProjectFile call fzf#run(fzf#wrap({
 function! s:open_another_project_file(line)
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
-    \ 'source':  printf('find ' . a:line . ' -not -path "./.git/*" -type f'),
+    \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -type f'),
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+    \ 'options': '--multi --bind=ctrl-p:toggle-preview ',
     \ 'sink':   function('s:open_selected_file')})))
   catch
     echohl WarningMsg
@@ -1471,7 +1472,7 @@ command! -nargs=0 DiffAnotherProjectFile call fzf#run(fzf#wrap({
 function! s:diff_another_project_file(line)
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
-    \ 'source':  printf('find ' . a:line . ' -not -path "./.git/*" -type f'),
+    \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . './.git/*" -type f'),
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
     \ 'sink':   function('s:diff_files')})))
   catch
@@ -1479,6 +1480,39 @@ function! s:diff_another_project_file(line)
     echom v:exception
     echohl None
   endtry
+endfunction
+
+command! -nargs=0 RGInAnotherProject call fzf#run(fzf#wrap({
+\ 'source': 'ghq list --full-path',
+\ 'sink':  function('<sid>rg_in_another_project'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:rg_in_another_project(line)
+  let g:rg_in_another_project_file = a:line
+  execute 'RGOnAnotherProject ' . input('RGOnAnotherProject/')
+endfunction
+
+command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap({
+\ 'source':  printf("rg '%s' " . g:rg_in_another_project_file . " --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
+\                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+\ 'sink*':    function('<sid>open_file_in_another_project'),
+\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
+\            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+\            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ })))
+
+function! s:open_file_in_another_project(lines)
+  unlet g:rg_in_another_project_file
+  if len(a:lines) < 2 | return | endif
+
+  let cmd = get({'ctrl-e': 'edit ',
+               \ 'ctrl-v': 'vertical split ',
+               \ 'enter': 'tab drop '}, a:lines[0], 'e ')
+  for file in a:lines[1:]
+    exec cmd . split(file, ':')[0]
+  endfor
 endfunction
 
 " }}}
