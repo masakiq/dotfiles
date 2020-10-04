@@ -215,6 +215,11 @@ let g:netrw_winsize = 25
 let g:netrw_browse_split = 3
 let g:netrw_alto = 1
 
+fun! MyCloseDuplicateTabs()
+  CloseDupTabs
+endfun
+let g:Netrw_funcref= function('MyCloseDuplicateTabs')
+
 "Netrw を toggle する関数を設定
 "元処理と異なり Vex を呼び出すことで左 window に表示
 let g:NetrwIsOpen=0
@@ -230,7 +235,9 @@ function! ToggleNetrw()
     let g:NetrwIsOpen=0
   else
     let g:NetrwIsOpen=1
-    silent Vex
+    " silent Vex
+    silent Texplore
+    execute 'tabm 0'
   endif
 endfunction
 
@@ -823,6 +830,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'natebosch/vim-lsc'
 Plug 'natebosch/vim-lsc-dart'
+Plug 'sorribas/vim-close-duplicate-tabs'
 call plug#end()
 
 " }}}
