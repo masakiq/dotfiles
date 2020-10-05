@@ -1469,14 +1469,15 @@ function! s:open_selected_files_with_another_tab(files)
   unlet g:selected_branch
 endfunction
 
-command! Sandbox call fzf#run(fzf#wrap({
-\ 'source': 'ls ~/.vim/sandbox',
+command! Sandbox call fzf#run(fzf#vim#with_preview(fzf#wrap({
+\ 'source': 'find ~/.vim/sandbox -type file | sort',
 \ 'sink':   function('<sid>open_selected_sandbox'),
+\ 'options': '--multi --bind=ctrl-p:toggle-preview ',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+\ })))
 
 function! s:open_selected_sandbox(line)
-  execute 'vs ~/.vim/sandbox/' . a:line
+  execute 'vs ' . a:line
 endfunction
 
 command! -nargs=0 DiffAnotherProjectFile call fzf#run(fzf#wrap({
