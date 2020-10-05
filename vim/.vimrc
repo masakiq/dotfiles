@@ -1203,9 +1203,15 @@ function! s:ag_handler(lines)
   execute 'normal!' first.col.'|zz'
 
   if len(list) > 1
-    call setqflist(list)
-    copen
-    wincmd p
+    if a:lines[0] == 'ctrl-q'
+      call setqflist(list)
+      copen
+      wincmd p
+    else
+      for fi in list
+        exec 'tab drop ' . fi.filename
+      endfor
+    endif
   endif
 endfunction
 
@@ -1214,8 +1220,8 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
 \ 'sink*':    function('<sid>ag_handler'),
-\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e '.
-\            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-q '.
+\            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
@@ -1224,8 +1230,8 @@ command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
 \ 'sink*':    function('<sid>ag_handler'),
-\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e '.
-\            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-q '.
+\            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
