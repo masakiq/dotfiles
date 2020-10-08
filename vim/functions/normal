@@ -25,6 +25,7 @@ OpenNote
 Floaterms
 CreateFloaterm
 DeleteBuffers
+DeleteBuffersByFZF
 DeleteFloaterms
 DeleteSessions
 RenameFile
@@ -34,4 +35,4 @@ PlugUpdate
 DiffFile
 DiffFileGitBranch
 DiffAnotherProjectFile
-Sandbox
+TemporaryNote

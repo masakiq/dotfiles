@@ -60,8 +60,8 @@ set showmode
 set cursorline
 
 " ウィンドウ間のバーをカスタマイズ
-set fillchars+=vert:\|
-hi VertSplit ctermbg=240 ctermfg=240 guibg=#d0d0d0 guifg=#444444
+hi VertSplit ctermfg=0 ctermbg=31
+set fillchars+=vert:│
 
 " ステータスバーカラーをカスタマイズ
 hi StatusLine ctermbg=Black ctermfg=Cyan
@@ -102,6 +102,23 @@ hi DiffDelete cterm=bold ctermfg=10 ctermbg=18 gui=none guifg=bg guibg=Red
 hi DiffChange cterm=bold ctermfg=10 ctermbg=18 gui=none guifg=bg guibg=Red
 hi DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
 
+hi LineNr ctermfg=31
+hi CursorLineNr ctermfg=87 cterm=none
+hi CursorLine cterm=none
+hi SpellCap ctermfg=87 ctermbg=31
+hi SpellRare ctermfg=87 ctermbg=63
+hi SpellLocal ctermfg=87 ctermbg=71
+hi Error ctermfg=255 ctermbg=199
+hi Constant ctermfg=147
+hi Statement ctermfg=219
+hi Search ctermfg=255 ctermbg=63
+hi Type ctermfg=45
+hi Todo ctermfg=255 ctermbg=34
+hi Visual ctermfg=255 ctermbg=38
+hi Identifier ctermfg=115
+" hide the `~` at the start of an empty line
+hi EndOfBuffer ctermfg=black ctermbg=black
+
 " }}}
 
 " ## 検索の挙動に関する設定 ---------------------- {{{
@@ -134,7 +151,7 @@ set nohlsearch
 " ## カーソル移動に関する設定 ---------------------- {{{
 
 " スクロールオフ
-set scrolloff=20
+set scrolloff=15
 
 " マウススクロール
 set mouse=a
@@ -210,13 +227,15 @@ let g:netrw_liststyle=3
 " I で toggle 可能
 let g:netrw_banner = 0
 "window サイズ
-let g:netrw_winsize = 25
+let g:netrw_winsize = 75
 "Netrw で Enter 押下時の挙動設定
 let g:netrw_browse_split = 3
 let g:netrw_alto = 1
 
 fun! MyCloseDuplicateTabs()
   CloseDupTabs
+  sleep 1m
+  exec 'e'
 endfun
 let g:Netrw_funcref= function('MyCloseDuplicateTabs')
 
@@ -228,7 +247,7 @@ function! ToggleNetrw()
     let i = bufnr("$")
     while (i >= 1)
       if (getbufvar(i, "&filetype") == "netrw")
-        silent exe "bwipeout " . i
+        silent exe "bwipeout! " . i
       endif
       let i-=1
     endwhile
@@ -765,8 +784,8 @@ function! DeleteBufsWithoutExistingWindows()
   endfor
 endfunction
 
-command! DeleteAllBuffers call DeleteAllBuffers()
-function! DeleteAllBuffers()
+command! DeleteBuffers call DeleteBuffers()
+function! DeleteBuffers()
   let allbufnums = ListAllBufNums()
   for num in allbufnums
     execute 'bwipeout! ' . num
@@ -783,14 +802,14 @@ function! QuitAll()
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
   call DeleteAllTerms()
-  call DeleteAllBuffers()
+  call DeleteBuffers()
   normal ZQ
 endfunction
 
 command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
 function! QuitAllWithoutSaveSession()
   call DeleteAllTerms()
-  call DeleteAllBuffers()
+  call DeleteBuffers()
   normal ZQ
 endfunction
 
@@ -1130,7 +1149,7 @@ function! s:delete_buffers(lines)
   execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[0]}))
 endfunction
 
-command! DeleteBuffers call fzf#run(fzf#wrap({
+command! DeleteBuffersByFZF call fzf#run(fzf#wrap({
   \ 'source': s:list_buffers(),
   \ 'sink*': { lines -> s:delete_buffers(lines) },
   \ 'options': '--multi --reverse --bind ctrl-a:select-all'
@@ -1300,7 +1319,7 @@ function! s:open_project(project)
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
   call DeleteAllTerms()
-  call DeleteAllBuffers()
+  call DeleteBuffers()
   silent! execute 'cd ' . a:project
   CreateFloaterm
   CreateFloaterm
@@ -1318,7 +1337,7 @@ command! -nargs=0 SwitchProjectWithKeepingTerminal call fzf#run(fzf#wrap({
 function! s:switch_project_with_keeping_terminal(project)
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
-  call DeleteAllBuffers()
+  call DeleteBuffers()
   silent! execute 'cd ' . a:project[0]
 endfunction
 
@@ -1353,7 +1372,7 @@ function! s:load_session(session)
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
   call DeleteAllTerms()
-  call DeleteAllBuffers()
+  call DeleteBuffers()
   silent! execute 'source ~/.vim/sessions/' . a:session
   silent! execute 'source $MYVIMRC'
   sleep 100m
@@ -1386,7 +1405,7 @@ command! -nargs=0 SwitchSessionWithKeepingTerminal call fzf#run(fzf#wrap({
 function! s:switch_session_with_keeping_terminal(session)
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
-  call DeleteAllBuffers()
+  call DeleteBuffers()
   silent! execute 'source ~/.vim/sessions/' . a:session[0]
   silent! execute 'source $MYVIMRC'
 endfunction
@@ -1469,14 +1488,14 @@ function! s:open_selected_files_with_another_tab(files)
   unlet g:selected_branch
 endfunction
 
-command! Sandbox call fzf#run(fzf#vim#with_preview(fzf#wrap({
-\ 'source': 'find ~/.vim/sandbox -type file | sort',
-\ 'sink':   function('<sid>open_selected_sandbox'),
+command! TemporaryNote call fzf#run(fzf#vim#with_preview(fzf#wrap({
+\ 'source': 'find ~/.vim/temporary_note -type file | sort',
+\ 'sink':   function('<sid>open_selected_temporary_note'),
 \ 'options': '--multi --bind=ctrl-p:toggle-preview ',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
 
-function! s:open_selected_sandbox(line)
+function! s:open_selected_temporary_note(line)
   execute 'vs ' . a:line
 endfunction
 
