@@ -1300,8 +1300,8 @@ function! s:open_another_project_file(line)
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
     \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -type f'),
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'options': '--multi --bind=ctrl-p:toggle-preview ',
-    \ 'sink':   function('s:open_selected_file')})))
+    \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+    \ 'sink*':   function('s:open_selected_file_by_some_way')})))
   catch
     echohl WarningMsg
     echom v:exception
@@ -1470,7 +1470,7 @@ function! s:select_diff_files(branch)
     \ 'source':  printf('git diff' . a:branch . '...' . current_branch . ' --name-only'),
     \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'sink*':   function('s:open_selected_files_with_another_tab')}))
+    \ 'sink*':   function('<sid>open_selected_files_with_another_tab')}))
   catch
     echohl WarningMsg
     echom v:exception
@@ -1490,13 +1490,20 @@ endfunction
 
 command! TemporaryNote call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source': 'find ~/.vim/temporary_note -type file | sort',
-\ 'sink':   function('<sid>open_selected_temporary_note'),
-\ 'options': '--multi --bind=ctrl-p:toggle-preview ',
+\ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+\ 'sink*':   function('<sid>open_selected_file_by_some_way'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
 
-function! s:open_selected_temporary_note(line)
-  execute 'vs ' . a:line
+function! s:open_selected_file_by_some_way(line)
+  echom a:line
+  if a:line[0] == 'enter'
+    exec "tab drop " . a:line[1]
+  elseif a:line[0] == 'ctrl-v'
+    execute 'vs ' . a:line[1]
+  elseif a:line[0] == 'ctrl-e'
+    execute 'e ' . a:line[1]
+  endif
 endfunction
 
 command! -nargs=0 DiffAnotherProjectFile call fzf#run(fzf#wrap({
