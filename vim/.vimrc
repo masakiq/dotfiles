@@ -118,6 +118,7 @@ hi Visual ctermfg=255 ctermbg=38
 hi Identifier ctermfg=115
 " hide the `~` at the start of an empty line
 hi EndOfBuffer ctermfg=black ctermbg=black
+hi Folded  ctermfg=44 ctermbg=241
 
 " }}}
 
@@ -364,7 +365,7 @@ vnoremap 0 g0
 nnoremap ^ g^
 vnoremap ^ g^
 nnoremap $ g$
-vnoremap $ g$
+" vnoremap $ g$
 
 " 検索ハイライトをトグル
 nnoremap <space>n :set hlsearch!<CR>
@@ -953,7 +954,7 @@ noremap <silent><expr> f incsearch#go(<SID>config_easyfuzzymotion())
 
 " ### plugin voldikss/vim-floaterm ---------------------- {{{
 
-" let g:floaterm_keymap_toggle = '<c-t>'
+let g:floaterm_keymap_toggle = '<c-t>'
 let g:floaterm_keymap_prev = '<S-left>'
 let g:floaterm_keymap_next = '<S-right>'
 let g:floaterm_keymap_new = '<F12>'
@@ -961,7 +962,8 @@ let g:floaterm_height = 0.9
 let g:floaterm_width = 0.9
 let g:floaterm_keymap_kill = '<c-q>'
 
-noremap <c-t> :call TermToggle()<cr>
+" nnoremap <c-t> :call TermToggle()<cr>
+" tnoremap <c-t> :call TermToggle()<cr>
 
 function! TermToggle()
   if len(ListTermBufNums()) == 0
@@ -1046,21 +1048,21 @@ let g:fzf_action = {
     \ 'ctrl-e': 'edit',
     \ 'enter': 'GotoOrOpen tab',
   \ }
+
 let g:fzf_colors =
-  \ {
-    \ "fg":      ["fg", "CursorColumn"],
-    \ "bg":      ["bg", "Normal"],
-    \ "hl":      ["fg", "IncSearch"],
-    \ "fg+":     ["fg", "CursorLine", "CursorColumn", "Normal"],
-    \ "bg+":     ["bg", "CursorLine", "CursorColumn"],
-    \ "hl+":     ["fg", "IncSearch"],
-    \ 'info':    ['fg', 'PreProc'],
-    \ 'spinner': ['fg', 'PreProc'],
-    \ 'marker':  ['fg', 'PreProc'],
-    \ 'pointer': ['fg', 'PreProc'],
-    \ 'border':  ['fg', 'PreProc'],
-    \ 'header':  ['fg', 'PreProc'],
- \  }
+\ { "fg":      ["fg", "Normal"],
+  \ "bg":      ["bg", "Normal"],
+  \ "hl":      ["fg", "IncSearch"],
+  \ "fg+":     ["fg", "CursorLine", "CursorColumn", "Normal"],
+  \ "bg+":     ["bg", "CursorLine", "CursorColumn"],
+  \ "hl+":     ["fg", "IncSearch"],
+  \ "info":    ["fg", "IncSearch"],
+  \ "border":  ["fg", "Ignore"],
+  \ "prompt":  ["fg", "Comment"],
+  \ "pointer": ["fg", "IncSearch"],
+  \ "marker":  ["fg", "IncSearch"],
+  \ "spinner": ["fg", "IncSearch"],
+  \ "header":  ["fg", "WildMenu"] }
 
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
@@ -1490,19 +1492,24 @@ endfunction
 
 command! TemporaryNote call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source': 'find ~/.vim/temporary_note -type file | sort',
-\ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+\ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
 \ 'sink*':   function('<sid>open_selected_file_by_some_way'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
 
 function! s:open_selected_file_by_some_way(line)
-  echom a:line
-  if a:line[0] == 'enter'
-    exec "tab drop " . a:line[1]
-  elseif a:line[0] == 'ctrl-v'
-    execute 'vs ' . a:line[1]
-  elseif a:line[0] == 'ctrl-e'
-    execute 'e ' . a:line[1]
+  if len(a:line) == 2
+    if a:line[0] == 'enter'
+      exec "tab drop " . a:line[1]
+    elseif a:line[0] == 'ctrl-v'
+      execute 'vs ' . a:line[1]
+    elseif a:line[0] == 'ctrl-e'
+      execute 'e ' . a:line[1]
+    endif
+  else
+    for fi in a:line[1:]
+      exec 'tab drop ' . fi
+    endfor
   endif
 endfunction
 
