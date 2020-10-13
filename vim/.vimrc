@@ -1202,19 +1202,19 @@ command! DeleteWindow call fzf#run(fzf#wrap({
 
 " Rg, Ag が遅いので代わりにカスタムした RG を使う
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)#narrow-ag-results-within-vim
-function! s:ag_to_qf(line)
+function! s:open_quickfix(line)
   let parts = split(a:line, ':')
   return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2],
         \ 'text': join(parts[3:], ':')}
 endfunction
 
-function! s:ag_handler(lines)
+function! s:open_files(lines)
   if len(a:lines) < 2 | return | endif
 
   let cmd = get({'ctrl-e': 'edit',
                \ 'ctrl-v': 'vertical split',
                \ 'enter': 'GotoOrOpen tab'}, a:lines[0], 'e')
-  let list = map(a:lines[1:], 's:ag_to_qf(v:val)')
+  let list = map(a:lines[1:], 's:open_quickfix(v:val)')
 
   let first = list[0]
   execute cmd escape(first.filename, ' %#\')
@@ -1238,7 +1238,7 @@ endfunction
 command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('<sid>ag_handler'),
+\ 'sink*':    function('<sid>open_files'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
 \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
@@ -1248,7 +1248,7 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('<sid>ag_handler'),
+\ 'sink*':    function('<sid>open_files'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
 \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
