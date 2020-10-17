@@ -1591,57 +1591,12 @@ command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf
 
 " ## LSP 設定 ---------------------- {{{
 
-" let g:lsp_auto_enable = 1
-" let g:lsp_signs_enabled = 1         " enable diagnostic signs / we use ALE for now
-" let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-" let g:lsp_signs_error = {'text': '✖'}
-" let g:lsp_signs_warning = {'text': '~'}
-" let g:lsp_signs_hint = {'text': '?'}
-" let g:lsp_signs_information = {'text': '!!'}
-
-" let g:lsp_log_verbose = 1
-" let g:lsp_log_file = expand('~/.vim/vim-lsp.log')
-
-"  if executable('solargraph')
-"     " gem install solargraph
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'solargraph',
-"         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-"         \ 'initialization_options': {"diagnostics": "true"},
-"         \ 'whitelist': ['ruby'],
-"         \ })
-" endif
-
-" inoremap <silent><expr> <TAB>
-"   \ pumvisible() ? "\<C-n>" :
-"   \ <SID>check_back_space() ? "\<TAB>" :
-"   \ asyncomplete#force_refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-" function! s:on_lsp_buffer_enabled() abort
-"   setlocal omnifunc=lsp#complete
-"   setlocal signcolumn=yes
-"   nmap <buffer> gd <plug>(lsp-definition)
-"   nmap <buffer> <f2> <plug>(lsp-rename)
-"   inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
-" endfunction
-"
-" augroup lsp_install
-"   au!
-"   autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-" augroup END
-" command! LspDebug let lsp_log_verbose=1 | let lsp_log_file = expand('~/lsp.log')
-"
-" let g:lsp_diagnostics_enabled = 1
-" let g:lsp_diagnostics_echo_cursor = 1
-" let g:asyncomplete_auto_popup = 1
-" let g:asyncomplete_auto_completeopt = 0
-" let g:asyncomplete_popup_delay = 200
-" let g:lsp_text_edit_enabled = 1
-
 " Dart
 let g:lsc_auto_map = v:true
-let g:lsc_server_commands = {'dart': 'dart_language_server', 'ruby': 'solargraph stdio'}
+let g:lsc_server_commands = {
+  \ 'dart': 'dart_language_server',
+  \ 'ruby': 'solargraph stdio'
+  \ }
 let g:lsc_enable_autocomplete = v:true
 " Use all the defaults (recommended):
 
@@ -1652,10 +1607,10 @@ let g:lsc_auto_map = {'defaults': v:true, 'FindReferences': '<leader>r'}
 " let g:lsc_auto_map = {'defaults': v:true, 'FindImplementations': ''}
 
 " ... or set only the commands you want mapped without defaults.
+nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
 " Complete default mappings are:
     " \ 'GoToDefinition': 'gd',
     " \ 'GoToDefinitionSplit': 'gd',
-nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
 let g:lsc_auto_map = {
     \ 'FindReferences': 'gr',
     \ 'NextReference': 'gn',
