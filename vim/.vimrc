@@ -1333,6 +1333,25 @@ function! s:open_project(project)
   FloatermHide
 endfunction
 
+command! -nargs=0 SwitchVimPlugin call fzf#run(fzf#wrap({
+\ 'source': 'ls ~/.vim/plugged',
+\ 'sink':  function('<sid>switch_vim_plugin'),
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ }))
+
+function! s:switch_vim_plugin(dir)
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteAllTerms()
+  call DeleteBuffers()
+  silent! execute 'cd ~/.vim/plugged/' . a:dir
+  CreateFloaterm
+  CreateFloaterm
+  CreateFloaterm
+  sleep 100m
+  FloatermHide
+endfunction
+
 command! -nargs=0 SwitchProjectWithKeepingTerminal call fzf#run(fzf#wrap({
 \ 'source': 'ghq list --full-path',
 \ 'sink*':  function('<sid>switch_project_with_keeping_terminal'),
