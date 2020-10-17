@@ -121,6 +121,8 @@ hi EndOfBuffer ctermfg=black ctermbg=black
 hi Folded ctermfg=44 ctermbg=241
 hi CursorColumn ctermbg=19
 hi lscCurrentParameter ctermbg=19
+hi SignColumn ctermbg=0
+hi Pmenu ctermfg=12 ctermbg=239
 
 " }}}
 
@@ -843,12 +845,6 @@ endfunction
 
 " プラグラインインストールコマンド `:PlugUpdate`
 call plug#begin('~/.vim/plugged')
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/asyncomplete.vim'
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'mattn/vim-lsp-settings'
-Plug 'mattn/vim-goimports'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-markdown'
@@ -1047,9 +1043,6 @@ endfunction
 
 " ## fzf 設定 ---------------------- {{{
 
-" nnoremap <space>os :call SearchByRG()<CR>
-" vnoremap <space>os :<C-u>call RGBySelectedText()<CR>
-
 function! s:GotoOrOpen(command, ...)
   for file in a:000
     if a:command == 'e'
@@ -1064,8 +1057,6 @@ command! -nargs=+ GotoOrOpen call s:GotoOrOpen(<f-args>)
 let g:fzf_buffers_jump = 1
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 } }
-" let g:fzf_preview_window = 'right:60%'
-" This is default settings
 let g:fzf_action = {
     \ 'ctrl-v': 'vsplit',
     \ 'ctrl-e': 'edit',
@@ -1129,15 +1120,6 @@ function! s:find_all_files(lines)
   endfor
 endfunction
 
-
-" Rg でカラー出力しない
-" https://github.com/junegunn/fzf.vim/issues/488#issuecomment-350523157
-" https://github.com/junegunn/fzf.vim/pull/696
-" command! -bang -nargs=* Rg call fzf#vim#grep('rg --color never --column --line-number --no-heading --no-require-git '.shellescape(<q-args>), 1, <bang>0)
-" デフォルト rg --column --line-number --no-heading --color=always --smart-case --
-" command! -bang -nargs=? Rg
-"     \ call fzf#vim#grep('rg --line-number --color=always --smart-case '.shellescape(<q-args>), 1, fzf#vim#with_preview({'options': ['--layout=reverse']}))
-
 if has('gui_running')
 else
   nnoremap <space>of :FindAllFiles<CR>
@@ -1154,9 +1136,6 @@ nnoremap <space>oh :History<CR>
 vnoremap <space>oh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>
 
 nnoremap <space>ow :Windows<CR>
-
-" ターミナルを開く
-" nnoremap <space>ot :execute 'Buffers fish'<CR>
 
 " 単語補完
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
@@ -1592,6 +1571,21 @@ function! s:open_file_in_another_project(lines)
     exec cmd . split(file, ':')[0]
   endfor
 endfunction
+
+command! RGInTemporaryNote call RGInTemporaryNote()
+function! RGInTemporaryNote()
+  execute 'RGInTemporaryNoteAndOpen ' . input('RGInTemporaryNote/')
+endfunction
+
+command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
+\ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
+\                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+\ 'sink*':    function('<sid>open_files'),
+\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
+\            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+\            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+\ })))
 
 " }}}
 

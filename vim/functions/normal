@@ -5,6 +5,7 @@ SwitchProject
 SwitchProjectWithKeepingTerminal
 SearchByRGFromAllFiles
 RGInAnotherProject
+RGInTemporaryNote
 OpenAnotherProjectFile
 CopyCurrentPath
 CopyAbsolutePath
