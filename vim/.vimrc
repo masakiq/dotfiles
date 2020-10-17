@@ -118,7 +118,9 @@ hi Visual ctermfg=255 ctermbg=38
 hi Identifier ctermfg=115
 " hide the `~` at the start of an empty line
 hi EndOfBuffer ctermfg=black ctermbg=black
-hi Folded  ctermfg=44 ctermbg=241
+hi Folded ctermfg=44 ctermbg=241
+hi CursorColumn ctermbg=19
+hi lscCurrentParameter ctermbg=19
 
 " }}}
 
@@ -576,14 +578,14 @@ function! CreateFloaterm()
   execute 'FloatermNew --title=' . current_dir . '($1/$2) ' . '--name=' . current_dir
 endfunction
 
-function! ToSnakeCase() range
+function! SnakeCase() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/\//g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
 endfunction
 
-function! ToPascalCase() range
+function! PascalCase() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)\/(\u)/\1::\2/g'
@@ -596,37 +598,58 @@ endfunction
 
 function! RemoveUnderBar() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
+  unlet g:firstline
+  unlet g:lastline
+endfunction
+
+function! AddUnderBar() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
+  unlet g:firstline
+  unlet g:lastline
 endfunction
 
 function! RemoveBeginningOfLineSpace() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
 endfunction
 
-function! ClassAndModuleToColon() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%Vclass (.+)\n/::\1/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V \< .*//g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s//g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^:://g'
+function! ModuleToColon() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass (.+)\n/::\1/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V \< .*//g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V\s//g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^:://g'
+  silent! execute a:firstline . ',' . a:lastline . 's/^/class /g'
+  unlet g:firstline
+  unlet g:lastline
 endfunction
 
-function! ColonToClassAndModule() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%Vclass /module /g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/ module /g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V module /\rmodule /g'
+function! ColonToModule() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass /module /g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V::/ module /g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V module /\rmodule /g'
+  unlet g:firstline
+  unlet g:lastline
 endfunction
 
 function! CommaToBreakline() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V,/,\r/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/,/,\r/g'
+  unlet g:firstline
+  unlet g:lastline
 endfunction
 
 function! JsonToHash() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)"\s*:\s*/\1\2: /g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)"\s+:/\1\2:/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)":/\1\2:/g'
-  silent! execute a:firstline . ',' . a:lastline . "s/\\v'/\\\\'/g"
-  silent! execute a:firstline . ',' . a:lastline . 's/"' . "/'/g"
-  normal! gg=G
+  silent! execute g:firstline . ',' . g:lastline . 's/\"\(\w*\)\"\(:.*\)/\1\2/g'
+  silent! execute g:firstline . ',' . g:lastline . "s/\'/\\\\'/g"
+  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
+  unlet g:firstline
+  unlet g:lastline
+endfunction
+
+function! HashToJson() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\(\w*\)\:/\"\1\":/g'
+  silent! execute g:firstline . ',' . g:lastline . "s/'" . '/"/g'
+  unlet g:firstline
+  unlet g:lastline
 endfunction
 
 function! RocketToHash() range
@@ -1049,6 +1072,7 @@ let g:fzf_action = {
     \ 'enter': 'GotoOrOpen tab',
   \ }
 
+
 let g:fzf_colors =
 \ { "fg":      ["fg", "Normal"],
   \ "bg":      ["bg", "Normal"],
@@ -1350,8 +1374,12 @@ command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
-vnoremap <space><space> :call SelectVisualFunction()<CR>
-function! SelectVisualFunction() range
+vnoremap <space><space> :<c-u>call SelectVisualFunction()<CR>
+function! SelectVisualFunction()
+  let [line_start, column_start] = getpos("'<")[1:2]
+  let [line_end, column_end] = getpos("'>")[1:2]
+  let g:firstline = line_start
+  let g:lastline = line_end
   execute 'SelectVidualFunction'
 endfunction
 command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
@@ -1619,7 +1647,7 @@ endfunction
 
 " Dart
 let g:lsc_auto_map = v:true
-let g:lsc_server_commands = {'dart': 'dart_language_server'}
+let g:lsc_server_commands = {'dart': 'dart_language_server', 'ruby': 'solargraph stdio'}
 let g:lsc_enable_autocomplete = v:true
 " Use all the defaults (recommended):
 
@@ -1631,11 +1659,12 @@ let g:lsc_auto_map = {'defaults': v:true, 'FindReferences': '<leader>r'}
 
 " ... or set only the commands you want mapped without defaults.
 " Complete default mappings are:
+    " \ 'GoToDefinition': 'gd',
+    " \ 'GoToDefinitionSplit': 'gd',
+nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
 let g:lsc_auto_map = {
-    \ 'GoToDefinition': 'gd',
-    \ 'GoToDefinitionSplit': ['<C-W>]', '<C-W><C-]>'],
     \ 'FindReferences': 'gr',
-    \ 'NextReference': '<C-n>',
+    \ 'NextReference': 'gn',
     \ 'PreviousReference': '<C-p>',
     \ 'FindImplementations': 'gI',
     \ 'FindCodeActions': 'ga',
