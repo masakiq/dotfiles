@@ -580,6 +580,7 @@ function! CreateFloaterm()
   execute 'FloatermNew --title=' . current_dir . '($1/$2) ' . '--name=' . current_dir
 endfunction
 
+command! SnakeCase call SnakeCase()
 function! SnakeCase() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
@@ -587,6 +588,7 @@ function! SnakeCase() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
 endfunction
 
+command! PascalCase call PascalCase()
 function! PascalCase() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
@@ -598,22 +600,21 @@ function! CapitalCaseToSnakeCase() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
 endfunction
 
+command! RemoveUnderBar call RemoveUnderBar()
 function! RemoveUnderBar() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
-  unlet g:firstline
-  unlet g:lastline
 endfunction
 
+command! AddUnderBar call AddUnderBar()
 function! AddUnderBar() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
-  unlet g:firstline
-  unlet g:lastline
 endfunction
 
 function! RemoveBeginningOfLineSpace() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
 endfunction
 
+command! ModuleToColon call ModuleToColon()
 function! ModuleToColon() range
   silent! execute g:firstline . ',' . g:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
   silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass (.+)\n/::\1/g'
@@ -621,37 +622,31 @@ function! ModuleToColon() range
   silent! execute g:firstline . ',' . g:lastline . 's/\v%V\s//g'
   silent! execute g:firstline . ',' . g:lastline . 's/\v%V^:://g'
   silent! execute a:firstline . ',' . a:lastline . 's/^/class /g'
-  unlet g:firstline
-  unlet g:lastline
 endfunction
 
+command! ColonToModule call ColonToModule()
 function! ColonToModule() range
   silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass /module /g'
   silent! execute g:firstline . ',' . g:lastline . 's/\v%V::/ module /g'
   silent! execute g:firstline . ',' . g:lastline . 's/\v%V module /\rmodule /g'
-  unlet g:firstline
-  unlet g:lastline
 endfunction
 
+command! CommaToBreakline call CommaToBreakline()
 function! CommaToBreakline() range
   silent! execute g:firstline . ',' . g:lastline . 's/,/,\r/g'
-  unlet g:firstline
-  unlet g:lastline
 endfunction
 
+command! JsonToHash call JsonToHash()
 function! JsonToHash() range
   silent! execute g:firstline . ',' . g:lastline . 's/\"\(\w*\)\"\(:.*\)/\1\2/g'
   silent! execute g:firstline . ',' . g:lastline . "s/\'/\\\\'/g"
   silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
-  unlet g:firstline
-  unlet g:lastline
 endfunction
 
+command! HashToJson call HashToJson()
 function! HashToJson() range
   silent! execute g:firstline . ',' . g:lastline . 's/\(\w*\)\:/\"\1\":/g'
   silent! execute g:firstline . ',' . g:lastline . "s/'" . '/"/g'
-  unlet g:firstline
-  unlet g:lastline
 endfunction
 
 function! RocketToHash() range
@@ -692,6 +687,7 @@ function! ChangeToFileFormat(text)
   return file_format
 endfunction
 
+command! ReplaceText call ReplaceText()
 function! ReplaceText() range
   let selected_text = SelectedVisualModeText()
   if mode() == 'n'
@@ -1381,14 +1377,17 @@ function! SelectVisualFunction()
   let g:lastline = line_end
   execute 'SelectVidualFunction'
 endfunction
+
 command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
 \ 'source': 'cat ~/.vim/functions/visual',
-\ 'sink*':  function('<sid>select_visual_function_handler'),
+\ 'sink':  function('<sid>select_visual_function_handler'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
-function! s:select_visual_function_handler(lines) range
-  execute 'call '. a:lines[0] . '()'
+function! s:select_visual_function_handler(line) range
+  execute a:line
+  unlet g:firstline
+  unlet g:lastline
 endfunction
 
 command! -nargs=0 SwitchSession call fzf#run(fzf#wrap({
