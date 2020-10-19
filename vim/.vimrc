@@ -97,10 +97,10 @@ let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 " diff のカラー設定
-hi DiffAdd    cterm=bold ctermfg=10 ctermbg=18 gui=none guifg=bg guibg=Red
-hi DiffDelete cterm=bold ctermfg=10 ctermbg=18 gui=none guifg=bg guibg=Red
-hi DiffChange cterm=bold ctermfg=10 ctermbg=18 gui=none guifg=bg guibg=Red
-hi DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
+hi DiffAdd    cterm=none ctermfg=45  ctermbg=19
+hi DiffDelete cterm=none ctermfg=45  ctermbg=19
+hi DiffChange cterm=none ctermfg=45  ctermbg=19
+hi DiffText   cterm=none ctermfg=191 ctermbg=19
 
 hi LineNr ctermfg=31
 hi CursorLineNr ctermfg=87 cterm=none
