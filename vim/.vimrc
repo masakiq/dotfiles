@@ -1045,7 +1045,7 @@ endfunction
 
 let g:translator_window_type = 'normal'
 let g:translator_default_engines = ['google']
-let g:translator_window_max_width = 0.9
+let g:translator_window_max_width = 0.4
 let g:translator_window_max_height = 0.9
 
 command! -nargs=* TransEnToJaPopup call TransEnToJaPopup()
