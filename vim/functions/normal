@@ -33,6 +33,7 @@ RenameFile
 SaveSession
 SwapWindow
 PlugUpdate
+PlugClean
 DiffFile
 DiffFileGitBranch
 DiffAnotherProjectFile
