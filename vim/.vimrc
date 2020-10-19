@@ -123,6 +123,8 @@ hi CursorColumn ctermbg=19
 hi lscCurrentParameter ctermbg=19
 hi SignColumn ctermbg=0
 hi Pmenu ctermfg=12 ctermbg=239
+hi StatusLine  ctermfg=238 ctermbg=87
+hi WildMenu  ctermfg=238 ctermbg=87
 
 " }}}
 
@@ -191,6 +193,7 @@ set showmatch
 
 " コマンドライン補完するときに強化されたものを使う
 set wildmenu
+set wildmode=longest:full,full
 
 " テキスト挿入中の自動折り返しを日本語に対応させる
 set formatoptions+=mM
@@ -867,6 +870,7 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'natebosch/vim-lsc'
 Plug 'natebosch/vim-lsc-dart'
 Plug 'sorribas/vim-close-duplicate-tabs'
+Plug 'voldikss/vim-translator'
 call plug#end()
 
 " }}}
@@ -1034,6 +1038,35 @@ command! -nargs=0 GitAdd call GitAdd()
 function! GitAdd()
   AsyncRun -silent git add .
   echom 'executed "git add ."'
+endfunction
+
+" }}}
+
+" ## voldikss/vim-translator ---------------------- {{{
+
+let g:translator_window_type = 'normal'
+let g:translator_default_engines = ['google']
+let g:translator_window_max_width = 0.9
+let g:translator_window_max_height = 0.9
+
+command! -nargs=* TransEnToJaPopup call TransEnToJaPopup()
+function! TransEnToJaPopup() range
+  execute "'<,'>TranslateW source_lang=en target_lang=ja"
+endfunction
+
+command! -nargs=* TransJaToEnPopup call TransJaToEnPopup()
+function! TransJaToEnPopup() range
+  execute "'<,'>TranslateW source_lang=ja target_lang=en"
+endfunction
+
+command! -nargs=* TransEnToJaReplace call TransEnToJaReplace()
+function! TransEnToJaReplace() range
+  execute "'<,'>TranslateR source_lang=en target_lang=ja"
+endfunction
+
+command! -nargs=* TransJaToEnReplace call TransJaToEnReplace()
+function! TransJaToEnReplace() range
+  execute "'<,'>TranslateR source_lang=ja target_lang=en"
 endfunction
 
 " }}}

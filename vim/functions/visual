@@ -9,3 +9,7 @@ CommaToBreakline
 JsonToHash
 HashToJson
 SearchByRGFromAllFiles
+TransEnToJaPopup
+TransJaToEnPopup
+TransEnToJaReplace
+TransJaToEnReplace
