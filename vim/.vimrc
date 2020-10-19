@@ -1133,7 +1133,7 @@ command! -bang -nargs=? -complete=dir Windows
 
 command! -bang FindAllFiles call fzf#run(fzf#wrap({
 \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-\ 'sink*': function('<sid>find_all_files'),
+\ 'sink*': function('s:find_all_files'),
 \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
 \ }))
@@ -1272,7 +1272,7 @@ endfunction
 command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('<sid>open_files'),
+  \ 'sink*':    function('s:open_files'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
 \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
@@ -1282,7 +1282,7 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('<sid>open_files'),
+\ 'sink*':    function('s:open_files'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
 \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
@@ -1291,7 +1291,7 @@ command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
 
 command! -nargs=0 OpenNote call fzf#run(fzf#wrap({
 \ 'source': 'ls ~/.vim/note',
-\ 'sink':  function('<sid>open_note'),
+\ 'sink':  function('s:open_note'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1314,7 +1314,7 @@ endfunction
 
 command! -nargs=0 DiffFile call fzf#run(fzf#wrap({
 \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-\ 'sink':  function('<sid>diff_files'),
+\ 'sink':  function('s:diff_files'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 " \ 'source': 'rg --files',
@@ -1325,7 +1325,7 @@ endfunction
 
 command! -nargs=0 OpenAnotherProjectFile call fzf#run(fzf#wrap({
 \ 'source': 'ghq list --full-path',
-\ 'sink':  function('<sid>open_another_project_file'),
+\ 'sink':  function('s:open_another_project_file'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1345,7 +1345,7 @@ endfunction
 
 command! -nargs=0 SwitchProject call fzf#run(fzf#wrap({
 \ 'source': 'ghq list --full-path',
-\ 'sink':  function('<sid>open_project'),
+\ 'sink':  function('s:open_project'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1364,7 +1364,7 @@ endfunction
 
 command! -nargs=0 SwitchVimPlugin call fzf#run(fzf#wrap({
 \ 'source': 'ls ~/.vim/plugged',
-\ 'sink':  function('<sid>switch_vim_plugin'),
+\ 'sink':  function('s:switch_vim_plugin'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1383,7 +1383,7 @@ endfunction
 
 command! -nargs=0 SwitchProjectWithKeepingTerminal call fzf#run(fzf#wrap({
 \ 'source': 'ghq list --full-path',
-\ 'sink*':  function('<sid>switch_project_with_keeping_terminal'),
+\ 'sink*':  function('s:switch_project_with_keeping_terminal'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1412,7 +1412,7 @@ endfunction
 
 command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
 \ 'source': 'cat ~/.vim/functions/visual',
-\ 'sink':  function('<sid>select_visual_function_handler'),
+\ 'sink':  function('s:select_visual_function_handler'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1424,7 +1424,7 @@ endfunction
 
 command! -nargs=0 SwitchSession call fzf#run(fzf#wrap({
 \ 'source': 'ls ~/.vim/sessions',
-\ 'sink':  function('<sid>load_session'),
+\ 'sink':  function('s:load_session'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1446,7 +1446,7 @@ endfunction
 command! -nargs=0 DeleteSessions call fzf#run(fzf#wrap({
 \ 'source': 'ls ~/.vim/sessions',
 \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
-\ 'sink*':  function('<sid>delete_sessions'),
+\ 'sink*':  function('s:delete_sessions'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1458,7 +1458,7 @@ endfunction
 
 command! -nargs=0 SwitchSessionWithKeepingTerminal call fzf#run(fzf#wrap({
 \ 'source': 'ls ~/.vim/sessions',
-\ 'sink*':  function('<sid>switch_session_with_keeping_terminal'),
+\ 'sink*':  function('s:switch_session_with_keeping_terminal'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1473,7 +1473,7 @@ endfunction
 command! -bang DeleteFloaterms call fzf#run(fzf#wrap({
 \ 'source': s:fetch_term_names(),
 \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
-\ 'sink*': function('<sid>delete_floaterms'),
+\ 'sink*': function('s:delete_floaterms'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
 \ },
 \ <bang>0
@@ -1512,7 +1512,7 @@ endfunction
 
 command! -bang DiffFileGitBranch call fzf#run(fzf#wrap({
 \ 'source': 'git --no-pager branch | sed "/* /d"',
-\ 'sink': function('<sid>select_diff_files'),
+\ 'sink': function('s:select_diff_files'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
 \ },
 \ <bang>0
@@ -1551,7 +1551,7 @@ endfunction
 command! TemporaryNote call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source': 'find ~/.vim/temporary_note -type file | sort',
 \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-\ 'sink*':   function('<sid>open_selected_file_by_some_way'),
+\ 'sink*':   function('s:open_selected_file_by_some_way'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ })))
 
@@ -1573,7 +1573,7 @@ endfunction
 
 command! -nargs=0 DiffAnotherProjectFile call fzf#run(fzf#wrap({
 \ 'source': 'ghq list --full-path',
-\ 'sink':  function('<sid>diff_another_project_file'),
+\ 'sink':  function('s:diff_another_project_file'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1592,7 +1592,7 @@ endfunction
 
 command! -nargs=0 RGInAnotherProject call fzf#run(fzf#wrap({
 \ 'source': 'ghq list --full-path',
-\ 'sink':  function('<sid>rg_in_another_project'),
+\ 'sink':  function('s:rg_in_another_project'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
@@ -1604,7 +1604,7 @@ endfunction
 command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source':  printf("rg '%s' " . g:rg_in_another_project_file . " --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('<sid>open_file_in_another_project'),
+\ 'sink*':    function('s:open_file_in_another_project'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
 \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
@@ -1631,7 +1631,7 @@ endfunction
 command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('<sid>open_files'),
+\ 'sink*':    function('s:open_files'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
 \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
 \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
