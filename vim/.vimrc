@@ -561,6 +561,9 @@ endfunction
 
 command! SaveSession call SaveSession()
 function! SaveSession()
+  if has('nvim')
+    return
+  endif
   if s:actuality_tab_count() == 0
     return
   endif
@@ -838,6 +841,33 @@ function! QuitAllWithoutSaveSession()
   normal ZQ
 endfunction
 
+command! CloseDupTabs :call CloseDuplicateTabs()
+function! CloseDuplicateTabs()
+	let cnt = 0
+	let i = 1
+
+	let tpbufflst = []
+	let dups = []
+	let tabpgbufflst = tabpagebuflist(i)
+	while type(tabpagebuflist(i)) == 3
+		if index(tpbufflst, tabpagebuflist(i)) >= 0
+			call add(dups,i)
+		else
+			call add(tpbufflst, tabpagebuflist(i))
+		endif
+
+		let i += 1
+		let cnt += 1
+	endwhile
+
+	call reverse(dups)
+
+	for tb in dups
+		exec "tabclose ".tb
+	endfor
+
+endfunction
+
 " }}}
 
 " ## プラグイン設定 ---------------------- {{{
@@ -868,7 +898,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'natebosch/vim-lsc'
 Plug 'natebosch/vim-lsc-dart'
-Plug 'sorribas/vim-close-duplicate-tabs'
+" Plug 'sorribas/vim-close-duplicate-tabs'
 Plug 'voldikss/vim-translator'
 call plug#end()
 
@@ -1312,12 +1342,23 @@ function! s:open_selected_file(line)
   execute 'vs ' . a:line
 endfunction
 
-command! -nargs=0 DiffFile call fzf#run(fzf#wrap({
-\ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-\ 'sink':  function('s:diff_files'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
-" \ 'source': 'rg --files',
+command! DiffFile call DiffFile()
+function! DiffFile()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
+          \ 'sink':  function('s:diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 function! s:diff_files(line)
   execute 'vertical diffsplit ' . a:line
@@ -1343,11 +1384,24 @@ function! s:open_another_project_file(line)
   endtry
 endfunction
 
-command! -nargs=0 SwitchProject call fzf#run(fzf#wrap({
-\ 'source': 'ghq list --full-path',
-\ 'sink':  function('s:open_project'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+command! SwitchProject call SwitchProject()
+function!  SwitchProject()
+  try
+    call fzf#run(fzf#wrap({
+    \ 'source': 'ghq list --full-path',
+    \ 'sink':  function('s:open_project'),
+    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+    \ }))
+    " https://github.com/junegunn/fzf/issues/1566#issuecomment-495041470
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 function! s:open_project(project)
   call DeleteBufsWithoutExistingWindows()
@@ -1510,13 +1564,23 @@ function! ListTermBufNums()
   return listbufnums
 endfunction
 
-command! -bang DiffFileGitBranch call fzf#run(fzf#wrap({
-\ 'source': 'git --no-pager branch | sed "/* /d"',
-\ 'sink': function('s:select_diff_files'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-\ },
-\ <bang>0
-\ ))
+command! -bang DiffFileGitBranch call DiffFileGitBranch()
+function! DiffFileGitBranch()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'git --no-pager branch | sed "/* /d"',
+          \ 'sink': function('s:select_diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 function! s:get_current_branch()
   return substitute(FugitiveStatusline(), '^\[Git(\(.*\))\]', '\1', '')
@@ -1527,10 +1591,13 @@ function! s:select_diff_files(branch)
   let g:selected_branch = a:branch
   try
     call fzf#run(fzf#wrap({
-    \ 'source':  printf('git diff' . a:branch . '...' . current_branch . ' --name-only'),
-    \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
-    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'sink*': function('s:open_selected_files_with_another_tab')}))
+          \ 'source':  printf('git diff' . a:branch . '...' . current_branch . ' --name-only'),
+          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'sink*': function('s:open_selected_files_with_another_tab')}))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
   catch
     echohl WarningMsg
     echom v:exception
@@ -1548,12 +1615,24 @@ function! s:open_selected_files_with_another_tab(files)
   unlet g:selected_branch
 endfunction
 
-command! TemporaryNote call fzf#run(fzf#vim#with_preview(fzf#wrap({
-\ 'source': 'find ~/.vim/temporary_note -type file | sort',
-\ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-\ 'sink*':   function('s:open_selected_file_by_some_way'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ })))
+command! TemporaryNote call TemporaryNote()
+function! TemporaryNote()
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
+          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'sink*':   function('s:open_selected_file_by_some_way'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ })))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 function! s:open_selected_file_by_some_way(line)
   if len(a:line) == 2
