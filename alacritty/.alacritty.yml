@@ -13,3 +13,5 @@ font:
   cursor:
     text: '0x002b36'
     cursor: '0x839496'
+key_bindings:
+  - { key: A, mods: Alt, chars: "\x1ba" }
