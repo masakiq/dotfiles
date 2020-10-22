@@ -377,6 +377,11 @@ nnoremap $ g$
 " 検索ハイライトをトグル
 nnoremap <space>n :set hlsearch!<CR>
 
+" カーソル位置を一つ前に戻す
+nnoremap <space>; <c-o>
+" カーソル位置を一つ後に進める
+nnoremap <space>' <c-i>
+
 " }}}
 
 " ### 変換系 ---------------------- {{{
@@ -486,6 +491,9 @@ iabbrev fro # frozen_string_literal: true
 " iabbrev yie @yield [String] description
 iabbrev att attr_reader
 iabbrev yar # @param options [String] description <CR>@return [String] description<CR>@raise [StandardError] description<CR>@option options [String] description<CR>@example description<CR>@yield [String] description
+iabbrev con context '' do <CR>end
+iabbrev let let(:) { }
+iabbrev sha shared_examples '' do<CR>end
 
 " }}}
 
@@ -794,7 +802,6 @@ function! ListAllBufNums()
   let buflist = split(bufs, "\n")
   let listbufnums = []
   for buf in buflist
-    " echo substitute('  34 hoge hoge', '^\s*\(\d*\)\s*.*', '\1', '')
     let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
     call add(listbufnums, num)
   endfor
@@ -829,14 +836,14 @@ command! QuitAll call QuitAll()
 function! QuitAll()
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
-  call DeleteAllTerms()
+  " call DeleteAllTerms()
   call DeleteBuffers()
   normal ZQ
 endfunction
 
 command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
 function! QuitAllWithoutSaveSession()
-  call DeleteAllTerms()
+  " call DeleteAllTerms()
   call DeleteBuffers()
   normal ZQ
 endfunction
@@ -890,8 +897,8 @@ Plug 'haya14busa/incsearch-fuzzy.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'liuchengxu/vim-which-key'
 Plug 'osyo-manga/vim-over'
-Plug 'voldikss/vim-floaterm'
-Plug 'voldikss/fzf-floaterm'
+" Plug 'voldikss/vim-floaterm'
+" Plug 'voldikss/fzf-floaterm'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'dense-analysis/ale'
 Plug 'tpope/vim-fugitive'
@@ -1003,24 +1010,24 @@ noremap <silent><expr> f incsearch#go(<SID>config_easyfuzzymotion())
 
 " ### plugin voldikss/vim-floaterm ---------------------- {{{
 
-let g:floaterm_keymap_toggle = '<c-t>'
-let g:floaterm_keymap_prev = '<S-left>'
-let g:floaterm_keymap_next = '<S-right>'
-let g:floaterm_keymap_new = '<F12>'
-let g:floaterm_height = 0.9
-let g:floaterm_width = 0.9
-let g:floaterm_keymap_kill = '<c-q>'
+" let g:floaterm_keymap_toggle = '<c-t>'
+" let g:floaterm_keymap_prev = '<S-left>'
+" let g:floaterm_keymap_next = '<S-right>'
+" let g:floaterm_keymap_new = '<F12>'
+" let g:floaterm_height = 0.9
+" let g:floaterm_width = 0.9
+" let g:floaterm_keymap_kill = '<c-q>'
 
 " nnoremap <c-t> :call TermToggle()<cr>
 " tnoremap <c-t> :call TermToggle()<cr>
 
-function! TermToggle()
-  if len(ListTermBufNums()) == 0
-    CreateFloaterm
-  else
-    FloatermToggle
-  endif
-endfunction
+" function! TermToggle()
+"   if len(ListTermBufNums()) == 0
+"     CreateFloaterm
+"   else
+"     FloatermToggle
+"   endif
+" endfunction
 
 " }}}
 
@@ -1097,6 +1104,13 @@ command! -nargs=* TransJaToEnReplace call TransJaToEnReplace()
 function! TransJaToEnReplace() range
   execute "'<,'>TranslateR source_lang=ja target_lang=en"
 endfunction
+
+" }}}
+
+" ## mg979/vim-visual-multi ---------------------- {{{
+
+let g:VM_maps = {}
+let g:VM_maps["Align"] = '<M-a>'
 
 " }}}
 
@@ -1406,14 +1420,14 @@ endfunction
 function! s:open_project(project)
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
-  call DeleteAllTerms()
+  " call DeleteAllTerms()
   call DeleteBuffers()
   silent! execute 'cd ' . a:project
-  CreateFloaterm
-  CreateFloaterm
-  CreateFloaterm
-  sleep 100m
-  FloatermHide
+  " CreateFloaterm
+  " CreateFloaterm
+  " CreateFloaterm
+  " sleep 100m
+  " FloatermHide
 endfunction
 
 command! -nargs=0 SwitchVimPlugin call fzf#run(fzf#wrap({
@@ -1425,14 +1439,14 @@ command! -nargs=0 SwitchVimPlugin call fzf#run(fzf#wrap({
 function! s:switch_vim_plugin(dir)
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
-  call DeleteAllTerms()
+  " call DeleteAllTerms()
   call DeleteBuffers()
   silent! execute 'cd ~/.vim/plugged/' . a:dir
-  CreateFloaterm
-  CreateFloaterm
-  CreateFloaterm
-  sleep 100m
-  FloatermHide
+  " CreateFloaterm
+  " CreateFloaterm
+  " CreateFloaterm
+  " sleep 100m
+  " FloatermHide
 endfunction
 
 command! -nargs=0 SwitchProjectWithKeepingTerminal call fzf#run(fzf#wrap({
@@ -1476,25 +1490,37 @@ function! s:select_visual_function_handler(line) range
   unlet g:lastline
 endfunction
 
-command! -nargs=0 SwitchSession call fzf#run(fzf#wrap({
-\ 'source': 'ls ~/.vim/sessions',
-\ 'sink':  function('s:load_session'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+command! -bang SwitchSession call SwitchSession()
+function! SwitchSession()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ls ~/.vim/sessions',
+          \ 'sink':  function('s:load_session'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 function! s:load_session(session)
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
-  call DeleteAllTerms()
+  " call DeleteAllTerms()
   call DeleteBuffers()
   silent! execute 'source ~/.vim/sessions/' . a:session
   silent! execute 'source $MYVIMRC'
-  sleep 100m
-  CreateFloaterm
-  CreateFloaterm
-  CreateFloaterm
-  sleep 100m
-  FloatermHide
+  " sleep 100m
+  " CreateFloaterm
+  " CreateFloaterm
+  " CreateFloaterm
+  " sleep 100m
+  " FloatermHide
 endfunction
 
 command! -nargs=0 DeleteSessions call fzf#run(fzf#wrap({
