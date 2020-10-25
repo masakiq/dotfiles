@@ -447,14 +447,14 @@ nnoremap <space>t :tabnew<CR>
 if has('gui_running')
 else
   " 右のタブに移動
-  nnoremap ' :normal gt<CR>
+  nnoremap <right> :normal gt<CR>
   " 左のタブに移動
-  nnoremap ; :normal gT<CR>
+  nnoremap <left> :normal gT<CR>
 
-  " 現タブを左に移動
-  nnoremap <space>m; :-tabm<CR>
   " 現タブを右に移動
-  nnoremap <space>m' :+tabm<CR>
+  nnoremap <space><right> :+tabm<CR>
+  " 現タブを左に移動
+  nnoremap <space><left> :-tabm<CR>
 endif
 
 " }}}
@@ -898,8 +898,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'natebosch/vim-lsc'
 Plug 'natebosch/vim-lsc-dart'
-" Plug 'sorribas/vim-close-duplicate-tabs'
 Plug 'voldikss/vim-translator'
+Plug 'chriskempson/base16-vim'
 call plug#end()
 
 " }}}
