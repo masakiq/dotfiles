@@ -1,12 +1,12 @@
 font:
   size: 13
-  normal:
-    family: Meslo LG M DZ for Powerline
-  bold:
-    family: Meslo LG M DZ for Powerline
-  italic:
-    family: Meslo LG M DZ for Powerline
-      #colors:
+  # normal:
+  #   family: Meslo LG M DZ for Powerline
+  # bold:
+  #   family: Meslo LG M DZ for Powerline
+  # italic:
+  #   family: Meslo LG M DZ for Powerline
+  #     #colors:
   primary:
     background: '0x002b36'
     foreground: '0x839496'
@@ -15,3 +15,5 @@ font:
     cursor: '0x839496'
 key_bindings:
   - { key: A, mods: Alt, chars: "\x1ba" }
+  - { key: Key1, mods: Alt|Command, command: { program: "open", args: ["/Applications/Google\ Chrome.app"] } }
+  - { key: Key3, mods: Alt|Command, command: { program: "open", args: ["/Applications/iTerm.app"] } }
