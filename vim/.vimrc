@@ -1341,11 +1341,24 @@ function! s:diff_files(line)
   execute 'vertical diffsplit ' . a:line
 endfunction
 
-command! -nargs=0 OpenAnotherProjectFile call fzf#run(fzf#wrap({
-\ 'source': 'ghq list --full-path',
-\ 'sink':  function('s:open_another_project_file'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+command! -nargs=0 OpenAnotherProjectFile call s:ghq_list_and_open_another_project_file()
+
+function! s:ghq_list_and_open_another_project_file()
+  try
+    call fzf#run(fzf#wrap({
+    \ 'source': 'ghq list --full-path',
+    \ 'sink':  function('s:open_another_project_file'),
+    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+    \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 function! s:open_another_project_file(line)
   try
@@ -1354,6 +1367,9 @@ function! s:open_another_project_file(line)
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
     \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
     \ 'sink*':   function('s:open_selected_file_by_some_way')})))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
   catch
     echohl WarningMsg
     echom v:exception
@@ -1566,18 +1582,18 @@ function! s:open_selected_file_by_some_way(line)
   endif
 endfunction
 
-command! -nargs=0 DiffAnotherProjectFile call fzf#run(fzf#wrap({
-\ 'source': 'ghq list --full-path',
-\ 'sink':  function('s:diff_another_project_file'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+command! -nargs=0 DiffAnotherProjectFile call s:ghq_list_diff_another_project_file()
 
-function! s:diff_another_project_file(line)
+function! s:ghq_list_diff_another_project_file()
   try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-    \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . './.git/*" -type f'),
-    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'sink':   function('s:diff_files')})))
+    call fzf#run(fzf#wrap({
+    \ 'source': 'ghq list --full-path',
+    \ 'sink':  function('s:diff_another_project_file'),
+    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+    \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
   catch
     echohl WarningMsg
     echom v:exception
@@ -1585,15 +1601,47 @@ function! s:diff_another_project_file(line)
   endtry
 endfunction
 
-command! -nargs=0 RGInAnotherProject call fzf#run(fzf#wrap({
-\ 'source': 'ghq list --full-path',
-\ 'sink':  function('s:rg_in_another_project'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+function! s:diff_another_project_file(line)
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+    \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . './.git/*" -type f'),
+    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+    \ 'sink':   function('s:diff_files')})))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+command! -nargs=0 RGInAnotherProject call s:ghq_list_rg_in_another_project()
+
+function! s:ghq_list_rg_in_another_project()
+  try
+    call fzf#run(fzf#wrap({
+    \ 'source': 'ghq list --full-path',
+    \ 'sink':  function('s:rg_in_another_project'),
+    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+    \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 function! s:rg_in_another_project(line)
   let g:rg_in_another_project_file = a:line
   execute 'RGOnAnotherProject ' . input('RGOnAnotherProject/')
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
 endfunction
 
 command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap({
@@ -1621,6 +1669,9 @@ endfunction
 command! RGInTemporaryNote call RGInTemporaryNote()
 function! RGInTemporaryNote()
   execute 'RGInTemporaryNoteAndOpen ' . input('RGInTemporaryNote/')
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
 endfunction
 
 command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
