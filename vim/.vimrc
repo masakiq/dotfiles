@@ -745,6 +745,9 @@ function! SearchByRG()
     echom 'Copyed! ' . selected
     execute 'RG ' . selected
     silent! exec "normal \<c-c>"
+    if has('nvim')
+      call feedkeys(' ')
+    endif
   endif
 endfunction
 
@@ -755,15 +758,22 @@ function! RGBySelectedText()
   execute 'RG ' . selected
 endfunction
 
-command! SearchByRGFromAllFiles call SearchByRGFromAllFiles()
-function! SearchByRGFromAllFiles()
-  if mode() == 'n'
-    execute 'RGFromAllFiles ' . input('RG/')
-  else
-    let selected = SelectedVisualModeText()
-    let @+=selected
-    execute 'RGFromAllFiles ' . selected
-    silent! exec "normal \<c-c>"
+command! RGFromAllFilesVisual call RGFromAllFilesVisual()
+function! RGFromAllFilesVisual()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  execute 'RGFromAllFiles ' . selected
+  silent! exec "normal \<c-c>"
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+command! RGFromAllFilesNormal call RGFromAllFilesNormal()
+function! RGFromAllFilesNormal()
+  execute 'RGFromAllFiles ' . input('RGFromAllFiles/')
+  if has('nvim')
+    call feedkeys('i', 'n')
   endif
 endfunction
 
