@@ -1,8 +1,6 @@
 GitAdd
 SwitchSession
-SwitchSessionWithKeepingTerminal
 SwitchProject
-SwitchProjectWithKeepingTerminal
 SearchByRGFromAllFiles
 RGInAnotherProject
 RGInTemporaryNote
@@ -23,11 +21,8 @@ OpenMarkdown
 OpenImplementationFile
 OpenTestFile
 OpenNote
-Floaterms
-CreateFloaterm
 DeleteBuffers
 DeleteBuffersByFZF
-DeleteFloaterms
 DeleteSessions
 RenameFile
 SaveSession
