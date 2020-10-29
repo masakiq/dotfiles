@@ -424,13 +424,13 @@ nnoremap <space>sh :sp<CR><c-w>j
 " nnoremap <space>sx :sp<cr>:vs<cr><c-w>k:vs<cr><c-w>h15<c-w>+
 
 " ウインドウ幅を右に広げる
-nnoremap <space><right> 41<c-w>>
+nnoremap <space>. 41<c-w>>
 " ウインドウ幅を左に広げる
-nnoremap <space><left> 41<c-w><
+nnoremap <space>, 41<c-w><
 " ウインドウ高さを高くする
-nnoremap <space><down> 9<c-w>+
+nnoremap <space>= 9<c-w>+
 " ウインドウ高さを低くする
-nnoremap <space><up> 9<c-w>-
+nnoremap <space>- 9<c-w>-
 
 " 前のバッファに戻る
 " nnoremap <space><left> :bprevious<CR>
@@ -1223,6 +1223,7 @@ command! DeleteBuffersByFZF call fzf#run(fzf#wrap({
 function! s:list_windows()
   let list = []
   let tabnumber = 1
+
 
   while tabnumber <= tabpagenr('$')
     let buflist = tabpagebuflist(tabnumber)
