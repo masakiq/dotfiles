@@ -32,7 +32,7 @@ DeleteSessions
 RenameFile
 SaveSession
 SwapWindow
-PluginInstall
+PlugInstall
 PlugUpdate
 PlugClean
 DiffFile
