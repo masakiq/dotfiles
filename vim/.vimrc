@@ -482,18 +482,12 @@ endif
 " ## スニペット設定 ---------------------- {{{
 
 " Ruby 用スニペット
-iabbrev fro # frozen_string_literal: true
-" iabbrev par @param options [String] description
-" iabbrev ret @return [String] description
-" iabbrev rai @raise [StandardError] description
-" iabbrev opt @option options [String] description
-" iabbrev exa @example description
-" iabbrev yie @yield [String] description
-iabbrev att attr_reader
-iabbrev yar # @param options [String] description <CR>@return [String] description<CR>@raise [StandardError] description<CR>@option options [String] description<CR>@example description<CR>@yield [String] description
-iabbrev con context '' do <CR>end
-iabbrev let let(:) { }
-iabbrev sha shared_examples '' do<CR>end
+iabbrev fro # frozen_string_literal: true<esc>
+iabbrev yar # @param options [Type] description<CR>@return [Type] description<CR>@raise [StandardError] description<CR>@option options [Type] description<CR>@example description<CR>@yield [Type] description<esc>6k4w
+iabbrev con context '' do <CR>end<esc>kw<esc>
+iabbrev let let(:) { }<esc>4hi<esc>
+iabbrev sha shared_examples '' do<CR>end<esc>kw<esc>
+iabbrev beh it_behaves_like ''<esc>h<esc>
 
 " }}}
 
