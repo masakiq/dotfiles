@@ -102,29 +102,34 @@ hi DiffDelete cterm=none ctermfg=45  ctermbg=19
 hi DiffChange cterm=none ctermfg=45  ctermbg=19
 hi DiffText   cterm=none ctermfg=191 ctermbg=19
 
-hi LineNr ctermfg=31
-hi CursorLineNr ctermfg=87 cterm=none
-hi CursorLine cterm=none
-hi SpellCap ctermfg=87 ctermbg=31
-hi SpellRare ctermfg=87 ctermbg=63
-hi SpellLocal ctermfg=87 ctermbg=71
-hi Error ctermfg=255 ctermbg=199
-hi Constant ctermfg=147
-hi Statement ctermfg=219
-hi Search ctermfg=255 ctermbg=63
-hi Type ctermfg=45
-hi Todo ctermfg=255 ctermbg=34
-hi Visual ctermfg=255 ctermbg=38
-hi Identifier ctermfg=115
+
+hi Identifier           ctermfg=115
+hi Type                 ctermfg=45
+hi PreProc              ctermfg=223
+hi Constant             ctermfg=147
+hi Statement            ctermfg=219
+hi CursorColumn         ctermbg=19
+hi lscCurrentParameter  ctermbg=19
+hi SignColumn           ctermbg=0
+
+hi LineNr               ctermfg=31
+hi CursorLineNr         ctermfg=87  cterm=none
+hi CursorLine           cterm=none
+
+hi SpellCap             ctermfg=87  ctermbg=31
+hi SpellRare            ctermfg=87  ctermbg=63
+hi SpellLocal           ctermfg=87  ctermbg=71
+hi Error                ctermfg=255 ctermbg=199
+hi Search               ctermfg=255 ctermbg=63
+hi Todo                 ctermfg=255 ctermbg=34
+hi Visual               ctermfg=255 ctermbg=38
 " hide the `~` at the start of an empty line
-hi EndOfBuffer ctermfg=black ctermbg=black
-hi Folded ctermfg=44 ctermbg=241
-hi CursorColumn ctermbg=19
-hi lscCurrentParameter ctermbg=19
-hi SignColumn ctermbg=0
-hi Pmenu ctermfg=12 ctermbg=239
-hi StatusLine  ctermfg=238 ctermbg=87
-hi WildMenu  ctermfg=238 ctermbg=87
+hi EndOfBuffer          ctermfg=black ctermbg=black
+hi Folded               ctermfg=44  ctermbg=241
+hi Pmenu                ctermfg=12  ctermbg=239
+hi StatusLine           ctermfg=238 ctermbg=87
+hi WildMenu             ctermfg=238 ctermbg=87
+
 
 " }}}
 
