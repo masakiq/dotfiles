@@ -8,6 +8,8 @@ ColonToModule
 CommaToBreakline
 JsonToHash
 HashToJson
+RocketToHash
+HashToRocket
 RGFromAllFilesVisual
 TransEnToJaPopup
 TransJaToEnPopup

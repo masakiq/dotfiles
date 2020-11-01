@@ -646,12 +646,19 @@ function! HashToJson() range
   silent! execute g:firstline . ',' . g:lastline . "s/'" . '/"/g'
 endfunction
 
+command! RocketToHash call RocketToHash()
 function! RocketToHash() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)"(\w+)".*\=\>/\1\2:/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V^(\s*)(\w+):\s*/\1\2: /g'
-  silent! execute a:firstline . ',' . a:lastline . "s/\\v'/\\\\'/g"
-  silent! execute a:firstline . ',' . a:lastline . 's/"' . "/'/g"
-  normal! gg=G
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)"(\w+)".*\=\>/\1\2:/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)(\w+):\s*/\1\2: /g'
+  silent! execute g:firstline . ',' . g:lastline . "s/\\v'/\\\\'/g"
+  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
+endfunction
+
+command! HashToRocket call HashToRocket()
+function! HashToRocket() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):\s*/\1\2: /g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):/\1"\2" =>/g'
+  silent! execute g:firstline . ',' . g:lastline . "s/\'/\"/g"
 endfunction
 
 command! RenameFile call RenameFile()
