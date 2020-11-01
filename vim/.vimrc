@@ -533,16 +533,6 @@ function! OpenVIMRC()
   :noh
 endfunction
 
-command! OpenGitHub call OpenGitHub()
-function! OpenGitHub()
-  GHInteractive
-endfunction
-
-command! OpenGitHubBlame call OpenGitHubBlame()
-function! OpenGitHubBlame()
-  GBInteractive
-endfunction
-
 command! OpenImplementationFile call OpenImplementationFile()
 function! OpenImplementationFile()
   execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')
@@ -871,6 +861,10 @@ function! CloseDuplicateTabs()
 
 endfunction
 
+command! CopyGitHubURL :ShareLine
+command! OpenGitHub :GHInteractive
+command! OpenGitHubBlame :GBInteractive
+
 " }}}
 
 " ## プラグイン設定 ---------------------- {{{
@@ -901,6 +895,7 @@ Plug 'natebosch/vim-lsc'
 Plug 'natebosch/vim-lsc-dart'
 Plug 'voldikss/vim-translator'
 Plug 'chriskempson/base16-vim'
+Plug 'maeda1150/shareline.vim'
 call plug#end()
 
 " }}}
