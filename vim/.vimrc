@@ -487,12 +487,12 @@ endif
 " ## スニペット設定 ---------------------- {{{
 
 " Ruby 用スニペット
-iabbrev fro # frozen_string_literal: true<esc>
-iabbrev yar # @param options [Type] description<CR>@return [Type] description<CR>@raise [StandardError] description<CR>@option options [Type] description<CR>@example description<CR>@yield [Type] description<esc>6k4w
-iabbrev con context '' do <CR>end<esc>kw<esc>
-iabbrev let let(:) { }<esc>4hi<esc>
-iabbrev sha shared_examples '' do<CR>end<esc>kw<esc>
-iabbrev beh it_behaves_like ''<esc>h<esc>
+:autocmd FileType ruby :iabbrev fro # frozen_string_literal: true<esc>
+:autocmd FileType ruby :iabbrev yar # @param options [Type] description<CR>@return [Type] description<CR>@raise [StandardError] description<CR>@option options [Type] description<CR>@example description<CR>@yield [Type] description<esc>6k4w
+:autocmd FileType ruby :iabbrev con context '' do <CR>end<esc>kw<esc>
+:autocmd FileType ruby :iabbrev let let(:) { }<esc>4hi<esc>
+:autocmd FileType ruby :iabbrev sha shared_examples '' do<CR>end<esc>kw<esc>
+:autocmd FileType ruby :iabbrev beh it_behaves_like ''<esc>h<esc>
 
 " }}}
 
