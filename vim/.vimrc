@@ -105,9 +105,9 @@ hi DiffText   cterm=none ctermfg=191 ctermbg=19
 
 hi Identifier           ctermfg=115
 hi Type                 ctermfg=45
-hi PreProc              ctermfg=223
+hi PreProc              ctermfg=219
 hi Constant             ctermfg=147
-hi Statement            ctermfg=219
+hi Statement            ctermfg=199
 hi CursorColumn         ctermbg=19
 hi lscCurrentParameter  ctermbg=19
 hi SignColumn           ctermbg=0
@@ -1183,6 +1183,8 @@ vnoremap <space>oh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>
 
 nnoremap <space>ow :Windows<CR>
 
+nnoremap <space>on :TemporaryNote<CR>
+
 " 単語補完
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
 " ファイル名補完
@@ -1567,9 +1569,9 @@ function! TemporaryNote()
           \ 'sink*':   function('s:open_selected_file_by_some_way'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
           \ })))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
+    " if has('nvim')
+    "   call feedkeys('i', 'n')
+    " endif
   catch
     echohl WarningMsg
     echom v:exception
