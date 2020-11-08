@@ -558,12 +558,6 @@ endfunction
 
 command! SaveSession call SaveSession()
 function! SaveSession()
-  if has('nvim')
-    return
-  endif
-  if s:actuality_tab_count() == 0
-    return
-  endif
   let current_dir = s:getCurrentDirectory()
   silent! execute 'mks! ~/.vim/sessions/' . current_dir
   echom 'saved current session : ' .current_dir
