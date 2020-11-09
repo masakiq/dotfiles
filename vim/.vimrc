@@ -490,6 +490,7 @@ endif
 :autocmd FileType ruby :iabbrev fro # frozen_string_literal: true<esc>
 :autocmd FileType ruby :iabbrev yar # @param options [Type] description<CR>@return [Type] description<CR>@raise [StandardError] description<CR>@option options [Type] description<CR>@example description<CR>@yield [Type] description<esc>6k4w
 :autocmd FileType ruby :iabbrev con context '' do <CR>end<esc>kw<esc>
+:autocmd FileType ruby :iabbrev des describe '' do <CR>end<esc>kw<esc>
 :autocmd FileType ruby :iabbrev let let(:) { }<esc>4hi<esc>
 :autocmd FileType ruby :iabbrev sha shared_examples '' do<CR>end<esc>kw<esc>
 :autocmd FileType ruby :iabbrev beh it_behaves_like ''<esc>h<esc>
@@ -573,17 +574,21 @@ endfunction
 
 command! SnakeCase call SnakeCase()
 function! SnakeCase() range
+  let start_col = col('.')
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/\//g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
+  silent! exec 'normal ' . start_col . '|'
 endfunction
 
 command! PascalCase call PascalCase()
 function! PascalCase() range
+  let start_col = col('.')
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)\/(\u)/\1::\2/g'
+  silent! exec 'normal ' . start_col . '|'
 endfunction
 
 function! CapitalCaseToSnakeCase() range
@@ -593,12 +598,16 @@ endfunction
 
 command! RemoveUnderBar call RemoveUnderBar()
 function! RemoveUnderBar() range
+  let start_col = col('.')
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
+  silent! exec 'normal ' . start_col . '|'
 endfunction
 
 command! AddUnderBar call AddUnderBar()
 function! AddUnderBar() range
+  let start_col = col('.')
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
+  silent! exec 'normal ' . start_col . '|'
 endfunction
 
 function! RemoveBeginningOfLineSpace() range
@@ -1196,11 +1205,23 @@ function! s:delete_buffers(lines)
   execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[0]}))
 endfunction
 
-command! DeleteBuffersByFZF call fzf#run(fzf#wrap({
-  \ 'source': s:list_buffers(),
-  \ 'sink*': { lines -> s:delete_buffers(lines) },
-  \ 'options': '--multi --reverse --bind ctrl-a:select-all'
-\ }))
+command! -bang DeleteBuffersByFZF call DeleteBuffersByFZF()
+function! DeleteBuffersByFZF()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': s:list_buffers(),
+          \ 'sink*': { lines -> s:delete_buffers(lines) },
+          \ 'options': '--multi --reverse --bind ctrl-a:select-all'
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 " https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
 function! s:list_windows()
@@ -1477,12 +1498,24 @@ function! s:load_session(session)
   silent! execute 'source $MYVIMRC'
 endfunction
 
-command! -nargs=0 DeleteSessions call fzf#run(fzf#wrap({
-\ 'source': 'ls ~/.vim/sessions',
-\ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
-\ 'sink*':  function('s:delete_sessions'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+command! -bang DeleteSessions call DeleteSessions()
+function! DeleteSessions()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ls ~/.vim/sessions',
+          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
+          \ 'sink*':  function('s:delete_sessions'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 function! s:delete_sessions(sessions)
   for session in a:sessions

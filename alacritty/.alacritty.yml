@@ -17,3 +17,4 @@ key_bindings:
   - { key: A, mods: Alt, chars: "\x1ba" }
   - { key: Key1, mods: Alt|Command, command: { program: "open", args: ["/Applications/Google\ Chrome.app"] } }
   - { key: Key3, mods: Alt|Command, command: { program: "open", args: ["/Applications/iTerm.app"] } }
+background_opacity: 0.9
