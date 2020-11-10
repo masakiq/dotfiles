@@ -283,7 +283,7 @@ noremap <space>oe :call ToggleNetrw()<CR>
 " ### マップ基本設定 ---------------------- {{{
 
 " リーダーキーを , にする
-let mapleader = ","
+let mapleader = ','
 
 " ローカルリーダーキーを , にする
 " let maplocalleader = ","
@@ -489,8 +489,8 @@ endif
 " Ruby 用スニペット
 :autocmd FileType ruby :iabbrev fro # frozen_string_literal: true<esc>
 :autocmd FileType ruby :iabbrev yar # @param options [Type] description<CR>@return [Type] description<CR>@raise [StandardError] description<CR>@option options [Type] description<CR>@example description<CR>@yield [Type] description<esc>6k4w
-:autocmd FileType ruby :iabbrev con context '' do <CR>end<esc>kw<esc>
-:autocmd FileType ruby :iabbrev des describe '' do <CR>end<esc>kw<esc>
+:autocmd FileType ruby :iabbrev con context '' do<CR>end<esc>kw<esc>
+:autocmd FileType ruby :iabbrev des describe '' do<CR>end<esc>kw<esc>
 :autocmd FileType ruby :iabbrev let let(:) { }<esc>4hi<esc>
 :autocmd FileType ruby :iabbrev sha shared_examples '' do<CR>end<esc>kw<esc>
 :autocmd FileType ruby :iabbrev beh it_behaves_like ''<esc>h<esc>
@@ -906,6 +906,7 @@ Plug 'natebosch/vim-lsc-dart'
 Plug 'voldikss/vim-translator'
 Plug 'chriskempson/base16-vim'
 Plug 'maeda1150/shareline.vim'
+Plug 'tpope/vim-surround'
 call plug#end()
 
 " }}}
@@ -1086,7 +1087,12 @@ endfunction
 " ## mg979/vim-visual-multi ---------------------- {{{
 
 let g:VM_maps = {}
-let g:VM_maps["Align"] = '<M-a>'
+" let g:VM_maps["Align"]                = '<M-a>'
+" let g:VM_maps["Surround"]             = '<M-s>'
+" let g:VM_maps["Case Conversion Menu"] = '<M-c>'
+let g:VM_maps["Align"]                = 'A'
+let g:VM_maps["Surround"]             = 'S'
+let g:VM_maps["Case Conversion Menu"] = 'C'
 
 " }}}
 
