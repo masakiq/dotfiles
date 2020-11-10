@@ -102,7 +102,6 @@ hi DiffDelete cterm=none ctermfg=45  ctermbg=19
 hi DiffChange cterm=none ctermfg=45  ctermbg=19
 hi DiffText   cterm=none ctermfg=191 ctermbg=19
 
-
 hi Identifier           ctermfg=115
 hi Type                 ctermfg=45
 hi PreProc              ctermfg=219
@@ -124,7 +123,7 @@ hi Search               ctermfg=255 ctermbg=63
 hi Todo                 ctermfg=255 ctermbg=34
 hi Visual               ctermfg=255 ctermbg=38
 " hide the `~` at the start of an empty line
-hi EndOfBuffer          ctermfg=black ctermbg=black
+hi EndOfBuffer          ctermfg=237 ctermbg=none
 hi Folded               ctermfg=44  ctermbg=241
 hi Pmenu                ctermfg=12  ctermbg=239
 hi StatusLine           ctermfg=238 ctermbg=87
@@ -1087,12 +1086,9 @@ endfunction
 " ## mg979/vim-visual-multi ---------------------- {{{
 
 let g:VM_maps = {}
-" let g:VM_maps["Align"]                = '<M-a>'
-" let g:VM_maps["Surround"]             = '<M-s>'
-" let g:VM_maps["Case Conversion Menu"] = '<M-c>'
-let g:VM_maps["Align"]                = 'A'
+let g:VM_maps["Align"]                = '<M-a>'
 let g:VM_maps["Surround"]             = 'S'
-let g:VM_maps["Case Conversion Menu"] = 'C'
+let g:VM_maps["Case Conversion Menu"] = '<M-c>'
 
 " }}}
 
