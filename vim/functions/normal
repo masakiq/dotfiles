@@ -7,7 +7,6 @@ RGInTemporaryNote
 OpenAnotherProjectFile
 CopyCurrentPath
 CopyAbsolutePath
-CopyGitHubURL
 OpenGitHub
 OpenGitHubBlame
 QuitAll
