@@ -870,8 +870,16 @@ function! CloseDuplicateTabs()
 
 endfunction
 
-command! CopyGitHubURL :ShareLine
-command! OpenGitHub :GHInteractive
+command! OpenGitHub :call OpenGitHub()
+function! OpenGitHub()
+  if g:mode == 'n'
+    let line = a:firstline == a:lastline ? "#L" . line(".") : "#L" . a:firstline . "-L" . a:lastline
+  else
+    let line = g:firstline == g:lastline ? "#L" . line(".") : "#L" . g:firstline . "-L" . g:lastline
+  endif
+  let command = "~/.vim/functions/open_github.rb '" . expand("%:p") . "' '" . line . "'"
+  call asyncrun#run('', '', command)
+endfunction
 command! OpenGitHubBlame :GBInteractive
 
 " }}}
@@ -904,7 +912,6 @@ Plug 'natebosch/vim-lsc'
 Plug 'natebosch/vim-lsc-dart'
 Plug 'voldikss/vim-translator'
 Plug 'chriskempson/base16-vim'
-Plug 'maeda1150/shareline.vim'
 Plug 'tpope/vim-surround'
 call plug#end()
 
@@ -1446,15 +1453,29 @@ function! s:switch_vim_plugin(dir)
   silent! execute 'cd ~/.vim/plugged/' . a:dir
 endfunction
 
-nnoremap <space><space> :SelectFunction<CR>
+nnoremap <space><space> :<c-u>call SelectFunction()<CR>
+function! SelectFunction()
+  let g:mode = 'n'
+  execute 'SelectFunction'
+endfunction
+
 command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
 \ 'source': 'cat ~/.vim/functions/normal',
-\ 'sink': '',
+\ 'sink':  function('s:select_function_handler'),
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 \ }))
 
+if exists('*s:select_function_handler')
+else
+  function! s:select_function_handler(line)
+    execute a:line
+    unlet g:mode
+  endfunction
+endif
+
 vnoremap <space><space> :<c-u>call SelectVisualFunction()<CR>
 function! SelectVisualFunction()
+  let g:mode = 'v'
   let [line_start, column_start] = getpos("'<")[1:2]
   let [line_end, column_end] = getpos("'>")[1:2]
   let g:firstline = line_start
@@ -1470,6 +1491,7 @@ command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
 
 function! s:select_visual_function_handler(line) range
   execute a:line
+  unlet g:mode
   unlet g:firstline
   unlet g:lastline
 endfunction
