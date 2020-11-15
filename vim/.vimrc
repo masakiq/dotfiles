@@ -989,7 +989,7 @@ endif
 
 " map  f <Plug>(easymotion-bd-f)
 " nmap <space>f <Plug>(easymotion-overwin-f)
-" nmap f <Plug>(easymotion-overwin-f2)
+nmap f <Plug>(easymotion-overwin-f2)
 " nmap f <Plug>(easymotion-sn)
 let g:EasyMotion_smartcase = 1
 
@@ -1002,8 +1002,7 @@ function! s:config_easyfuzzymotion(...) abort
   \   'is_stay': 1
   \ }), get(a:, 1, {}))
 endfunction
-
-noremap <silent><expr> f incsearch#go(<SID>config_easyfuzzymotion())
+noremap <silent><expr> <space>f incsearch#go(<SID>config_easyfuzzymotion())
 
 " }}}
 
