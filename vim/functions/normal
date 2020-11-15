@@ -4,6 +4,7 @@ SwitchProject
 RGFromAllFilesNormal
 RGInAnotherProject
 RGInTemporaryNote
+FindAllFiles
 OpenAnotherProjectFile
 CopyCurrentPath
 CopyAbsolutePath

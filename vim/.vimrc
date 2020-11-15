@@ -1159,14 +1159,33 @@ command! -bang -nargs=? -complete=dir History
 command! -bang -nargs=? -complete=dir Windows
     \ call fzf#vim#windows(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
-command! -bang FindAllFiles call fzf#run(fzf#wrap({
-\ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-\ 'sink*': function('s:find_all_files'),
+command! -bang FindAllFiles call FindAllFiles()
+function! FindAllFiles()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
+          \ 'sink*': function('s:find_and_open_files'),
+          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+command! -bang FindFiles call fzf#run(fzf#wrap({
+\ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
+\ 'sink*': function('s:find_and_open_files'),
 \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
 \ }))
 
-function! s:find_all_files(lines)
+function! s:find_and_open_files(lines)
   if len(a:lines) < 2 | return | endif
 
   let cmd = get({'ctrl-e': 'edit ',
@@ -1179,7 +1198,7 @@ endfunction
 
 if has('gui_running')
 else
-  nnoremap <space>of :FindAllFiles<CR>
+  nnoremap <space>of :FindFiles<CR>
   " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
   vnoremap <space>of :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
 endif
@@ -1399,7 +1418,7 @@ endfunction
 function! s:open_another_project_file(line)
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
-    \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -type f'),
+    \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
     \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
     \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
     \ 'sink*':   function('s:open_selected_file_by_some_way')})))
@@ -1708,7 +1727,7 @@ function! s:rg_in_another_project(line)
 endfunction
 
 command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap({
-\ 'source':  printf("rg '%s' " . g:rg_in_another_project_file . " --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
+\ 'source':  printf("rg '%s' " . g:rg_in_another_project_file . " --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' -g '!vendor' ",
 \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
 \ 'sink*':    function('s:open_file_in_another_project'),
 \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
