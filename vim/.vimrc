@@ -1796,7 +1796,8 @@ let g:lsc_auto_map = {'defaults': v:true, 'FindReferences': '<leader>r'}
 " let g:lsc_auto_map = {'defaults': v:true, 'FindImplementations': ''}
 
 " ... or set only the commands you want mapped without defaults.
-nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
+nnoremap gd :LSClientGoToDefinition<cr>
+" nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
 " Complete default mappings are:
     " \ 'GoToDefinition': 'gd',
     " \ 'GoToDefinitionSplit': 'gd',
