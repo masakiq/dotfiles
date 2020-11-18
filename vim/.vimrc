@@ -1396,7 +1396,7 @@ function! s:diff_files(line)
   execute 'vertical diffsplit ' . a:line
 endfunction
 
-command! -nargs=0 OpenAnotherProjectFile call s:ghq_list_and_open_another_project_file()
+command! -nargs=0 FindAnotherProjectFile call s:ghq_list_and_open_another_project_file()
 
 function! s:ghq_list_and_open_another_project_file()
   try

@@ -5,7 +5,7 @@ RGFromAllFilesNormal
 RGInAnotherProject
 RGInTemporaryNote
 FindAllFiles
-OpenAnotherProjectFile
+FindAnotherProjectFile
 CopyCurrentPath
 CopyAbsolutePath
 OpenGitHub
