@@ -1098,6 +1098,9 @@ let g:VM_maps["Case Conversion Menu"] = 'C'
 " ## lukelbd/vim-tabline ---------------------- {{{
 
 let g:tabline_charmax = 40
+hi TabLine     ctermfg=31 ctermbg=None cterm=None
+hi TabLineFill ctermfg=87 ctermbg=None cterm=None
+hi TabLineSel  ctermfg=87 ctermbg=None cterm=None
 
 " }}}
 
