@@ -1188,12 +1188,22 @@ function! FindAllFiles()
   endtry
 endfunction
 
-command! -bang FindFiles call fzf#run(fzf#wrap({
+command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
 \ 'sink*': function('s:find_and_open_files'),
-\ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+\ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-\ }))
+\ })))
+
+" command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
+" \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
+" \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+"   \ 'sink*':    function('s:open_files'),
+" \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+" \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+" \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+" \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+" \ })))
 
 function! s:find_and_open_files(lines)
   if len(a:lines) < 2 | return | endif
