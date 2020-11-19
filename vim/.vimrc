@@ -210,6 +210,13 @@ set hidden
 " 保存時に行末空白削除
 autocmd BufWritePre * if &filetype != 'markdown' | :%s/\s\+$//ge | endif
 
+" Undo の永続化
+if has('persistent_undo')
+	let undo_path = expand('~/.vim/undo')
+	exe 'set undodir=' .. undo_path
+	set undofile
+endif
+
 " }}}
 
 " ## ファイル操作に関する設定 ---------------------- {{{
@@ -909,7 +916,7 @@ Plug 'natebosch/vim-lsc-dart'
 Plug 'voldikss/vim-translator'
 Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-surround'
-Plug 'lukelbd/vim-tabline'
+Plug 'maeda1150/vim-tabline'
 call plug#end()
 
 " }}}
@@ -1095,12 +1102,9 @@ let g:VM_maps["Case Conversion Menu"] = 'C'
 
 " }}}
 
-" ## lukelbd/vim-tabline ---------------------- {{{
+" ## maeda1150/vim-tabline ---------------------- {{{
 
 let g:tabline_charmax = 40
-hi TabLine     ctermfg=31 ctermbg=None cterm=None
-hi TabLineFill ctermfg=87 ctermbg=None cterm=None
-hi TabLineSel  ctermfg=87 ctermbg=None cterm=None
 
 " }}}
 
