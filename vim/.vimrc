@@ -63,9 +63,6 @@ set cursorline
 hi VertSplit ctermfg=0 ctermbg=31
 set fillchars+=vert:│
 
-" ステータスバーカラーをカスタマイズ
-hi StatusLine ctermbg=Black ctermfg=Cyan
-hi StatusLineNC ctermbg=252 ctermfg=240 guibg=#d0d0d0 guifg=#444444
 augroup BgHighlight
   autocmd!
   autocmd WinEnter * set cul
@@ -127,6 +124,7 @@ hi EndOfBuffer          ctermfg=237 ctermbg=none
 hi Folded               ctermfg=44  ctermbg=241
 hi Pmenu                ctermfg=12  ctermbg=239
 hi StatusLine           ctermfg=238 ctermbg=87
+hi StatusLineNC         ctermfg=238 ctermbg=87
 hi WildMenu             ctermfg=238 ctermbg=87
 
 
@@ -894,8 +892,6 @@ Plug 'tpope/vim-markdown'
 Plug 'kannokanno/previm'
 Plug 'tyru/open-browser.vim'
 Plug 'mg979/vim-visual-multi'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'iberianpig/tig-explorer.vim'
 Plug 'ruanyl/vim-gh-line'
 Plug 'easymotion/vim-easymotion'
@@ -913,6 +909,7 @@ Plug 'natebosch/vim-lsc-dart'
 Plug 'voldikss/vim-translator'
 Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-surround'
+Plug 'lukelbd/vim-tabline'
 call plug#end()
 
 " }}}
@@ -1094,7 +1091,13 @@ endfunction
 let g:VM_maps = {}
 let g:VM_maps["Align"]                = '<M-a>'
 let g:VM_maps["Surround"]             = 'S'
-let g:VM_maps["Case Conversion Menu"] = '<M-c>'
+let g:VM_maps["Case Conversion Menu"] = 'C'
+
+" }}}
+
+" ## lukelbd/vim-tabline ---------------------- {{{
+
+let g:tabline_charmax = 40
 
 " }}}
 
