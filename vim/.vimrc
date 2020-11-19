@@ -1468,11 +1468,23 @@ function! s:open_project(project)
   silent! execute 'cd ' . a:project
 endfunction
 
-command! -nargs=0 SwitchVimPlugin call fzf#run(fzf#wrap({
-\ 'source': 'ls ~/.vim/plugged',
-\ 'sink':  function('s:switch_vim_plugin'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+command! -nargs=0 SwitchVimPlugin call SwitchVimPlugin()
+function! SwitchVimPlugin()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ls ~/.vim/plugged',
+          \ 'sink':  function('s:switch_vim_plugin'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 function! s:switch_vim_plugin(dir)
   call DeleteBufsWithoutExistingWindows()
