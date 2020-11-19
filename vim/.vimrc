@@ -81,18 +81,6 @@ hi SpellLocal cterm=underline
 " ファイルを読み込み
 set autoread
 
-" タブ表示カスタム
-let g:airline_theme='cool'
-" https://vi.stackexchange.com/questions/5622/how-do-i-configure-the-vim-airline-plugin-to-look-like-its-own-project-screensho
-let g:airline_powerline_fonts = 1
-" set t_Co=256
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#tabline#show_splits = 0
-let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-
 " diff のカラー設定
 hi DiffAdd    cterm=none ctermfg=45  ctermbg=19
 hi DiffDelete cterm=none ctermfg=45  ctermbg=19
