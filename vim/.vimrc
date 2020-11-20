@@ -1127,7 +1127,7 @@ let g:fzf_colors =
   \ "bg+":     ["bg", "CursorLine", "CursorColumn"],
   \ "hl+":     ["fg", "IncSearch"],
   \ "info":    ["fg", "IncSearch"],
-  \ "border":  ["fg", "Ignore"],
+  \ "border":  ["fg", "Normal"],
   \ "prompt":  ["fg", "Comment"],
   \ "pointer": ["fg", "IncSearch"],
   \ "marker":  ["fg", "IncSearch"],
