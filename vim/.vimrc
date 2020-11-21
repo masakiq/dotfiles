@@ -1424,6 +1424,7 @@ function! s:open_project(project)
   call SaveSession()
   call DeleteBuffers()
   silent! execute 'cd ' . a:project
+  silent! exec 'set titlestring=' . s:getCurrentDirectory()
 endfunction
 
 command! -nargs=0 SwitchVimPlugin call SwitchVimPlugin()
@@ -1518,6 +1519,7 @@ function! s:load_session(session)
   call DeleteBuffers()
   silent! execute 'source ~/.vim/sessions/' . a:session
   silent! execute 'source $MYVIMRC'
+  silent! exec 'set titlestring=' . s:getCurrentDirectory()
 endfunction
 
 command! -bang DeleteSessions call DeleteSessions()
