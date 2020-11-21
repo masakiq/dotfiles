@@ -223,53 +223,6 @@ set splitright
 
 " }}}
 
-" ## ツリー表示に関する設定 ---------------------- {{{
-
-"ツリー表示
-"表示を変更したい場合は i で切替可能
-let g:netrw_liststyle=3
-"上部のバナーを非表示
-" I で toggle 可能
-let g:netrw_banner = 0
-"window サイズ
-let g:netrw_winsize = 75
-"Netrw で Enter 押下時の挙動設定
-let g:netrw_browse_split = 3
-let g:netrw_alto = 1
-
-fun! MyCloseDuplicateTabs()
-  CloseDupTabs
-  sleep 1m
-  exec 'e'
-endfun
-let g:Netrw_funcref= function('MyCloseDuplicateTabs')
-
-"Netrw を toggle する関数を設定
-"元処理と異なり Vex を呼び出すことで左 window に表示
-let g:NetrwIsOpen=0
-function! ToggleNetrw()
-  if g:NetrwIsOpen
-    let i = bufnr("$")
-    while (i >= 1)
-      if (getbufvar(i, "&filetype") == "netrw")
-        silent exe "bwipeout! " . i
-      endif
-      let i-=1
-    endwhile
-    let g:NetrwIsOpen=0
-  else
-    let g:NetrwIsOpen=1
-    " silent Vex
-    silent Texplore
-    execute 'tabm 0'
-  endif
-endfunction
-
-" ショートカットの設定
-noremap <space>oe :call ToggleNetrw()<CR>
-
-" }}}
-
 " ## カスタムマッピング ---------------------- {{{
 
 " ### マップ基本設定 ---------------------- {{{
@@ -905,6 +858,7 @@ Plug 'voldikss/vim-translator'
 Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-surround'
 Plug 'maeda1150/vim-tabline'
+Plug 'lambdalisue/fern.vim'
 call plug#end()
 
 " }}}
@@ -1093,6 +1047,12 @@ let g:VM_maps["Case Conversion Menu"] = 'C'
 " ## maeda1150/vim-tabline ---------------------- {{{
 
 let g:tabline_charmax = 40
+
+" }}}
+
+" ## lambdalisue/fern.vim ---------------------- {{{
+
+noremap <space>oe :Fern . -drawer -toggle -keep<CR>
 
 " }}}
 
