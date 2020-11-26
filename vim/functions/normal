@@ -37,3 +37,5 @@ DiffAnotherProjectFile
 TemporaryNote
 SwitchVimPlugin
 Registers
+DisableLinterOnSave
+EnableLinterOnSave

@@ -994,6 +994,18 @@ let g:ale_fixers = {
 \}
 let g:ale_fix_on_save = 1
 
+command! -nargs=0 DisableLinterOnSave call DisableLinterOnSave()
+function! DisableLinterOnSave()
+  let g:ale_fix_on_save = 0
+  echo 'disable linter'
+endfunction
+
+command! -nargs=0 EnableLinterOnSave call EnableLinterOnSave()
+function! EnableLinterOnSave()
+  let g:ale_fix_on_save = 1
+  echo 'enable linter'
+endfunction
+
 " }}}
 
 " ## skywind3000/asyncrun.vim ---------------------- {{{
