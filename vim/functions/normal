@@ -33,6 +33,7 @@ PlugUpdate
 PlugClean
 DiffFile
 DiffFileGitBranch
+DiffTemporaryNote
 DiffAnotherProjectFile
 TemporaryNote
 SwitchVimPlugin

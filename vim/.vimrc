@@ -1372,6 +1372,24 @@ function! DiffFile()
   endtry
 endfunction
 
+command! DiffTemporaryNote call DiffTemporaryNote()
+function! DiffTemporaryNote()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
+          \ 'sink':  function('s:diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
 function! s:diff_files(line)
   execute 'vertical diffsplit ' . a:line
 endfunction
