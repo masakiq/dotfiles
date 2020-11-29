@@ -1868,3 +1868,9 @@ if &term =~ '^screen'
 endif
 
 " }}}
+
+" ## for test lines ---------------------- {{{
+
+
+
+" }}}
