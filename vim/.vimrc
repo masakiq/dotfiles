@@ -327,11 +327,6 @@ nnoremap $ g$
 " 検索ハイライトをトグル
 nnoremap <space>n :set hlsearch!<CR>
 
-" カーソル位置を一つ前に戻す
-nnoremap <space>; <c-o>
-" カーソル位置を一つ後に進める
-nnoremap <space>' <c-i>
-
 " }}}
 
 " ### 変換系 ---------------------- {{{
@@ -359,9 +354,6 @@ vnoremap <bs> c<Bs><C-r>"<Esc>wxb
 " ### ファイル操作系 ---------------------- {{{
 
 nnoremap <space>q :q!<cr>
-
-" 開いているウィンドウ以外のバッファを削除
-" nnoremap <space>D :call DeleteBufsWithoutExistingWindows()<cr>
 
 " }}}
 
@@ -439,14 +431,6 @@ endif
 :autocmd FileType ruby :iabbrev let let(:) { }<esc>4hi<esc>
 :autocmd FileType ruby :iabbrev sha shared_examples '' do<CR>end<esc>kw<esc>
 :autocmd FileType ruby :iabbrev beh it_behaves_like ''<esc>h<esc>
-
-" }}}
-
-" ## カスタムコマンド ---------------------- {{{
-
-" command! -range=% JsonToHash :<line1>,<line2>call JsonToHash()
-" command! -range=% RocketToHash :<line1>,<line2>call RocketToHash()
-" command! BreakLine %s/\v}\s*,/},\r/ge | %s/\v]\s*,/],\r/ge | %s/\v"\s*,/",\r/ge | %s/{/{\r/ge | %s/}/\r}/ge | %s/\[/\[\r/ge | %s/\]/\r]/ge
 
 " }}}
 
@@ -828,11 +812,16 @@ function! OpenGitHub()
 endfunction
 command! OpenGitHubBlame :GBInteractive
 
+command! -nargs=0 GitAdd call GitAdd()
+function! GitAdd()
+  AsyncRun -silent git add .
+  echom 'executed "git add ."'
+endfunction
+
 " }}}
 
 " ## プラグイン設定 ---------------------- {{{
 
-" プラグラインインストールコマンド `:PlugUpdate`
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -847,7 +836,6 @@ Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-fuzzy.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'liuchengxu/vim-which-key'
-Plug 'osyo-manga/vim-over'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'dense-analysis/ale'
 Plug 'tpope/vim-fugitive'
@@ -908,17 +896,6 @@ endif
 
 " }}}
 
-" ### plugin tig-explorer.vim ---------------------- {{{
-
-if has('gui_running')
-else
-"  nnoremap <space>gtb :TigBlame<CR>
-"  nnoremap <space>gth :TigOpenCurrentFile<CR>
-"  vnoremap <space>gtg y:TigGrep<Space><C-R>"<CR>
-endif
-
-" }}}
-
 " ### plugin ruanyl/vim-gh-line ---------------------- {{{
 
 if has('gui_running')
@@ -949,13 +926,6 @@ function! s:config_easyfuzzymotion(...) abort
   \ }), get(a:, 1, {}))
 endfunction
 noremap <silent><expr> <space>f incsearch#go(<SID>config_easyfuzzymotion())
-
-" }}}
-
-" ### plugin osyo-manga/vim-over ---------------------- {{{
-
-" nnoremap <space>or :call ReplaceText()<CR>
-" vnoremap <space>or :call ReplaceText()<cr>
 
 " }}}
 
@@ -1009,12 +979,6 @@ endfunction
 " }}}
 
 " ## skywind3000/asyncrun.vim ---------------------- {{{
-
-command! -nargs=0 GitAdd call GitAdd()
-function! GitAdd()
-  AsyncRun -silent git add .
-  echom 'executed "git add ."'
-endfunction
 
 " }}}
 
