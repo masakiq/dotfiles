@@ -1026,22 +1026,22 @@ let g:translator_window_max_height = 0.9
 
 command! -nargs=* TransEnToJaPopup call TransEnToJaPopup()
 function! TransEnToJaPopup() range
-  execute "'<,'>TranslateW source_lang=en target_lang=ja"
+  execute "'<,'>TranslateW --source_lang=en --target_lang=ja"
 endfunction
 
 command! -nargs=* TransJaToEnPopup call TransJaToEnPopup()
 function! TransJaToEnPopup() range
-  execute "'<,'>TranslateW source_lang=ja target_lang=en"
+  execute "'<,'>TranslateW --source_lang=ja --target_lang=en"
 endfunction
 
 command! -nargs=* TransEnToJaReplace call TransEnToJaReplace()
 function! TransEnToJaReplace() range
-  execute "'<,'>TranslateR source_lang=en target_lang=ja"
+  execute "'<,'>TranslateR --source_lang=en --target_lang=ja"
 endfunction
 
 command! -nargs=* TransJaToEnReplace call TransJaToEnReplace()
 function! TransJaToEnReplace() range
-  execute "'<,'>TranslateR source_lang=ja target_lang=en"
+  execute "'<,'>TranslateR --source_lang=ja --target_lang=en"
 endfunction
 
 " }}}
