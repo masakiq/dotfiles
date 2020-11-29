@@ -285,6 +285,9 @@ vnoremap a <esc>G$vgg
 
 nnoremap V 0v$h
 
+" 検索ハイライトをトグル
+nnoremap <space>n :set hlsearch!<CR>
+
 " }}}
 
 " ### クリップボード系 ---------------------- {{{
@@ -324,8 +327,8 @@ vnoremap ^ g^
 nnoremap $ g$
 " vnoremap $ g$
 
-" 検索ハイライトをトグル
-nnoremap <space>n :set hlsearch!<CR>
+nnoremap <C-e> <Esc>$
+nnoremap <C-a> <Esc>^
 
 " }}}
 
