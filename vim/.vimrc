@@ -436,17 +436,7 @@ endif
 
 " ## カスタムファンクション ---------------------- {{{
 
-command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
-function! CopyCurrentPath()
-  echo "copied current path: " . expand('%')
-  let @+=expand('%')
-endfunction
-
-command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
-function! CopyAbsolutePath()
-  echo "copied absolute path: " . expand('%:p')
-  let @+=expand('%:p')
-endfunction
+" ## vimrc 系 ---------------------- {{{
 
 if exists('*LoadVIMRC')
 else
@@ -463,6 +453,22 @@ function! OpenVIMRC()
   :noh
 endfunction
 
+" }}}
+
+" ## ファイル操作 ---------------------- {{{
+
+command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
+function! CopyCurrentPath()
+  echo "copied current path: " . expand('%')
+  let @+=expand('%')
+endfunction
+
+command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
+function! CopyAbsolutePath()
+  echo "copied absolute path: " . expand('%:p')
+  let @+=expand('%:p')
+endfunction
+
 command! OpenImplementationFile call OpenImplementationFile()
 function! OpenImplementationFile()
   execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')
@@ -473,10 +479,34 @@ function! OpenTestFile()
   execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')
 endfunction
 
-command! SwapWindow call SwapWindow()
-function! SwapWindow()
-  silent! exec "normal \<c-w>\<c-r>"
+command! RenameFile call RenameFile()
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
 endfunction
+
+command! QuitAll call QuitAll()
+function! QuitAll()
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteBuffers()
+  normal ZQ
+endfunction
+
+command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
+function! QuitAllWithoutSaveSession()
+  call DeleteBuffers()
+  normal ZQ
+endfunction
+
+" }}}
+
+" ## タブ操作 ---------------------- {{{
 
 function! MoveTabRight()
   silent! execute '+tabm'
@@ -486,6 +516,10 @@ function! MoveTabLeft()
   silent! execute '-tabm'
 endfunction
 
+" }}}
+
+" ## セッション操作 ---------------------- {{{
+
 command! SaveSession call SaveSession()
 function! SaveSession()
   let current_dir = s:getCurrentDirectory()
@@ -493,13 +527,124 @@ function! SaveSession()
   echom 'saved current session : ' .current_dir
 endfunction
 
-function! s:getCurrentDirectory()
-  redir => path
-  silent pwd
-  redir END
-  let splited = split(path, '/')
-  return splited[-1]
+" }}}
+
+" ## ウィンドウ操作 ---------------------- {{{
+
+command! SwapWindow call SwapWindow()
+function! SwapWindow()
+  silent! exec "normal \<c-w>\<c-r>"
 endfunction
+
+" }}}
+
+" ## タブ操作 ---------------------- {{{
+
+command! CloseDupTabs :call CloseDuplicateTabs()
+function! CloseDuplicateTabs()
+	let cnt = 0
+	let i = 1
+
+	let tpbufflst = []
+	let dups = []
+	let tabpgbufflst = tabpagebuflist(i)
+	while type(tabpagebuflist(i)) == 3
+		if index(tpbufflst, tabpagebuflist(i)) >= 0
+			call add(dups,i)
+		else
+			call add(tpbufflst, tabpagebuflist(i))
+		endif
+
+		let i += 1
+		let cnt += 1
+	endwhile
+
+	call reverse(dups)
+
+	for tb in dups
+		exec "tabclose ".tb
+	endfor
+
+endfunction
+
+" }}}
+
+" ## バッファ操作 ---------------------- {{{
+
+function! DeleteBufsWithoutExistingWindows()
+  let allbufnums = ListAllBufNums()
+  let bufnums = ListBufNums()
+  for num in allbufnums
+    if (index(bufnums, num) < 0)
+      execute 'bwipeout! ' . num
+      echom num . ' is deleted!'
+    endif
+  endfor
+endfunction
+
+command! DeleteBuffers call DeleteBuffers()
+function! DeleteBuffers()
+  let allbufnums = ListAllBufNums()
+  for num in allbufnums
+    execute 'bwipeout! ' . num
+  endfor
+endfunction
+
+" }}}
+
+" ## 検索 ---------------------- {{{
+
+function! SearchByRG()
+  if mode() == 'n'
+    execute 'RG ' . input('RG/')
+  else
+    let selected = SelectedVisualModeText()
+    let @+=selected
+    echom 'Copyed! ' . selected
+    execute 'RG ' . selected
+    silent! exec "normal \<c-c>"
+    if has('nvim')
+      call feedkeys(' ')
+    endif
+  endif
+endfunction
+
+function! RGBySelectedText()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  echom 'Copyed! ' . selected
+  execute 'RG ' . selected
+endfunction
+
+command! RGFromAllFilesVisual call RGFromAllFilesVisual()
+function! RGFromAllFilesVisual()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  execute 'RGFromAllFiles ' . selected
+  silent! exec "normal \<c-c>"
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+command! RGFromAllFilesNormal call RGFromAllFilesNormal()
+function! RGFromAllFilesNormal()
+  execute 'RGFromAllFiles ' . input('RGFromAllFiles/')
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+function! VimGrepBySelectedText()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  echom 'Copyed! ' . selected
+  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
+endfunction
+
+" }}}
+
+" ## カスタム置換 ---------------------- {{{
 
 command! SnakeCase call SnakeCase()
 function! SnakeCase() range
@@ -593,15 +738,16 @@ function! HashToRocket() range
   silent! execute g:firstline . ',' . g:lastline . "s/\'/\"/g"
 endfunction
 
-command! RenameFile call RenameFile()
-function! RenameFile()
-  let old_name = expand('%')
-  let new_name = input('New file name: ', expand('%'), 'file')
-  if new_name != '' && new_name != old_name
-    exec ':saveas ' . new_name
-    exec ':silent !rm ' . old_name
-    redraw!
-  endif
+" }}}
+
+" ## ヘルパー ---------------------- {{{
+
+function! s:getCurrentDirectory()
+  redir => path
+  silent pwd
+  redir END
+  let splited = split(path, '/')
+  return splited[-1]
 endfunction
 
 function! SelectedVisualModeText()
@@ -621,16 +767,6 @@ function! ChangeToFileFormat(text)
   let down_case = tolower(snake_case)
   let file_format = substitute(down_case, '::', '/', "g")
   return file_format
-endfunction
-
-command! ReplaceText call ReplaceText()
-function! ReplaceText() range
-  let selected_text = SelectedVisualModeText()
-  if mode() == 'n'
-    execute 'OverCommandLine %s/' . selected_text . '//g'
-  else
-    execute 'OverCommandLine %s/' . selected_text . '//g'
-  endif
 endfunction
 
 function! ChangeToFileFormatAndCopy()
@@ -664,54 +800,6 @@ function! ChangeToFileFormatAndCopyAndSearchHistory()
   execute 'History'
 endfunction
 
-function! SearchByRG()
-  if mode() == 'n'
-    execute 'RG ' . input('RG/')
-  else
-    let selected = SelectedVisualModeText()
-    let @+=selected
-    echom 'Copyed! ' . selected
-    execute 'RG ' . selected
-    silent! exec "normal \<c-c>"
-    if has('nvim')
-      call feedkeys(' ')
-    endif
-  endif
-endfunction
-
-function! RGBySelectedText()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  echom 'Copyed! ' . selected
-  execute 'RG ' . selected
-endfunction
-
-command! RGFromAllFilesVisual call RGFromAllFilesVisual()
-function! RGFromAllFilesVisual()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  execute 'RGFromAllFiles ' . selected
-  silent! exec "normal \<c-c>"
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-command! RGFromAllFilesNormal call RGFromAllFilesNormal()
-function! RGFromAllFilesNormal()
-  execute 'RGFromAllFiles ' . input('RGFromAllFiles/')
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-function! VimGrepBySelectedText()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  echom 'Copyed! ' . selected
-  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
-endfunction
-
 function! ListBufNums()
   let list = []
   let tabnumber = 1
@@ -740,65 +828,9 @@ function! ListAllBufNums()
   return listbufnums
 endfunction
 
-function! DeleteBufsWithoutExistingWindows()
-  let allbufnums = ListAllBufNums()
-  let bufnums = ListBufNums()
-  for num in allbufnums
-    if (index(bufnums, num) < 0)
-      execute 'bwipeout! ' . num
-      echom num . ' is deleted!'
-    endif
-  endfor
-endfunction
+" }}}
 
-command! DeleteBuffers call DeleteBuffers()
-function! DeleteBuffers()
-  let allbufnums = ListAllBufNums()
-  for num in allbufnums
-    execute 'bwipeout! ' . num
-  endfor
-endfunction
-
-command! QuitAll call QuitAll()
-function! QuitAll()
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  normal ZQ
-endfunction
-
-command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
-function! QuitAllWithoutSaveSession()
-  call DeleteBuffers()
-  normal ZQ
-endfunction
-
-command! CloseDupTabs :call CloseDuplicateTabs()
-function! CloseDuplicateTabs()
-	let cnt = 0
-	let i = 1
-
-	let tpbufflst = []
-	let dups = []
-	let tabpgbufflst = tabpagebuflist(i)
-	while type(tabpagebuflist(i)) == 3
-		if index(tpbufflst, tabpagebuflist(i)) >= 0
-			call add(dups,i)
-		else
-			call add(tpbufflst, tabpagebuflist(i))
-		endif
-
-		let i += 1
-		let cnt += 1
-	endwhile
-
-	call reverse(dups)
-
-	for tb in dups
-		exec "tabclose ".tb
-	endfor
-
-endfunction
+" ## GitHub ---------------------- {{{
 
 command! OpenGitHub :call OpenGitHub()
 function! OpenGitHub()
@@ -817,6 +849,8 @@ function! GitAdd()
   AsyncRun -silent git add .
   echom 'executed "git add ."'
 endfunction
+
+" }}}
 
 " }}}
 
@@ -1118,16 +1152,6 @@ command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
 \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
 \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
 \ })))
-
-" command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
-" \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
-" \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-"   \ 'sink*':    function('s:open_files'),
-" \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-" \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
-" \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-" \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-" \ })))
 
 function! s:find_and_open_files(lines)
   if len(a:lines) < 2 | return | endif
