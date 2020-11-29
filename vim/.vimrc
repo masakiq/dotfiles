@@ -881,6 +881,7 @@ Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-surround'
 Plug 'maeda1150/vim-tabline'
 Plug 'lambdalisue/fern.vim'
+Plug 'matze/vim-move'
 call plug#end()
 
 " }}}
@@ -1063,6 +1064,18 @@ let g:tabline_charmax = 40
 " ## lambdalisue/fern.vim ---------------------- {{{
 
 noremap <space>oe :Fern . -drawer -toggle -keep<CR>
+
+" }}}
+
+" ## matze/vim-move ---------------------- {{{
+
+let g:move_map_keys = 0
+let g:move_auto_indent = 0
+let g:move_past_end_of_line = 0
+vmap <C-j> <Plug>MoveBlockDown
+vmap <C-k> <Plug>MoveBlockUp
+vmap <C-h> <Plug>MoveBlockLeft
+vmap <C-l> <Plug>MoveBlockRight
 
 " }}}
 
