@@ -437,426 +437,6 @@ endif
 
 " }}}
 
-" ## カスタムファンクション ---------------------- {{{
-
-" ## vimrc 系 ---------------------- {{{
-
-if exists('*LoadVIMRC')
-else
-  command! LoadVIMRC call LoadVIMRC()
-  function! LoadVIMRC()
-    source $MYVIMRC
-    :noh
-  endfunction
-endif
-
-command! OpenVIMRC call OpenVIMRC()
-function! OpenVIMRC()
-  vsplit $MYVIMRC
-  :noh
-endfunction
-
-" }}}
-
-" ## ファイル操作 ---------------------- {{{
-
-command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
-function! CopyCurrentPath()
-  echo "copied current path: " . expand('%')
-  let @+=expand('%')
-endfunction
-
-command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
-function! CopyAbsolutePath()
-  echo "copied absolute path: " . expand('%:p')
-  let @+=expand('%:p')
-endfunction
-
-command! OpenImplementationFile call OpenImplementationFile()
-function! OpenImplementationFile()
-  execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')
-endfunction
-
-command! OpenTestFile call OpenTestFile()
-function! OpenTestFile()
-  execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')
-endfunction
-
-command! RenameFile call RenameFile()
-function! RenameFile()
-  let old_name = expand('%')
-  let new_name = input('New file name: ', expand('%'), 'file')
-  if new_name != '' && new_name != old_name
-    exec ':saveas ' . new_name
-    exec ':silent !rm ' . old_name
-    redraw!
-  endif
-endfunction
-
-command! QuitAll call QuitAll()
-function! QuitAll()
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  normal ZQ
-endfunction
-
-command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
-function! QuitAllWithoutSaveSession()
-  call DeleteBuffers()
-  normal ZQ
-endfunction
-
-" }}}
-
-" ## タブ操作 ---------------------- {{{
-
-function! MoveTabRight()
-  silent! execute '+tabm'
-endfunction
-
-function! MoveTabLeft()
-  silent! execute '-tabm'
-endfunction
-
-" }}}
-
-" ## セッション操作 ---------------------- {{{
-
-command! SaveSession call SaveSession()
-function! SaveSession()
-  let current_dir = s:getCurrentDirectory()
-  silent! execute 'mks! ~/.vim/sessions/' . current_dir
-  echom 'saved current session : ' .current_dir
-endfunction
-
-" }}}
-
-" ## ウィンドウ操作 ---------------------- {{{
-
-command! SwapWindow call SwapWindow()
-function! SwapWindow()
-  silent! exec "normal \<c-w>\<c-r>"
-endfunction
-
-" }}}
-
-" ## タブ操作 ---------------------- {{{
-
-command! CloseDupTabs :call CloseDuplicateTabs()
-function! CloseDuplicateTabs()
-  let cnt = 0
-  let i = 1
-
-  let tpbufflst = []
-  let dups = []
-  let tabpgbufflst = tabpagebuflist(i)
-  while type(tabpagebuflist(i)) == 3
-    if index(tpbufflst, tabpagebuflist(i)) >= 0
-      call add(dups,i)
-    else
-      call add(tpbufflst, tabpagebuflist(i))
-    endif
-
-    let i += 1
-    let cnt += 1
-  endwhile
-
-  call reverse(dups)
-
-  for tb in dups
-    exec "tabclose ".tb
-  endfor
-
-endfunction
-
-" }}}
-
-" ## バッファ操作 ---------------------- {{{
-
-function! DeleteBufsWithoutExistingWindows()
-  let allbufnums = ListAllBufNums()
-  let bufnums = ListBufNums()
-  for num in allbufnums
-    if (index(bufnums, num) < 0)
-      execute 'bwipeout! ' . num
-      echom num . ' is deleted!'
-    endif
-  endfor
-endfunction
-
-command! DeleteBuffers call DeleteBuffers()
-function! DeleteBuffers()
-  let allbufnums = ListAllBufNums()
-  for num in allbufnums
-    execute 'bwipeout! ' . num
-  endfor
-endfunction
-
-" }}}
-
-" ## 検索 ---------------------- {{{
-
-function! SearchByRG()
-  if mode() == 'n'
-    execute 'RG ' . input('RG/')
-  else
-    let selected = SelectedVisualModeText()
-    let @+=selected
-    echom 'Copyed! ' . selected
-    execute 'RG ' . selected
-    silent! exec "normal \<c-c>"
-    if has('nvim')
-      call feedkeys(' ')
-    endif
-  endif
-endfunction
-
-function! RGBySelectedText()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  echom 'Copyed! ' . selected
-  execute 'RG ' . selected
-endfunction
-
-command! RGFromAllFilesVisual call RGFromAllFilesVisual()
-function! RGFromAllFilesVisual()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  execute 'RGFromAllFiles ' . selected
-  silent! exec "normal \<c-c>"
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-command! RGFromAllFilesNormal call RGFromAllFilesNormal()
-function! RGFromAllFilesNormal()
-  execute 'RGFromAllFiles ' . input('RGFromAllFiles/')
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-function! VimGrepBySelectedText()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  echom 'Copyed! ' . selected
-  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
-endfunction
-
-" }}}
-
-" ## カスタム置換 ---------------------- {{{
-
-command! SnakeCase call SnakeCase()
-function! SnakeCase() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/\//g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! PascalCase call PascalCase()
-function! PascalCase() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)\/(\u)/\1::\2/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-function! CapitalCaseToSnakeCase() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
-endfunction
-
-command! RemoveUnderBar call RemoveUnderBar()
-function! RemoveUnderBar() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! AddUnderBar call AddUnderBar()
-function! AddUnderBar() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-function! RemoveBeginningOfLineSpace() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
-endfunction
-
-command! ModuleToColon call ModuleToColon()
-function! ModuleToColon() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass (.+)\n/::\1/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V \< .*//g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V\s//g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^:://g'
-  silent! execute a:firstline . ',' . a:lastline . 's/^/class /g'
-endfunction
-
-command! ColonToModule call ColonToModule()
-function! ColonToModule() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass /module /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V::/ module /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V module /\rmodule /g'
-endfunction
-
-command! CommaToBreakline call CommaToBreakline()
-function! CommaToBreakline() range
-  silent! execute g:firstline . ',' . g:lastline . 's/,/,\r/g'
-endfunction
-
-command! JsonToHash call JsonToHash()
-function! JsonToHash() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\"\(\w*\)\"\(:.*\)/\1\2/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\'/\\\\'/g"
-  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
-endfunction
-
-command! HashToJson call HashToJson()
-function! HashToJson() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\(\w*\)\:/\"\1\":/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/'" . '/"/g'
-endfunction
-
-command! RocketToHash call RocketToHash()
-function! RocketToHash() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)"(\w+)".*\=\>/\1\2:/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)(\w+):\s*/\1\2: /g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\\v'/\\\\'/g"
-  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
-endfunction
-
-command! HashToRocket call HashToRocket()
-function! HashToRocket() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):\s*/\1\2: /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):/\1"\2" =>/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\'/\"/g"
-endfunction
-
-" }}}
-
-" ## ヘルパー ---------------------- {{{
-
-function! s:getCurrentDirectory()
-  redir => path
-  silent pwd
-  redir END
-  let splited = split(path, '/')
-  return splited[-1]
-endfunction
-
-function! SelectedVisualModeText()
-  let [line_start, column_start] = getpos("'<")[1:2]
-  let [line_end, column_end] = getpos("'>")[1:2]
-  let lines = getline(line_start, line_end)
-  if len(lines) == 0
-    return ''
-  endif
-  let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
-  let lines[0] = lines[0][column_start - 1:]
-  return join(lines, "\n")
-endfunction
-
-function! ChangeToFileFormat(text)
-  let snake_case = substitute(substitute(a:text, '\(\l\)\(\u\)', '\1_\L\2\e', "g"), '\(\u\)\(\u\)', '\1_\L\2\e', "g")
-  let down_case = tolower(snake_case)
-  let file_format = substitute(down_case, '::', '/', "g")
-  return file_format
-endfunction
-
-function! ChangeToFileFormatAndCopy()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-endfunction
-
-function! ChangeToFileFormatAndCopyAndSearchFiles()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-  execute 'Files'
-endfunction
-
-function! ChangeToFileFormatAndCopyAndSearchBuffers()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-  execute 'Buffers'
-endfunction
-
-function! ChangeToFileFormatAndCopyAndSearchHistory()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-  execute 'History'
-endfunction
-
-function! ListBufNums()
-  let list = []
-  let tabnumber = 1
-
-  while tabnumber <= tabpagenr('$')
-    let buflist = tabpagebuflist(tabnumber)
-    for buf in buflist
-      call add(list, buf)
-    endfor
-    let tabnumber = tabnumber + 1
-  endwhile
-
-  return list
-endfunction
-
-function! ListAllBufNums()
-  redir => bufs
-  silent ls
-  redir END
-  let buflist = split(bufs, "\n")
-  let listbufnums = []
-  for buf in buflist
-    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
-    call add(listbufnums, num)
-  endfor
-  return listbufnums
-endfunction
-
-" }}}
-
-" ## GitHub ---------------------- {{{
-
-command! OpenGitHub :call OpenGitHub()
-function! OpenGitHub()
-  if g:mode == 'n'
-    let line = a:firstline == a:lastline ? "#L" . line(".") : "#L" . a:firstline . "-L" . a:lastline
-  else
-    let line = g:firstline == g:lastline ? "#L" . line(".") : "#L" . g:firstline . "-L" . g:lastline
-  endif
-  let command = "~/.vim/functions/open_github.rb '" . expand("%:p") . "' '" . line . "'"
-  call asyncrun#run('', '', command)
-endfunction
-command! OpenGitHubBlame :GBInteractive
-
-command! -nargs=0 GitAdd call GitAdd()
-function! GitAdd()
-  AsyncRun -silent git add .
-  echom 'executed "git add ."'
-endfunction
-
-" }}}
-
-" }}}
-
 " ## プラグイン設定 ---------------------- {{{
 
 call plug#begin('~/.vim/plugged')
@@ -1866,6 +1446,426 @@ if &term =~ '^screen'
   execute "set <xRight>=\e[1;*C"
   execute "set <xLeft>=\e[1;*D"
 endif
+
+" }}}
+
+" ## カスタムファンクション ---------------------- {{{
+
+" ## vimrc 系 ---------------------- {{{
+
+if exists('*LoadVIMRC')
+else
+  command! LoadVIMRC call LoadVIMRC()
+  function! LoadVIMRC()
+    source $MYVIMRC
+    :noh
+  endfunction
+endif
+
+command! OpenVIMRC call OpenVIMRC()
+function! OpenVIMRC()
+  vsplit $MYVIMRC
+  :noh
+endfunction
+
+" }}}
+
+" ## ファイル操作 ---------------------- {{{
+
+command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
+function! CopyCurrentPath()
+  echo "copied current path: " . expand('%')
+  let @+=expand('%')
+endfunction
+
+command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
+function! CopyAbsolutePath()
+  echo "copied absolute path: " . expand('%:p')
+  let @+=expand('%:p')
+endfunction
+
+command! OpenImplementationFile call OpenImplementationFile()
+function! OpenImplementationFile()
+  execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')
+endfunction
+
+command! OpenTestFile call OpenTestFile()
+function! OpenTestFile()
+  execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')
+endfunction
+
+command! RenameFile call RenameFile()
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
+endfunction
+
+command! QuitAll call QuitAll()
+function! QuitAll()
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteBuffers()
+  normal ZQ
+endfunction
+
+command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
+function! QuitAllWithoutSaveSession()
+  call DeleteBuffers()
+  normal ZQ
+endfunction
+
+" }}}
+
+" ## タブ操作 ---------------------- {{{
+
+function! MoveTabRight()
+  silent! execute '+tabm'
+endfunction
+
+function! MoveTabLeft()
+  silent! execute '-tabm'
+endfunction
+
+" }}}
+
+" ## セッション操作 ---------------------- {{{
+
+command! SaveSession call SaveSession()
+function! SaveSession()
+  let current_dir = s:getCurrentDirectory()
+  silent! execute 'mks! ~/.vim/sessions/' . current_dir
+  echom 'saved current session : ' .current_dir
+endfunction
+
+" }}}
+
+" ## ウィンドウ操作 ---------------------- {{{
+
+command! SwapWindow call SwapWindow()
+function! SwapWindow()
+  silent! exec "normal \<c-w>\<c-r>"
+endfunction
+
+" }}}
+
+" ## タブ操作 ---------------------- {{{
+
+command! CloseDupTabs :call CloseDuplicateTabs()
+function! CloseDuplicateTabs()
+  let cnt = 0
+  let i = 1
+
+  let tpbufflst = []
+  let dups = []
+  let tabpgbufflst = tabpagebuflist(i)
+  while type(tabpagebuflist(i)) == 3
+    if index(tpbufflst, tabpagebuflist(i)) >= 0
+      call add(dups,i)
+    else
+      call add(tpbufflst, tabpagebuflist(i))
+    endif
+
+    let i += 1
+    let cnt += 1
+  endwhile
+
+  call reverse(dups)
+
+  for tb in dups
+    exec "tabclose ".tb
+  endfor
+
+endfunction
+
+" }}}
+
+" ## バッファ操作 ---------------------- {{{
+
+function! DeleteBufsWithoutExistingWindows()
+  let allbufnums = ListAllBufNums()
+  let bufnums = ListBufNums()
+  for num in allbufnums
+    if (index(bufnums, num) < 0)
+      execute 'bwipeout! ' . num
+      echom num . ' is deleted!'
+    endif
+  endfor
+endfunction
+
+command! DeleteBuffers call DeleteBuffers()
+function! DeleteBuffers()
+  let allbufnums = ListAllBufNums()
+  for num in allbufnums
+    execute 'bwipeout! ' . num
+  endfor
+endfunction
+
+" }}}
+
+" ## 検索 ---------------------- {{{
+
+function! SearchByRG()
+  if mode() == 'n'
+    execute 'RG ' . input('RG/')
+  else
+    let selected = SelectedVisualModeText()
+    let @+=selected
+    echom 'Copyed! ' . selected
+    execute 'RG ' . selected
+    silent! exec "normal \<c-c>"
+    if has('nvim')
+      call feedkeys(' ')
+    endif
+  endif
+endfunction
+
+function! RGBySelectedText()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  echom 'Copyed! ' . selected
+  execute 'RG ' . selected
+endfunction
+
+command! RGFromAllFilesVisual call RGFromAllFilesVisual()
+function! RGFromAllFilesVisual()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  execute 'RGFromAllFiles ' . selected
+  silent! exec "normal \<c-c>"
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+command! RGFromAllFilesNormal call RGFromAllFilesNormal()
+function! RGFromAllFilesNormal()
+  execute 'RGFromAllFiles ' . input('RGFromAllFiles/')
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+function! VimGrepBySelectedText()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  echom 'Copyed! ' . selected
+  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
+endfunction
+
+" }}}
+
+" ## カスタム置換 ---------------------- {{{
+
+command! SnakeCase call SnakeCase()
+function! SnakeCase() range
+  let start_col = col('.')
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/\//g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
+  silent! exec 'normal ' . start_col . '|'
+endfunction
+
+command! PascalCase call PascalCase()
+function! PascalCase() range
+  let start_col = col('.')
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)\/(\u)/\1::\2/g'
+  silent! exec 'normal ' . start_col . '|'
+endfunction
+
+function! CapitalCaseToSnakeCase() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
+endfunction
+
+command! RemoveUnderBar call RemoveUnderBar()
+function! RemoveUnderBar() range
+  let start_col = col('.')
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
+  silent! exec 'normal ' . start_col . '|'
+endfunction
+
+command! AddUnderBar call AddUnderBar()
+function! AddUnderBar() range
+  let start_col = col('.')
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
+  silent! exec 'normal ' . start_col . '|'
+endfunction
+
+function! RemoveBeginningOfLineSpace() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
+endfunction
+
+command! ModuleToColon call ModuleToColon()
+function! ModuleToColon() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass (.+)\n/::\1/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V \< .*//g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V\s//g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^:://g'
+  silent! execute a:firstline . ',' . a:lastline . 's/^/class /g'
+endfunction
+
+command! ColonToModule call ColonToModule()
+function! ColonToModule() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass /module /g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V::/ module /g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V module /\rmodule /g'
+endfunction
+
+command! CommaToBreakline call CommaToBreakline()
+function! CommaToBreakline() range
+  silent! execute g:firstline . ',' . g:lastline . 's/,/,\r/g'
+endfunction
+
+command! JsonToHash call JsonToHash()
+function! JsonToHash() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\"\(\w*\)\"\(:.*\)/\1\2/g'
+  silent! execute g:firstline . ',' . g:lastline . "s/\'/\\\\'/g"
+  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
+endfunction
+
+command! HashToJson call HashToJson()
+function! HashToJson() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\(\w*\)\:/\"\1\":/g'
+  silent! execute g:firstline . ',' . g:lastline . "s/'" . '/"/g'
+endfunction
+
+command! RocketToHash call RocketToHash()
+function! RocketToHash() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)"(\w+)".*\=\>/\1\2:/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)(\w+):\s*/\1\2: /g'
+  silent! execute g:firstline . ',' . g:lastline . "s/\\v'/\\\\'/g"
+  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
+endfunction
+
+command! HashToRocket call HashToRocket()
+function! HashToRocket() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):\s*/\1\2: /g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):/\1"\2" =>/g'
+  silent! execute g:firstline . ',' . g:lastline . "s/\'/\"/g"
+endfunction
+
+" }}}
+
+" ## ヘルパー ---------------------- {{{
+
+function! s:getCurrentDirectory()
+  redir => path
+  silent pwd
+  redir END
+  let splited = split(path, '/')
+  return splited[-1]
+endfunction
+
+function! SelectedVisualModeText()
+  let [line_start, column_start] = getpos("'<")[1:2]
+  let [line_end, column_end] = getpos("'>")[1:2]
+  let lines = getline(line_start, line_end)
+  if len(lines) == 0
+    return ''
+  endif
+  let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[0] = lines[0][column_start - 1:]
+  return join(lines, "\n")
+endfunction
+
+function! ChangeToFileFormat(text)
+  let snake_case = substitute(substitute(a:text, '\(\l\)\(\u\)', '\1_\L\2\e', "g"), '\(\u\)\(\u\)', '\1_\L\2\e', "g")
+  let down_case = tolower(snake_case)
+  let file_format = substitute(down_case, '::', '/', "g")
+  return file_format
+endfunction
+
+function! ChangeToFileFormatAndCopy()
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+endfunction
+
+function! ChangeToFileFormatAndCopyAndSearchFiles()
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+  execute 'Files'
+endfunction
+
+function! ChangeToFileFormatAndCopyAndSearchBuffers()
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+  execute 'Buffers'
+endfunction
+
+function! ChangeToFileFormatAndCopyAndSearchHistory()
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+  execute 'History'
+endfunction
+
+function! ListBufNums()
+  let list = []
+  let tabnumber = 1
+
+  while tabnumber <= tabpagenr('$')
+    let buflist = tabpagebuflist(tabnumber)
+    for buf in buflist
+      call add(list, buf)
+    endfor
+    let tabnumber = tabnumber + 1
+  endwhile
+
+  return list
+endfunction
+
+function! ListAllBufNums()
+  redir => bufs
+  silent ls
+  redir END
+  let buflist = split(bufs, "\n")
+  let listbufnums = []
+  for buf in buflist
+    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
+    call add(listbufnums, num)
+  endfor
+  return listbufnums
+endfunction
+
+" }}}
+
+" ## GitHub ---------------------- {{{
+
+command! OpenGitHub :call OpenGitHub()
+function! OpenGitHub()
+  if g:mode == 'n'
+    let line = a:firstline == a:lastline ? "#L" . line(".") : "#L" . a:firstline . "-L" . a:lastline
+  else
+    let line = g:firstline == g:lastline ? "#L" . line(".") : "#L" . g:firstline . "-L" . g:lastline
+  endif
+  let command = "~/.vim/functions/open_github.rb '" . expand("%:p") . "' '" . line . "'"
+  call asyncrun#run('', '', command)
+endfunction
+command! OpenGitHubBlame :GBInteractive
+
+command! -nargs=0 GitAdd call GitAdd()
+function! GitAdd()
+  AsyncRun -silent git add .
+  echom 'executed "git add ."'
+endfunction
+
+" }}}
 
 " }}}
 
