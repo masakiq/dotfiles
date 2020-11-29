@@ -200,9 +200,9 @@ autocmd BufWritePre * if &filetype != 'markdown' | :%s/\s\+$//ge | endif
 
 " Undo の永続化
 if has('persistent_undo')
-	let undo_path = expand('~/.vim/undo')
-	exe 'set undodir=' .. undo_path
-	set undofile
+  let undo_path = expand('~/.vim/undo')
+  exe 'set undodir=' .. undo_path
+  set undofile
 endif
 
 " }}}
@@ -542,28 +542,28 @@ endfunction
 
 command! CloseDupTabs :call CloseDuplicateTabs()
 function! CloseDuplicateTabs()
-	let cnt = 0
-	let i = 1
+  let cnt = 0
+  let i = 1
 
-	let tpbufflst = []
-	let dups = []
-	let tabpgbufflst = tabpagebuflist(i)
-	while type(tabpagebuflist(i)) == 3
-		if index(tpbufflst, tabpagebuflist(i)) >= 0
-			call add(dups,i)
-		else
-			call add(tpbufflst, tabpagebuflist(i))
-		endif
+  let tpbufflst = []
+  let dups = []
+  let tabpgbufflst = tabpagebuflist(i)
+  while type(tabpagebuflist(i)) == 3
+    if index(tpbufflst, tabpagebuflist(i)) >= 0
+      call add(dups,i)
+    else
+      call add(tpbufflst, tabpagebuflist(i))
+    endif
 
-		let i += 1
-		let cnt += 1
-	endwhile
+    let i += 1
+    let cnt += 1
+  endwhile
 
-	call reverse(dups)
+  call reverse(dups)
 
-	for tb in dups
-		exec "tabclose ".tb
-	endfor
+  for tb in dups
+    exec "tabclose ".tb
+  endfor
 
 endfunction
 
@@ -903,21 +903,21 @@ else
   autocmd FileType which_key highlight WhichKeyGroup ctermfg=11
   autocmd FileType which_key highlight WhichKeyDesc ctermfg=10
   let g:which_key_map.o = {
-      \ 'name' : '+open' ,
-      \ 's' : ['SearchByRG()' , 'Search file from text'],
-      \ 'e' : ['ToggleNetrw()' , 'Open explore'],
-      \ }
+        \ 'name' : '+open' ,
+        \ 's' : ['SearchByRG()' , 'Search file from text'],
+        \ 'e' : ['ToggleNetrw()' , 'Open explore'],
+        \ }
   let g:which_key_map.q = 'Quit'
   let g:which_key_map.s = {
-      \ 'name' : '+split',
-      \ 'h' : [ 'sp', 'Split horizontal' ],
-      \ 'v' : [ 'vs', 'Split virtical' ]
-      \ }
+        \ 'name' : '+split',
+        \ 'h' : [ 'sp', 'Split horizontal' ],
+        \ 'v' : [ 'vs', 'Split virtical' ]
+        \ }
   let g:which_key_map.m = {
-      \ 'name' : '+move',
-      \ "'" : [ 'MoveTabRight()', 'Move tab right' ],
-      \ ';' : [ 'MoveTabLeft()', 'Move tab left' ]
-      \ }
+        \ 'name' : '+move',
+        \ "'" : [ 'MoveTabRight()', 'Move tab right' ],
+        \ ';' : [ 'MoveTabLeft()', 'Move tab left' ]
+        \ }
   let g:which_key_map.h = 'Move left'
   let g:which_key_map.j = 'Move down'
   let g:which_key_map.k = 'Move up'
@@ -953,12 +953,12 @@ let g:EasyMotion_smartcase = 1
 
 function! s:config_easyfuzzymotion(...) abort
   return extend(copy({
-  \   'converters': [incsearch#config#fuzzyword#converter()],
-  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-  \   'keymap': {"\<CR>": '<Over>(easymotion)'},
-  \   'is_expr': 0,
-  \   'is_stay': 1
-  \ }), get(a:, 1, {}))
+        \   'converters': [incsearch#config#fuzzyword#converter()],
+        \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+        \   'keymap': {"\<CR>": '<Over>(easymotion)'},
+        \   'is_expr': 0,
+        \   'is_stay': 1
+        \ }), get(a:, 1, {}))
 endfunction
 noremap <silent><expr> <space>f incsearch#go(<SID>config_easyfuzzymotion())
 
@@ -990,13 +990,13 @@ let g:dart_style_guide = 2
 
 let g:ale_lint_on_text_changed = 0
 let g:ale_linters = {
-\ 'dart': ['dartfmt'],
-\ 'ruby': ['rubocop'],
-\ }
+      \ 'dart': ['dartfmt'],
+      \ 'ruby': ['rubocop'],
+      \ }
 let g:ale_fixers = {
-\ 'dart': ['dartfmt'],
-\ 'ruby': ['rubocop'],
-\}
+      \ 'dart': ['dartfmt'],
+      \ 'ruby': ['rubocop'],
+      \}
 let g:ale_fix_on_save = 1
 
 command! -nargs=0 DisableLinterOnSave call DisableLinterOnSave()
@@ -1096,49 +1096,49 @@ let g:fzf_buffers_jump = 1
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 } }
 let g:fzf_action = {
-    \ 'ctrl-v': 'vsplit',
-    \ 'ctrl-e': 'edit',
-    \ 'enter': 'GotoOrOpen tab',
-  \ }
+      \ 'ctrl-v': 'vsplit',
+      \ 'ctrl-e': 'edit',
+      \ 'enter': 'GotoOrOpen tab',
+      \ }
 
 
 let g:fzf_colors =
-\ { "fg":      ["fg", "Normal"],
-  \ "bg":      ["bg", "Normal"],
-  \ "hl":      ["fg", "IncSearch"],
-  \ "fg+":     ["fg", "CursorLine", "CursorColumn", "Normal"],
-  \ "bg+":     ["bg", "CursorLine", "CursorColumn"],
-  \ "hl+":     ["fg", "IncSearch"],
-  \ "info":    ["fg", "IncSearch"],
-  \ "border":  ["fg", "Normal"],
-  \ "prompt":  ["fg", "Comment"],
-  \ "pointer": ["fg", "IncSearch"],
-  \ "marker":  ["fg", "IncSearch"],
-  \ "spinner": ["fg", "IncSearch"],
-  \ "header":  ["fg", "WildMenu"] }
+      \ { "fg":      ["fg", "Normal"],
+      \ "bg":      ["bg", "Normal"],
+      \ "hl":      ["fg", "IncSearch"],
+      \ "fg+":     ["fg", "CursorLine", "CursorColumn", "Normal"],
+      \ "bg+":     ["bg", "CursorLine", "CursorColumn"],
+      \ "hl+":     ["fg", "IncSearch"],
+      \ "info":    ["fg", "IncSearch"],
+      \ "border":  ["fg", "Normal"],
+      \ "prompt":  ["fg", "Comment"],
+      \ "pointer": ["fg", "IncSearch"],
+      \ "marker":  ["fg", "IncSearch"],
+      \ "spinner": ["fg", "IncSearch"],
+      \ "header":  ["fg", "WildMenu"] }
 
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(
-    \   <q-args>,
-    \   fzf#vim#with_preview(
-    \     {
-    \       'options': [
-    \         '--layout=reverse',
-    \         '--info=inline',
-    \         '--bind=ctrl-u:toggle,ctrl-p:toggle-preview'
-    \       ]
-    \     }
-    \   ),
-    \   <bang>0
-    \ )
+      \ call fzf#vim#files(
+      \   <q-args>,
+      \   fzf#vim#with_preview(
+      \     {
+      \       'options': [
+      \         '--layout=reverse',
+      \         '--info=inline',
+      \         '--bind=ctrl-u:toggle,ctrl-p:toggle-preview'
+      \       ]
+      \     }
+      \   ),
+      \   <bang>0
+      \ )
 command! -bang -nargs=? -complete=dir Buffers
-    \ call fzf#vim#buffers(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+      \ call fzf#vim#buffers(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 command! -bang -nargs=? -complete=dir History
-    \ call fzf#vim#history(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+      \ call fzf#vim#history(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 command! -bang -nargs=? -complete=dir Windows
-    \ call fzf#vim#windows(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+      \ call fzf#vim#windows(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
 command! -bang FindAllFiles call FindAllFiles()
 function! FindAllFiles()
@@ -1160,18 +1160,18 @@ function! FindAllFiles()
 endfunction
 
 command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-\ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
-\ 'sink*': function('s:find_and_open_files'),
-\ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-\ })))
+      \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
+      \ 'sink*': function('s:find_and_open_files'),
+      \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+      \ })))
 
 function! s:find_and_open_files(lines)
   if len(a:lines) < 2 | return | endif
 
   let cmd = get({'ctrl-e': 'edit ',
-               \ 'ctrl-v': 'vertical split ',
-               \ 'enter': 'tab drop '}, a:lines[0], 'e ')
+        \ 'ctrl-v': 'vertical split ',
+        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
   for file in a:lines[1:]
     exec cmd . file
   endfor
@@ -1272,10 +1272,10 @@ function! s:delete_windows(lines)
 endfunction
 
 command! DeleteWindow call fzf#run(fzf#wrap({
-  \ 'source': s:list_windows(),
-  \ 'sink*': { lines -> s:delete_windows(lines) },
-  \ 'options': '--multi --reverse --bind ctrl-a:select-all,ctrl-d:deselect-all'
-\ }))
+      \ 'source': s:list_windows(),
+      \ 'sink*': { lines -> s:delete_windows(lines) },
+      \ 'options': '--multi --reverse --bind ctrl-a:select-all,ctrl-d:deselect-all'
+      \ }))
 
 " Rg, Ag が遅いので代わりにカスタムした RG を使う
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)#narrow-ag-results-within-vim
@@ -1289,8 +1289,8 @@ function! s:open_files(lines)
   if len(a:lines) < 2 | return | endif
 
   let cmd = get({'ctrl-e': 'edit',
-               \ 'ctrl-v': 'vertical split',
-               \ 'enter': 'GotoOrOpen tab'}, a:lines[0], 'e')
+        \ 'ctrl-v': 'vertical split',
+        \ 'enter': 'GotoOrOpen tab'}, a:lines[0], 'e')
   let list = map(a:lines[1:], 's:open_quickfix(v:val)')
 
   let first = list[0]
@@ -1313,39 +1313,39 @@ endfunction
 
 " bind は selection を参考に。http://manpages.ubuntu.com/manpages/focal/man1/fzf.1.html
 command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
-\ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
-\                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('s:open_files'),
-\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-\            '--delimiter : --preview-window +{2}-/2 '.
-\            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
-\            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ })))
+      \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
 
 command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-\ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
-\                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('s:open_files'),
-\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-\            '--delimiter : --preview-window +{2}-/2 '.
-\            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
-\            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ })))
+      \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
 
 command! -nargs=0 OpenNote call fzf#run(fzf#wrap({
-\ 'source': 'ls ~/.vim/note',
-\ 'sink':  function('s:open_note'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+      \ 'source': 'ls ~/.vim/note',
+      \ 'sink':  function('s:open_note'),
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
 
 function! s:open_note(line)
   try
     call fzf#run(fzf#wrap({
-    \ 'source':  'cat ~/.vim/note/' . a:line,
-    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'sink':   function('s:open_selected_file')}))
+          \ 'source':  'cat ~/.vim/note/' . a:line,
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'sink':   function('s:open_selected_file')}))
   catch
     echohl WarningMsg
     echom v:exception
@@ -1402,10 +1402,10 @@ command! -nargs=0 FindAnotherProjectFile call s:ghq_list_and_open_another_projec
 function! s:ghq_list_and_open_another_project_file()
   try
     call fzf#run(fzf#wrap({
-    \ 'source': 'ghq list --full-path',
-    \ 'sink':  function('s:open_another_project_file'),
-    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-    \ }))
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:open_another_project_file'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
     if has('nvim')
       call feedkeys('i', 'n')
     endif
@@ -1419,10 +1419,10 @@ endfunction
 function! s:open_another_project_file(line)
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
-    \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
-    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-    \ 'sink*':   function('s:open_selected_file_by_some_way')})))
+          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'sink*':   function('s:open_selected_file_by_some_way')})))
     if has('nvim')
       call feedkeys('i', 'n')
     endif
@@ -1437,10 +1437,10 @@ command! SwitchProject call SwitchProject()
 function!  SwitchProject()
   try
     call fzf#run(fzf#wrap({
-    \ 'source': 'ghq list --full-path',
-    \ 'sink':  function('s:open_project'),
-    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-    \ }))
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:open_project'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
     " https://github.com/junegunn/fzf/issues/1566#issuecomment-495041470
     if has('nvim')
       call feedkeys('i', 'n')
@@ -1492,10 +1492,10 @@ function! SelectFunction()
 endfunction
 
 command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
-\ 'source': 'cat ~/.vim/functions/normal',
-\ 'sink':  function('s:select_function_handler'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+      \ 'source': 'cat ~/.vim/functions/normal',
+      \ 'sink':  function('s:select_function_handler'),
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
 
 if exists('*s:select_function_handler')
 else
@@ -1516,10 +1516,10 @@ function! SelectVisualFunction()
 endfunction
 
 command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
-\ 'source': 'cat ~/.vim/functions/visual',
-\ 'sink':  function('s:select_visual_function_handler'),
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ }))
+      \ 'source': 'cat ~/.vim/functions/visual',
+      \ 'sink':  function('s:select_visual_function_handler'),
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
 
 function! s:select_visual_function_handler(line) range
   execute a:line
@@ -1684,10 +1684,10 @@ command! -nargs=0 DiffAnotherProjectFile call s:ghq_list_diff_another_project_fi
 function! s:ghq_list_diff_another_project_file()
   try
     call fzf#run(fzf#wrap({
-    \ 'source': 'ghq list --full-path',
-    \ 'sink':  function('s:diff_another_project_file'),
-    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-    \ }))
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:diff_another_project_file'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
     if has('nvim')
       call feedkeys('i', 'n')
     endif
@@ -1701,9 +1701,9 @@ endfunction
 function! s:diff_another_project_file(line)
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
-    \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . './.git/*" -type f'),
-    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-    \ 'sink':   function('s:diff_files')})))
+          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . './.git/*" -type f'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'sink':   function('s:diff_files')})))
     if has('nvim')
       call feedkeys('i', 'n')
     endif
@@ -1719,10 +1719,10 @@ command! -nargs=0 RGInAnotherProject call s:ghq_list_rg_in_another_project()
 function! s:ghq_list_rg_in_another_project()
   try
     call fzf#run(fzf#wrap({
-    \ 'source': 'ghq list --full-path',
-    \ 'sink':  function('s:rg_in_another_project'),
-    \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-    \ }))
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:rg_in_another_project'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
     if has('nvim')
       call feedkeys('i', 'n')
     endif
@@ -1742,23 +1742,23 @@ function! s:rg_in_another_project(line)
 endfunction
 
 command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap({
-\ 'source':  printf("rg '%s' " . g:rg_in_another_project_file . " --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' -g '!vendor' ",
-\                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('s:open_file_in_another_project'),
-\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
-\            '--delimiter : --preview-window +{2}-/2 '.
-\            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
-\            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ })))
+      \ 'source':  printf("rg '%s' " . g:rg_in_another_project_file . " --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' -g '!vendor' ",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_file_in_another_project'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
 
 function! s:open_file_in_another_project(lines)
   unlet g:rg_in_another_project_file
   if len(a:lines) < 2 | return | endif
 
   let cmd = get({'ctrl-e': 'edit ',
-               \ 'ctrl-v': 'vertical split ',
-               \ 'enter': 'tab drop '}, a:lines[0], 'e ')
+        \ 'ctrl-v': 'vertical split ',
+        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
   for file in a:lines[1:]
     exec cmd . split(file, ':')[0]
   endfor
@@ -1773,15 +1773,15 @@ function! RGInTemporaryNote()
 endfunction
 
 command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
-\ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
-\                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-\ 'sink*':    function('s:open_files'),
-\ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
-\            '--delimiter : --preview-window +{2}-/2 '.
-\            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
-\            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-\ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-\ })))
+      \ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
 
 " https://github.com/junegunn/fzf.vim/issues/647#issuecomment-520259307
 function! s:get_registers() abort
@@ -1819,9 +1819,9 @@ command! -bang Registers call s:registers('<bang>' ==# '!')
 " Dart
 let g:lsc_auto_map = v:true
 let g:lsc_server_commands = {
-  \ 'dart': 'dart_language_server',
-  \ 'ruby': 'solargraph stdio'
-  \ }
+      \ 'dart': 'dart_language_server',
+      \ 'ruby': 'solargraph stdio'
+      \ }
 let g:lsc_enable_autocomplete = v:true
 " Use all the defaults (recommended):
 
@@ -1835,21 +1835,21 @@ let g:lsc_auto_map = {'defaults': v:true, 'FindReferences': '<leader>r'}
 nnoremap gd :LSClientGoToDefinition<cr>
 " nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
 " Complete default mappings are:
-    " \ 'GoToDefinition': 'gd',
-    " \ 'GoToDefinitionSplit': 'gd',
+" \ 'GoToDefinition': 'gd',
+" \ 'GoToDefinitionSplit': 'gd',
 let g:lsc_auto_map = {
-    \ 'FindReferences': 'gr',
-    \ 'NextReference': 'gn',
-    \ 'PreviousReference': '<C-p>',
-    \ 'FindImplementations': 'gI',
-    \ 'FindCodeActions': 'ga',
-    \ 'Rename': 'gR',
-    \ 'ShowHover': v:true,
-    \ 'DocumentSymbol': 'go',
-    \ 'WorkspaceSymbol': 'gS',
-    \ 'SignatureHelp': 'gm',
-    \ 'Completion': 'completefunc',
-    \}
+      \ 'FindReferences': 'gr',
+      \ 'NextReference': 'gn',
+      \ 'PreviousReference': '<C-p>',
+      \ 'FindImplementations': 'gI',
+      \ 'FindCodeActions': 'ga',
+      \ 'Rename': 'gR',
+      \ 'ShowHover': v:true,
+      \ 'DocumentSymbol': 'go',
+      \ 'WorkspaceSymbol': 'gS',
+      \ 'SignatureHelp': 'gm',
+      \ 'Completion': 'completefunc',
+      \}
 
 " }}}
 
