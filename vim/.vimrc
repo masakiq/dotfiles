@@ -684,7 +684,6 @@ let g:fzf_action = {
       \ 'enter': 'GotoOrOpen tab',
       \ }
 
-
 let g:fzf_colors =
       \ { "fg":      ["fg", "Normal"],
       \ "bg":      ["bg", "Normal"],
@@ -723,43 +722,6 @@ command! -bang -nargs=? -complete=dir History
 command! -bang -nargs=? -complete=dir Windows
       \ call fzf#vim#windows(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
-command! -bang FindAllFiles call FindAllFiles()
-function! FindAllFiles()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-          \ 'sink*': function('s:find_and_open_files'),
-          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
-      \ 'sink*': function('s:find_and_open_files'),
-      \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-      \ })))
-
-function! s:find_and_open_files(lines)
-  if len(a:lines) < 2 | return | endif
-
-  let cmd = get({'ctrl-e': 'edit ',
-        \ 'ctrl-v': 'vertical split ',
-        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
-  for file in a:lines[1:]
-    exec cmd . file
-  endfor
-endfunction
-
 if has('gui_running')
 else
   nnoremap <space>of :FindFiles<CR>
@@ -783,617 +745,6 @@ nnoremap <space>on :TemporaryNote<CR>
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
 " ファイル名補完
 inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
-
-" https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
-function! s:list_buffers()
-  redir => list
-  silent ls
-  redir END
-  return split(list, "\n")
-endfunction
-
-function! s:delete_buffers(lines)
-  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[0]}))
-endfunction
-
-command! -bang DeleteBuffersByFZF call DeleteBuffersByFZF()
-function! DeleteBuffersByFZF()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': s:list_buffers(),
-          \ 'sink*': { lines -> s:delete_buffers(lines) },
-          \ 'options': '--multi --reverse --bind ctrl-a:select-all'
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-" https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
-function! s:list_windows()
-  let list = []
-  let tabnumber = 1
-
-
-  while tabnumber <= tabpagenr('$')
-    let buflist = tabpagebuflist(tabnumber)
-    let winnumber = 1
-    for buf in buflist
-      silent! let file = expandcmd('#'. buf .'<.rb')
-      let file = substitute(file, '#.*', '[No-Name]', '')
-      let line = tabnumber . ' ' . winnumber . ' ' . file . ' ' . buf
-      call add(list, line)
-      let winnumber = winnumber + 1
-    endfor
-    let tabnumber = tabnumber + 1
-  endwhile
-
-  return list
-endfunction
-
-function! s:actuality_tab_count()
-  let ws = s:list_windows()
-  let tab_count = 0
-  let non_tab_count = 0
-  for win in ws
-    if win =~ '^.*\s\[No\-Name\]\s.*'
-      let non_tab_count = non_tab_count + 1
-    else
-      let tab_count = tab_count + 1
-    endif
-  endfor
-  return tab_count
-endfunction
-
-function! s:delete_windows(lines)
-  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[3]}))
-endfunction
-
-command! DeleteWindow call fzf#run(fzf#wrap({
-      \ 'source': s:list_windows(),
-      \ 'sink*': { lines -> s:delete_windows(lines) },
-      \ 'options': '--multi --reverse --bind ctrl-a:select-all,ctrl-d:deselect-all'
-      \ }))
-
-" Rg, Ag が遅いので代わりにカスタムした RG を使う
-" https://github.com/junegunn/fzf/wiki/Examples-(vim)#narrow-ag-results-within-vim
-function! s:open_quickfix(line)
-  let parts = split(a:line, ':')
-  return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2],
-        \ 'text': join(parts[3:], ':')}
-endfunction
-
-function! s:open_files(lines)
-  if len(a:lines) < 2 | return | endif
-
-  let cmd = get({'ctrl-e': 'edit',
-        \ 'ctrl-v': 'vertical split',
-        \ 'enter': 'GotoOrOpen tab'}, a:lines[0], 'e')
-  let list = map(a:lines[1:], 's:open_quickfix(v:val)')
-
-  let first = list[0]
-  execute cmd escape(first.filename, ' %#\')
-  execute first.lnum
-  execute 'normal!' first.col.'|zz'
-
-  if len(list) > 1
-    if a:lines[0] == 'ctrl-x'
-      call setqflist(list)
-      copen
-      wincmd p
-    else
-      for fi in list
-        exec 'tab drop ' . fi.filename
-      endfor
-    endif
-  endif
-endfunction
-
-" bind は selection を参考に。http://manpages.ubuntu.com/manpages/focal/man1/fzf.1.html
-command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
-
-command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
-
-command! -nargs=0 OpenNote call fzf#run(fzf#wrap({
-      \ 'source': 'ls ~/.vim/note',
-      \ 'sink':  function('s:open_note'),
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
-
-function! s:open_note(line)
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source':  'cat ~/.vim/note/' . a:line,
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'sink':   function('s:open_selected_file')}))
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:open_selected_file(line)
-  execute 'vs ' . a:line
-endfunction
-
-command! DiffFile call DiffFile()
-function! DiffFile()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-          \ 'sink':  function('s:diff_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-command! DiffTemporaryNote call DiffTemporaryNote()
-function! DiffTemporaryNote()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
-          \ 'sink':  function('s:diff_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:diff_files(line)
-  execute 'vertical diffsplit ' . a:line
-endfunction
-
-command! -nargs=0 FindAnotherProjectFile call s:ghq_list_and_open_another_project_file()
-
-function! s:ghq_list_and_open_another_project_file()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:open_another_project_file'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:open_another_project_file(line)
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-          \ 'sink*':   function('s:open_selected_file_by_some_way')})))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-command! SwitchProject call SwitchProject()
-function!  SwitchProject()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:open_project'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    " https://github.com/junegunn/fzf/issues/1566#issuecomment-495041470
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:open_project(project)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'cd ' . a:project
-  silent! exec 'set titlestring=' . s:getCurrentDirectory()
-endfunction
-
-command! -nargs=0 SwitchVimPlugin call SwitchVimPlugin()
-function! SwitchVimPlugin()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/plugged',
-          \ 'sink':  function('s:switch_vim_plugin'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:switch_vim_plugin(dir)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'cd ~/.vim/plugged/' . a:dir
-endfunction
-
-nnoremap <space><space> :<c-u>call SelectFunction()<CR>
-function! SelectFunction()
-  let g:mode = 'n'
-  execute 'SelectFunction'
-endfunction
-
-command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
-      \ 'source': 'cat ~/.vim/functions/normal',
-      \ 'sink':  function('s:select_function_handler'),
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
-
-if exists('*s:select_function_handler')
-else
-  function! s:select_function_handler(line)
-    execute a:line
-    unlet g:mode
-  endfunction
-endif
-
-vnoremap <space><space> :<c-u>call SelectVisualFunction()<CR>
-function! SelectVisualFunction()
-  let g:mode = 'v'
-  let [line_start, column_start] = getpos("'<")[1:2]
-  let [line_end, column_end] = getpos("'>")[1:2]
-  let g:firstline = line_start
-  let g:lastline = line_end
-  execute 'SelectVidualFunction'
-endfunction
-
-command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
-      \ 'source': 'cat ~/.vim/functions/visual',
-      \ 'sink':  function('s:select_visual_function_handler'),
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
-
-function! s:select_visual_function_handler(line) range
-  execute a:line
-  unlet g:mode
-  unlet g:firstline
-  unlet g:lastline
-endfunction
-
-command! -bang SwitchSession call SwitchSession()
-function! SwitchSession()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/sessions',
-          \ 'sink':  function('s:load_session'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:load_session(session)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'source ~/.vim/sessions/' . a:session
-  silent! execute 'source $MYVIMRC'
-  silent! exec 'set titlestring=' . s:getCurrentDirectory()
-endfunction
-
-command! -bang DeleteSessions call DeleteSessions()
-function! DeleteSessions()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/sessions',
-          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
-          \ 'sink*':  function('s:delete_sessions'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:delete_sessions(sessions)
-  for session in a:sessions
-    call delete(expand('~/.vim/sessions/' . session))
-  endfor
-endfunction
-
-function! ListTermBufNums()
-  redir => bufs
-  silent ls!('R')
-  redir END
-  let buflist = split(bufs, "\n")
-  let listbufnums = []
-  for buf in buflist
-    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
-    call add(listbufnums, num)
-  endfor
-  return listbufnums
-endfunction
-
-command! -bang DiffFileGitBranch call DiffFileGitBranch()
-function! DiffFileGitBranch()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'git --no-pager branch | sed "/* /d"',
-          \ 'sink': function('s:select_diff_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:get_current_branch()
-  return substitute(FugitiveStatusline(), '^\[Git(\(.*\))\]', '\1', '')
-endfunction
-
-function! s:select_diff_files(branch)
-  let current_branch = s:get_current_branch()
-  let g:selected_branch = a:branch
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source':  printf('git diff' . a:branch . '...' . current_branch . ' --name-only'),
-          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'sink*': function('s:open_selected_files_with_another_tab')}))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:open_selected_files_with_another_tab(files)
-  let current_branch = s:get_current_branch()
-  for file in a:files
-    silent execute '$tabnew ' . file
-    execute 'Gvdiff ' . g:selected_branch . '...' . current_branch
-    SwapWindow
-  endfor
-  unlet g:selected_branch
-endfunction
-
-command! TemporaryNote call TemporaryNote()
-function! TemporaryNote()
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
-          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-          \ 'sink*':   function('s:open_selected_file_by_some_way'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ })))
-    " if has('nvim')
-    "   call feedkeys('i', 'n')
-    " endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:open_selected_file_by_some_way(line)
-  if len(a:line) == 2
-    if a:line[0] == 'enter'
-      exec "tab drop " . a:line[1]
-    elseif a:line[0] == 'ctrl-v'
-      execute 'vs ' . a:line[1]
-    elseif a:line[0] == 'ctrl-e'
-      execute 'e ' . a:line[1]
-    endif
-  else
-    for fi in a:line[1:]
-      exec 'tab drop ' . fi
-    endfor
-  endif
-endfunction
-
-command! -nargs=0 DiffAnotherProjectFile call s:ghq_list_diff_another_project_file()
-
-function! s:ghq_list_diff_another_project_file()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:diff_another_project_file'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:diff_another_project_file(line)
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . './.git/*" -type f'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'sink':   function('s:diff_files')})))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-command! -nargs=0 RGInAnotherProject call s:ghq_list_rg_in_another_project()
-
-function! s:ghq_list_rg_in_another_project()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:rg_in_another_project'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:rg_in_another_project(line)
-  let g:rg_in_another_project_file = a:line
-  execute 'RGOnAnotherProject ' . input('RGOnAnotherProject/')
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg '%s' " . g:rg_in_another_project_file . " --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' -g '!vendor' ",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_file_in_another_project'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
-
-function! s:open_file_in_another_project(lines)
-  unlet g:rg_in_another_project_file
-  if len(a:lines) < 2 | return | endif
-
-  let cmd = get({'ctrl-e': 'edit ',
-        \ 'ctrl-v': 'vertical split ',
-        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
-  for file in a:lines[1:]
-    exec cmd . split(file, ':')[0]
-  endfor
-endfunction
-
-command! RGInTemporaryNote call RGInTemporaryNote()
-function! RGInTemporaryNote()
-  execute 'RGInTemporaryNoteAndOpen ' . input('RGInTemporaryNote/')
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
-
-" https://github.com/junegunn/fzf.vim/issues/647#issuecomment-520259307
-function! s:get_registers() abort
-  redir => l:regs
-  silent registers
-  redir END
-
-  return split(l:regs, '\n')[1:]
-endfunction
-
-function! s:registers(...) abort
-  try
-    let l:opts = {
-          \ 'source': s:get_registers(),
-          \ 'sink': {x -> feedkeys(matchstr(x, '\v^\S+\ze.*') . (a:1 ? 'P' : 'p'), 'x')},
-          \ 'options': '--prompt="Reg> "'
-          \ }
-    call fzf#run(fzf#wrap(l:opts))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-command! -bang Registers call s:registers('<bang>' ==# '!')
 
 " }}}
 
@@ -1451,7 +802,7 @@ endif
 
 " ## カスタムファンクション ---------------------- {{{
 
-" ## vimrc 系 ---------------------- {{{
+" ## Vim 系 ---------------------- {{{
 
 if exists('*LoadVIMRC')
 else
@@ -1468,9 +819,127 @@ function! OpenVIMRC()
   :noh
 endfunction
 
+command! -nargs=0 SwitchVimPlugin call SwitchVimPlugin()
+function! SwitchVimPlugin()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ls ~/.vim/plugged',
+          \ 'sink':  function('s:switch_vim_plugin'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:switch_vim_plugin(dir)
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteBuffers()
+  silent! execute 'cd ~/.vim/plugged/' . a:dir
+endfunction
+
 " }}}
 
 " ## ファイル操作 ---------------------- {{{
+
+command! -bang FindAllFiles call FindAllFiles()
+function! FindAllFiles()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
+          \ 'sink*': function('s:find_and_open_files'),
+          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:open_files(lines)
+  if len(a:lines) < 2 | return | endif
+
+  let cmd = get({'ctrl-e': 'edit',
+        \ 'ctrl-v': 'vertical split',
+        \ 'enter': 'GotoOrOpen tab'}, a:lines[0], 'e')
+  let list = map(a:lines[1:], 's:open_quickfix(v:val)')
+
+  let first = list[0]
+  execute cmd escape(first.filename, ' %#\')
+  execute first.lnum
+  execute 'normal!' first.col.'|zz'
+
+  if len(list) > 1
+    if a:lines[0] == 'ctrl-x'
+      call setqflist(list)
+      copen
+      wincmd p
+    else
+      for fi in list
+        exec 'tab drop ' . fi.filename
+      endfor
+    endif
+  endif
+endfunction
+
+command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
+      \ 'sink*': function('s:find_and_open_files'),
+      \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+      \ })))
+
+function! s:find_and_open_files(lines)
+  if len(a:lines) < 2 | return | endif
+
+  let cmd = get({'ctrl-e': 'edit ',
+        \ 'ctrl-v': 'vertical split ',
+        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
+  for file in a:lines[1:]
+    exec cmd . file
+  endfor
+endfunction
+
+function! s:open_selected_file(line)
+  execute 'vs ' . a:line
+endfunction
+
+function! s:open_selected_files_with_another_tab(files)
+  let current_branch = s:get_current_branch()
+  for file in a:files
+    silent execute '$tabnew ' . file
+    execute 'Gvdiff ' . g:selected_branch . '...' . current_branch
+    SwapWindow
+  endfor
+  unlet g:selected_branch
+endfunction
+
+function! s:open_selected_file_by_some_way(line)
+  if len(a:line) == 2
+    if a:line[0] == 'enter'
+      exec "tab drop " . a:line[1]
+    elseif a:line[0] == 'ctrl-v'
+      execute 'vs ' . a:line[1]
+    elseif a:line[0] == 'ctrl-e'
+      execute 'e ' . a:line[1]
+    endif
+  else
+    for fi in a:line[1:]
+      exec 'tab drop ' . fi
+    endfor
+  endif
+endfunction
 
 command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
 function! CopyCurrentPath()
@@ -1531,6 +1000,20 @@ function! MoveTabLeft()
   silent! execute '-tabm'
 endfunction
 
+function! s:actuality_tab_count()
+  let ws = s:list_windows()
+  let tab_count = 0
+  let non_tab_count = 0
+  for win in ws
+    if win =~ '^.*\s\[No\-Name\]\s.*'
+      let non_tab_count = non_tab_count + 1
+    else
+      let tab_count = tab_count + 1
+    endif
+  endfor
+  return tab_count
+endfunction
+
 " }}}
 
 " ## セッション操作 ---------------------- {{{
@@ -1542,6 +1025,58 @@ function! SaveSession()
   echom 'saved current session : ' .current_dir
 endfunction
 
+command! -bang SwitchSession call SwitchSession()
+function! SwitchSession()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ls ~/.vim/sessions',
+          \ 'sink':  function('s:load_session'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:load_session(session)
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteBuffers()
+  silent! execute 'source ~/.vim/sessions/' . a:session
+  silent! execute 'source $MYVIMRC'
+  silent! exec 'set titlestring=' . s:getCurrentDirectory()
+endfunction
+
+command! -bang DeleteSessions call DeleteSessions()
+function! DeleteSessions()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ls ~/.vim/sessions',
+          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
+          \ 'sink*':  function('s:delete_sessions'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:delete_sessions(sessions)
+  for session in a:sessions
+    call delete(expand('~/.vim/sessions/' . session))
+  endfor
+endfunction
+
 " }}}
 
 " ## ウィンドウ操作 ---------------------- {{{
@@ -1549,6 +1084,37 @@ endfunction
 command! SwapWindow call SwapWindow()
 function! SwapWindow()
   silent! exec "normal \<c-w>\<c-r>"
+endfunction
+
+function! s:delete_windows(lines)
+  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[3]}))
+endfunction
+
+command! DeleteWindow call fzf#run(fzf#wrap({
+      \ 'source': s:list_windows(),
+      \ 'sink*': { lines -> s:delete_windows(lines) },
+      \ 'options': '--multi --reverse --bind ctrl-a:select-all,ctrl-d:deselect-all'
+      \ }))
+
+" https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
+function! s:list_windows()
+  let list = []
+  let tabnumber = 1
+
+  while tabnumber <= tabpagenr('$')
+    let buflist = tabpagebuflist(tabnumber)
+    let winnumber = 1
+    for buf in buflist
+      silent! let file = expandcmd('#'. buf .'<.rb')
+      let file = substitute(file, '#.*', '[No-Name]', '')
+      let line = tabnumber . ' ' . winnumber . ' ' . file . ' ' . buf
+      call add(list, line)
+      let winnumber = winnumber + 1
+    endfor
+    let tabnumber = tabnumber + 1
+  endwhile
+
+  return list
 endfunction
 
 " }}}
@@ -1605,9 +1171,255 @@ function! DeleteBuffers()
   endfor
 endfunction
 
+" https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
+
+function! s:delete_buffers(lines)
+  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! -bang DeleteBuffersByFZF call DeleteBuffersByFZF()
+function! DeleteBuffersByFZF()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': s:list_buffers(),
+          \ 'sink*': { lines -> s:delete_buffers(lines) },
+          \ 'options': '--multi --reverse --bind ctrl-a:select-all'
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+" }}}
+
+" ## レジスタ操作 ---------------------- {{{
+
+" https://github.com/junegunn/fzf.vim/issues/647#issuecomment-520259307
+function! s:get_registers() abort
+  redir => l:regs
+  silent registers
+  redir END
+
+  return split(l:regs, '\n')[1:]
+endfunction
+
+function! s:registers(...) abort
+  try
+    let l:opts = {
+          \ 'source': s:get_registers(),
+          \ 'sink': {x -> feedkeys(matchstr(x, '\v^\S+\ze.*') . (a:1 ? 'P' : 'p'), 'x')},
+          \ 'options': '--prompt="Reg> "'
+          \ }
+    call fzf#run(fzf#wrap(l:opts))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+command! -bang Registers call s:registers('<bang>' ==# '!')
+
+" }}}
+
+" ## Diff ---------------------- {{{
+
+command! DiffFile call DiffFile()
+function! DiffFile()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
+          \ 'sink':  function('s:diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:diff_files(line)
+  execute 'vertical diffsplit ' . a:line
+endfunction
+
+function! s:select_diff_files(branch)
+  let current_branch = s:get_current_branch()
+  let g:selected_branch = a:branch
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source':  printf('git diff' . a:branch . '...' . current_branch . ' --name-only'),
+          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'sink*': function('s:open_selected_files_with_another_tab')}))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+" }}}
+
+" ## プロジェクト横断 ---------------------- {{{
+
+command! SwitchProject call SwitchProject()
+function!  SwitchProject()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:open_project'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    " https://github.com/junegunn/fzf/issues/1566#issuecomment-495041470
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:open_project(project)
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteBuffers()
+  silent! execute 'cd ' . a:project
+  silent! exec 'set titlestring=' . s:getCurrentDirectory()
+endfunction
+
+command! -nargs=0 DiffAnotherProjectFile call s:ghq_list_diff_another_project_file()
+
+function! s:ghq_list_diff_another_project_file()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:diff_another_project_file'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:diff_another_project_file(line)
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . './.git/*" -type f'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'sink':   function('s:diff_files')})))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:open_file_in_another_project(lines)
+  unlet g:rg_in_another_project_file
+  if len(a:lines) < 2 | return | endif
+
+  let cmd = get({'ctrl-e': 'edit ',
+        \ 'ctrl-v': 'vertical split ',
+        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
+  for file in a:lines[1:]
+    exec cmd . split(file, ':')[0]
+  endfor
+endfunction
+
+command! -nargs=0 FindAnotherProjectFile call s:ghq_list_and_open_another_project_file()
+
+function! s:ghq_list_and_open_another_project_file()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:open_another_project_file'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:open_another_project_file(line)
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'sink*':   function('s:open_selected_file_by_some_way')})))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
 " }}}
 
 " ## 検索 ---------------------- {{{
+
+" https://github.com/junegunn/fzf/wiki/Examples-(vim)#narrow-ag-results-within-vim
+" bind は selection を参考に。http://manpages.ubuntu.com/manpages/focal/man1/fzf.1.html
+command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
+
+command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
 
 function! SearchByRG()
   if mode() == 'n'
@@ -1656,6 +1468,63 @@ function! VimGrepBySelectedText()
   echom 'Copyed! ' . selected
   execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
 endfunction
+
+command! RGInTemporaryNote call RGInTemporaryNote()
+function! RGInTemporaryNote()
+  execute 'RGInTemporaryNoteAndOpen ' . input('RGInTemporaryNote/')
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
+
+command! -nargs=0 RGInAnotherProject call s:ghq_list_rg_in_another_project()
+
+function! s:ghq_list_rg_in_another_project()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:rg_in_another_project'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:rg_in_another_project(line)
+  let g:rg_in_another_project_file = a:line
+  execute 'RGOnAnotherProject ' . input('RGOnAnotherProject/')
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg '%s' " . g:rg_in_another_project_file . " --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' -g '!vendor' ",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_file_in_another_project'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
 
 " }}}
 
@@ -1843,9 +1712,71 @@ function! ListAllBufNums()
   return listbufnums
 endfunction
 
+function! ListTermBufNums()
+  redir => bufs
+  silent ls!('R')
+  redir END
+  let buflist = split(bufs, "\n")
+  let listbufnums = []
+  for buf in buflist
+    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
+    call add(listbufnums, num)
+  endfor
+  return listbufnums
+endfunction
+
+nnoremap <space><space> :<c-u>call SelectFunction()<CR>
+function! SelectFunction()
+  let g:mode = 'n'
+  execute 'SelectFunction'
+endfunction
+
+command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
+      \ 'source': 'cat ~/.vim/functions/normal',
+      \ 'sink':  function('s:select_function_handler'),
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
+
+if exists('*s:select_function_handler')
+else
+  function! s:select_function_handler(line)
+    execute a:line
+    unlet g:mode
+  endfunction
+endif
+
+vnoremap <space><space> :<c-u>call SelectVisualFunction()<CR>
+function! SelectVisualFunction()
+  let g:mode = 'v'
+  let [line_start, column_start] = getpos("'<")[1:2]
+  let [line_end, column_end] = getpos("'>")[1:2]
+  let g:firstline = line_start
+  let g:lastline = line_end
+  execute 'SelectVidualFunction'
+endfunction
+
+command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
+      \ 'source': 'cat ~/.vim/functions/visual',
+      \ 'sink':  function('s:select_visual_function_handler'),
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
+
+function! s:select_visual_function_handler(line) range
+  execute a:line
+  unlet g:mode
+  unlet g:firstline
+  unlet g:lastline
+endfunction
+
+function! s:open_quickfix(line)
+  let parts = split(a:line, ':')
+  return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2],
+        \ 'text': join(parts[3:], ':')}
+endfunction
+
 " }}}
 
-" ## GitHub ---------------------- {{{
+" ## Git ---------------------- {{{
 
 command! OpenGitHub :call OpenGitHub()
 function! OpenGitHub()
@@ -1863,6 +1794,88 @@ command! -nargs=0 GitAdd call GitAdd()
 function! GitAdd()
   AsyncRun -silent git add .
   echom 'executed "git add ."'
+endfunction
+
+command! -bang DiffFileGitBranch call DiffFileGitBranch()
+function! DiffFileGitBranch()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'git --no-pager branch | sed "/* /d"',
+          \ 'sink': function('s:select_diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:get_current_branch()
+  return substitute(FugitiveStatusline(), '^\[Git(\(.*\))\]', '\1', '')
+endfunction
+
+" }}}
+
+" ## ノート ---------------------- {{{
+
+command! TemporaryNote call TemporaryNote()
+function! TemporaryNote()
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
+          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'sink*':   function('s:open_selected_file_by_some_way'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ })))
+    " if has('nvim')
+    "   call feedkeys('i', 'n')
+    " endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+command! DiffTemporaryNote call DiffTemporaryNote()
+function! DiffTemporaryNote()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
+          \ 'sink':  function('s:diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+command! -nargs=0 OpenNote call fzf#run(fzf#wrap({
+      \ 'source': 'ls ~/.vim/note',
+      \ 'sink':  function('s:open_note'),
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
+
+function! s:open_note(line)
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source':  'cat ~/.vim/note/' . a:line,
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'sink':   function('s:open_selected_file')}))
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
 endfunction
 
 " }}}
