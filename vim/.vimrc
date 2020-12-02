@@ -327,8 +327,8 @@ vnoremap ^ g^
 nnoremap $ g$
 " vnoremap $ g$
 
-nnoremap <C-e> <Esc>$
-nnoremap <C-a> <Esc>^
+nnoremap <C-e> $a
+nnoremap <C-a> ^i
 
 " }}}
 
@@ -434,426 +434,6 @@ endif
 :autocmd FileType ruby :iabbrev let let(:) { }<esc>4hi<esc>
 :autocmd FileType ruby :iabbrev sha shared_examples '' do<CR>end<esc>kw<esc>
 :autocmd FileType ruby :iabbrev beh it_behaves_like ''<esc>h<esc>
-
-" }}}
-
-" ## カスタムファンクション ---------------------- {{{
-
-" ## vimrc 系 ---------------------- {{{
-
-if exists('*LoadVIMRC')
-else
-  command! LoadVIMRC call LoadVIMRC()
-  function! LoadVIMRC()
-    source $MYVIMRC
-    :noh
-  endfunction
-endif
-
-command! OpenVIMRC call OpenVIMRC()
-function! OpenVIMRC()
-  vsplit $MYVIMRC
-  :noh
-endfunction
-
-" }}}
-
-" ## ファイル操作 ---------------------- {{{
-
-command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
-function! CopyCurrentPath()
-  echo "copied current path: " . expand('%')
-  let @+=expand('%')
-endfunction
-
-command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
-function! CopyAbsolutePath()
-  echo "copied absolute path: " . expand('%:p')
-  let @+=expand('%:p')
-endfunction
-
-command! OpenImplementationFile call OpenImplementationFile()
-function! OpenImplementationFile()
-  execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')
-endfunction
-
-command! OpenTestFile call OpenTestFile()
-function! OpenTestFile()
-  execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')
-endfunction
-
-command! RenameFile call RenameFile()
-function! RenameFile()
-  let old_name = expand('%')
-  let new_name = input('New file name: ', expand('%'), 'file')
-  if new_name != '' && new_name != old_name
-    exec ':saveas ' . new_name
-    exec ':silent !rm ' . old_name
-    redraw!
-  endif
-endfunction
-
-command! QuitAll call QuitAll()
-function! QuitAll()
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  normal ZQ
-endfunction
-
-command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
-function! QuitAllWithoutSaveSession()
-  call DeleteBuffers()
-  normal ZQ
-endfunction
-
-" }}}
-
-" ## タブ操作 ---------------------- {{{
-
-function! MoveTabRight()
-  silent! execute '+tabm'
-endfunction
-
-function! MoveTabLeft()
-  silent! execute '-tabm'
-endfunction
-
-" }}}
-
-" ## セッション操作 ---------------------- {{{
-
-command! SaveSession call SaveSession()
-function! SaveSession()
-  let current_dir = s:getCurrentDirectory()
-  silent! execute 'mks! ~/.vim/sessions/' . current_dir
-  echom 'saved current session : ' .current_dir
-endfunction
-
-" }}}
-
-" ## ウィンドウ操作 ---------------------- {{{
-
-command! SwapWindow call SwapWindow()
-function! SwapWindow()
-  silent! exec "normal \<c-w>\<c-r>"
-endfunction
-
-" }}}
-
-" ## タブ操作 ---------------------- {{{
-
-command! CloseDupTabs :call CloseDuplicateTabs()
-function! CloseDuplicateTabs()
-  let cnt = 0
-  let i = 1
-
-  let tpbufflst = []
-  let dups = []
-  let tabpgbufflst = tabpagebuflist(i)
-  while type(tabpagebuflist(i)) == 3
-    if index(tpbufflst, tabpagebuflist(i)) >= 0
-      call add(dups,i)
-    else
-      call add(tpbufflst, tabpagebuflist(i))
-    endif
-
-    let i += 1
-    let cnt += 1
-  endwhile
-
-  call reverse(dups)
-
-  for tb in dups
-    exec "tabclose ".tb
-  endfor
-
-endfunction
-
-" }}}
-
-" ## バッファ操作 ---------------------- {{{
-
-function! DeleteBufsWithoutExistingWindows()
-  let allbufnums = ListAllBufNums()
-  let bufnums = ListBufNums()
-  for num in allbufnums
-    if (index(bufnums, num) < 0)
-      execute 'bwipeout! ' . num
-      echom num . ' is deleted!'
-    endif
-  endfor
-endfunction
-
-command! DeleteBuffers call DeleteBuffers()
-function! DeleteBuffers()
-  let allbufnums = ListAllBufNums()
-  for num in allbufnums
-    execute 'bwipeout! ' . num
-  endfor
-endfunction
-
-" }}}
-
-" ## 検索 ---------------------- {{{
-
-function! SearchByRG()
-  if mode() == 'n'
-    execute 'RG ' . input('RG/')
-  else
-    let selected = SelectedVisualModeText()
-    let @+=selected
-    echom 'Copyed! ' . selected
-    execute 'RG ' . selected
-    silent! exec "normal \<c-c>"
-    if has('nvim')
-      call feedkeys(' ')
-    endif
-  endif
-endfunction
-
-function! RGBySelectedText()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  echom 'Copyed! ' . selected
-  execute 'RG ' . selected
-endfunction
-
-command! RGFromAllFilesVisual call RGFromAllFilesVisual()
-function! RGFromAllFilesVisual()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  execute 'RGFromAllFiles ' . selected
-  silent! exec "normal \<c-c>"
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-command! RGFromAllFilesNormal call RGFromAllFilesNormal()
-function! RGFromAllFilesNormal()
-  execute 'RGFromAllFiles ' . input('RGFromAllFiles/')
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-function! VimGrepBySelectedText()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  echom 'Copyed! ' . selected
-  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
-endfunction
-
-" }}}
-
-" ## カスタム置換 ---------------------- {{{
-
-command! SnakeCase call SnakeCase()
-function! SnakeCase() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/\//g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! PascalCase call PascalCase()
-function! PascalCase() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)\/(\u)/\1::\2/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-function! CapitalCaseToSnakeCase() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
-endfunction
-
-command! RemoveUnderBar call RemoveUnderBar()
-function! RemoveUnderBar() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! AddUnderBar call AddUnderBar()
-function! AddUnderBar() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-function! RemoveBeginningOfLineSpace() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
-endfunction
-
-command! ModuleToColon call ModuleToColon()
-function! ModuleToColon() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass (.+)\n/::\1/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V \< .*//g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V\s//g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^:://g'
-  silent! execute a:firstline . ',' . a:lastline . 's/^/class /g'
-endfunction
-
-command! ColonToModule call ColonToModule()
-function! ColonToModule() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass /module /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V::/ module /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V module /\rmodule /g'
-endfunction
-
-command! CommaToBreakline call CommaToBreakline()
-function! CommaToBreakline() range
-  silent! execute g:firstline . ',' . g:lastline . 's/,/,\r/g'
-endfunction
-
-command! JsonToHash call JsonToHash()
-function! JsonToHash() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\"\(\w*\)\"\(:.*\)/\1\2/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\'/\\\\'/g"
-  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
-endfunction
-
-command! HashToJson call HashToJson()
-function! HashToJson() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\(\w*\)\:/\"\1\":/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/'" . '/"/g'
-endfunction
-
-command! RocketToHash call RocketToHash()
-function! RocketToHash() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)"(\w+)".*\=\>/\1\2:/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)(\w+):\s*/\1\2: /g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\\v'/\\\\'/g"
-  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
-endfunction
-
-command! HashToRocket call HashToRocket()
-function! HashToRocket() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):\s*/\1\2: /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):/\1"\2" =>/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\'/\"/g"
-endfunction
-
-" }}}
-
-" ## ヘルパー ---------------------- {{{
-
-function! s:getCurrentDirectory()
-  redir => path
-  silent pwd
-  redir END
-  let splited = split(path, '/')
-  return splited[-1]
-endfunction
-
-function! SelectedVisualModeText()
-  let [line_start, column_start] = getpos("'<")[1:2]
-  let [line_end, column_end] = getpos("'>")[1:2]
-  let lines = getline(line_start, line_end)
-  if len(lines) == 0
-    return ''
-  endif
-  let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
-  let lines[0] = lines[0][column_start - 1:]
-  return join(lines, "\n")
-endfunction
-
-function! ChangeToFileFormat(text)
-  let snake_case = substitute(substitute(a:text, '\(\l\)\(\u\)', '\1_\L\2\e', "g"), '\(\u\)\(\u\)', '\1_\L\2\e', "g")
-  let down_case = tolower(snake_case)
-  let file_format = substitute(down_case, '::', '/', "g")
-  return file_format
-endfunction
-
-function! ChangeToFileFormatAndCopy()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-endfunction
-
-function! ChangeToFileFormatAndCopyAndSearchFiles()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-  execute 'Files'
-endfunction
-
-function! ChangeToFileFormatAndCopyAndSearchBuffers()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-  execute 'Buffers'
-endfunction
-
-function! ChangeToFileFormatAndCopyAndSearchHistory()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-  execute 'History'
-endfunction
-
-function! ListBufNums()
-  let list = []
-  let tabnumber = 1
-
-  while tabnumber <= tabpagenr('$')
-    let buflist = tabpagebuflist(tabnumber)
-    for buf in buflist
-      call add(list, buf)
-    endfor
-    let tabnumber = tabnumber + 1
-  endwhile
-
-  return list
-endfunction
-
-function! ListAllBufNums()
-  redir => bufs
-  silent ls
-  redir END
-  let buflist = split(bufs, "\n")
-  let listbufnums = []
-  for buf in buflist
-    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
-    call add(listbufnums, num)
-  endfor
-  return listbufnums
-endfunction
-
-" }}}
-
-" ## GitHub ---------------------- {{{
-
-command! OpenGitHub :call OpenGitHub()
-function! OpenGitHub()
-  if g:mode == 'n'
-    let line = a:firstline == a:lastline ? "#L" . line(".") : "#L" . a:firstline . "-L" . a:lastline
-  else
-    let line = g:firstline == g:lastline ? "#L" . line(".") : "#L" . g:firstline . "-L" . g:lastline
-  endif
-  let command = "~/.vim/functions/open_github.rb '" . expand("%:p") . "' '" . line . "'"
-  call asyncrun#run('', '', command)
-endfunction
-command! OpenGitHubBlame :GBInteractive
-
-command! -nargs=0 GitAdd call GitAdd()
-function! GitAdd()
-  AsyncRun -silent git add .
-  echom 'executed "git add ."'
-endfunction
-
-" }}}
 
 " }}}
 
@@ -1073,7 +653,7 @@ noremap <space>oe :Fern . -drawer -toggle -keep<CR>
 " ## matze/vim-move ---------------------- {{{
 
 let g:move_map_keys = 0
-let g:move_auto_indent = 0
+" let g:move_auto_indent = 0
 let g:move_past_end_of_line = 0
 vmap <C-j> <Plug>MoveBlockDown
 vmap <C-k> <Plug>MoveBlockUp
@@ -1103,7 +683,6 @@ let g:fzf_action = {
       \ 'ctrl-e': 'edit',
       \ 'enter': 'GotoOrOpen tab',
       \ }
-
 
 let g:fzf_colors =
       \ { "fg":      ["fg", "Normal"],
@@ -1143,43 +722,6 @@ command! -bang -nargs=? -complete=dir History
 command! -bang -nargs=? -complete=dir Windows
       \ call fzf#vim#windows(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
-command! -bang FindAllFiles call FindAllFiles()
-function! FindAllFiles()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-          \ 'sink*': function('s:find_and_open_files'),
-          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
-      \ 'sink*': function('s:find_and_open_files'),
-      \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-      \ })))
-
-function! s:find_and_open_files(lines)
-  if len(a:lines) < 2 | return | endif
-
-  let cmd = get({'ctrl-e': 'edit ',
-        \ 'ctrl-v': 'vertical split ',
-        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
-  for file in a:lines[1:]
-    exec cmd . file
-  endfor
-endfunction
-
 if has('gui_running')
 else
   nnoremap <space>of :FindFiles<CR>
@@ -1204,25 +746,86 @@ inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'hei
 " ファイル名補完
 inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
 
-" https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
-function! s:list_buffers()
-  redir => list
-  silent ls
-  redir END
-  return split(list, "\n")
+" }}}
+
+" ## LSP 設定 ---------------------- {{{
+
+" Dart
+let g:lsc_auto_map = v:true
+let g:lsc_server_commands = {
+      \ 'dart': 'dart_language_server',
+      \ 'ruby': 'solargraph stdio'
+      \ }
+let g:lsc_enable_autocomplete = v:true
+" Use all the defaults (recommended):
+
+" Apply the defaults with a few overrides:
+let g:lsc_auto_map = {'defaults': v:true, 'FindReferences': '<leader>r'}
+
+" Setting a value to a blank string leaves that command unmapped:
+" let g:lsc_auto_map = {'defaults': v:true, 'FindImplementations': ''}
+
+" ... or set only the commands you want mapped without defaults.
+nnoremap gd :LSClientGoToDefinition<cr>
+" nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
+" Complete default mappings are:
+" \ 'GoToDefinition': 'gd',
+" \ 'GoToDefinitionSplit': 'gd',
+let g:lsc_auto_map = {
+      \ 'FindReferences': 'gr',
+      \ 'NextReference': 'gn',
+      \ 'PreviousReference': '<C-p>',
+      \ 'FindImplementations': 'gI',
+      \ 'FindCodeActions': 'ga',
+      \ 'Rename': 'gR',
+      \ 'ShowHover': v:true,
+      \ 'DocumentSymbol': 'go',
+      \ 'WorkspaceSymbol': 'gS',
+      \ 'SignatureHelp': 'gm',
+      \ 'Completion': 'completefunc',
+      \}
+
+" }}}
+
+" ## tmux 用設定 ---------------------- {{{
+
+" tmux の中で vim を開いているときに shift + 方向 キーを有効にする
+if &term =~ '^screen'
+  " tmux will send xterm-style keys when its xterm-keys option is on
+  execute "set <xUp>=\e[1;*A"
+  execute "set <xDown>=\e[1;*B"
+  execute "set <xRight>=\e[1;*C"
+  execute "set <xLeft>=\e[1;*D"
+endif
+
+" }}}
+
+" ## カスタムファンクション ---------------------- {{{
+
+" ## Vim 系 ---------------------- {{{
+
+if exists('*LoadVIMRC')
+else
+  command! LoadVIMRC call LoadVIMRC()
+  function! LoadVIMRC()
+    source $MYVIMRC
+    :noh
+  endfunction
+endif
+
+command! OpenVIMRC call OpenVIMRC()
+function! OpenVIMRC()
+  vsplit $MYVIMRC
+  :noh
 endfunction
 
-function! s:delete_buffers(lines)
-  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[0]}))
-endfunction
-
-command! -bang DeleteBuffersByFZF call DeleteBuffersByFZF()
-function! DeleteBuffersByFZF()
+command! -nargs=0 SwitchVimPlugin call SwitchVimPlugin()
+function! SwitchVimPlugin()
   try
     call fzf#run(fzf#wrap({
-          \ 'source': s:list_buffers(),
-          \ 'sink*': { lines -> s:delete_buffers(lines) },
-          \ 'options': '--multi --reverse --bind ctrl-a:select-all'
+          \ 'source': 'ls ~/.vim/plugged',
+          \ 'sink':  function('s:switch_vim_plugin'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
           \ }))
     if has('nvim')
       call feedkeys('i', 'n')
@@ -1234,58 +837,34 @@ function! DeleteBuffersByFZF()
   endtry
 endfunction
 
-" https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
-function! s:list_windows()
-  let list = []
-  let tabnumber = 1
-
-
-  while tabnumber <= tabpagenr('$')
-    let buflist = tabpagebuflist(tabnumber)
-    let winnumber = 1
-    for buf in buflist
-      silent! let file = expandcmd('#'. buf .'<.rb')
-      let file = substitute(file, '#.*', '[No-Name]', '')
-      let line = tabnumber . ' ' . winnumber . ' ' . file . ' ' . buf
-      call add(list, line)
-      let winnumber = winnumber + 1
-    endfor
-    let tabnumber = tabnumber + 1
-  endwhile
-
-  return list
+function! s:switch_vim_plugin(dir)
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteBuffers()
+  silent! execute 'cd ~/.vim/plugged/' . a:dir
 endfunction
 
-function! s:actuality_tab_count()
-  let ws = s:list_windows()
-  let tab_count = 0
-  let non_tab_count = 0
-  for win in ws
-    if win =~ '^.*\s\[No\-Name\]\s.*'
-      let non_tab_count = non_tab_count + 1
-    else
-      let tab_count = tab_count + 1
+" }}}
+
+" ## ファイル操作 ---------------------- {{{
+
+command! -bang FindAllFiles call FindAllFiles()
+function! FindAllFiles()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
+          \ 'sink*': function('s:find_and_open_files'),
+          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
     endif
-  endfor
-  return tab_count
-endfunction
-
-function! s:delete_windows(lines)
-  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[3]}))
-endfunction
-
-command! DeleteWindow call fzf#run(fzf#wrap({
-      \ 'source': s:list_windows(),
-      \ 'sink*': { lines -> s:delete_windows(lines) },
-      \ 'options': '--multi --reverse --bind ctrl-a:select-all,ctrl-d:deselect-all'
-      \ }))
-
-" Rg, Ag が遅いので代わりにカスタムした RG を使う
-" https://github.com/junegunn/fzf/wiki/Examples-(vim)#narrow-ag-results-within-vim
-function! s:open_quickfix(line)
-  let parts = split(a:line, ':')
-  return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2],
-        \ 'text': join(parts[3:], ':')}
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
 endfunction
 
 function! s:open_files(lines)
@@ -1314,221 +893,136 @@ function! s:open_files(lines)
   endif
 endfunction
 
-" bind は selection を参考に。http://manpages.ubuntu.com/manpages/focal/man1/fzf.1.html
-command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
+      \ 'sink*': function('s:find_and_open_files'),
+      \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
       \ })))
 
-command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
+function! s:find_and_open_files(lines)
+  if len(a:lines) < 2 | return | endif
 
-command! -nargs=0 OpenNote call fzf#run(fzf#wrap({
-      \ 'source': 'ls ~/.vim/note',
-      \ 'sink':  function('s:open_note'),
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
-
-function! s:open_note(line)
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source':  'cat ~/.vim/note/' . a:line,
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'sink':   function('s:open_selected_file')}))
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
+  let cmd = get({'ctrl-e': 'edit ',
+        \ 'ctrl-v': 'vertical split ',
+        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
+  for file in a:lines[1:]
+    exec cmd . file
+  endfor
 endfunction
 
 function! s:open_selected_file(line)
   execute 'vs ' . a:line
 endfunction
 
-command! DiffFile call DiffFile()
-function! DiffFile()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-          \ 'sink':  function('s:diff_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
+function! s:open_selected_files_with_another_tab(files)
+  let current_branch = s:get_current_branch()
+  for file in a:files
+    silent execute '$tabnew ' . file
+    execute 'Gvdiff ' . g:selected_branch . '...' . current_branch
+    SwapWindow
+  endfor
+  unlet g:selected_branch
+endfunction
+
+function! s:open_selected_file_by_some_way(line)
+  if len(a:line) == 2
+    if a:line[0] == 'enter'
+      exec "tab drop " . a:line[1]
+    elseif a:line[0] == 'ctrl-v'
+      execute 'vs ' . a:line[1]
+    elseif a:line[0] == 'ctrl-e'
+      execute 'e ' . a:line[1]
     endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
+  else
+    for fi in a:line[1:]
+      exec 'tab drop ' . fi
+    endfor
+  endif
 endfunction
 
-command! DiffTemporaryNote call DiffTemporaryNote()
-function! DiffTemporaryNote()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
-          \ 'sink':  function('s:diff_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
+command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
+function! CopyCurrentPath()
+  echo "copied current path: " . expand('%')
+  let @+=expand('%')
 endfunction
 
-function! s:diff_files(line)
-  execute 'vertical diffsplit ' . a:line
+command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
+function! CopyAbsolutePath()
+  echo "copied absolute path: " . expand('%:p')
+  let @+=expand('%:p')
 endfunction
 
-command! -nargs=0 FindAnotherProjectFile call s:ghq_list_and_open_another_project_file()
-
-function! s:ghq_list_and_open_another_project_file()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:open_another_project_file'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
+command! OpenImplementationFile call OpenImplementationFile()
+function! OpenImplementationFile()
+  execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')
 endfunction
 
-function! s:open_another_project_file(line)
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-          \ 'sink*':   function('s:open_selected_file_by_some_way')})))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
+command! OpenTestFile call OpenTestFile()
+function! OpenTestFile()
+  execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')
 endfunction
 
-command! SwitchProject call SwitchProject()
-function!  SwitchProject()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:open_project'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    " https://github.com/junegunn/fzf/issues/1566#issuecomment-495041470
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
+command! RenameFile call RenameFile()
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
 endfunction
 
-function! s:open_project(project)
+command! QuitAll call QuitAll()
+function! QuitAll()
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
   call DeleteBuffers()
-  silent! execute 'cd ' . a:project
-  silent! exec 'set titlestring=' . s:getCurrentDirectory()
+  normal ZQ
 endfunction
 
-command! -nargs=0 SwitchVimPlugin call SwitchVimPlugin()
-function! SwitchVimPlugin()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/plugged',
-          \ 'sink':  function('s:switch_vim_plugin'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:switch_vim_plugin(dir)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
+command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
+function! QuitAllWithoutSaveSession()
   call DeleteBuffers()
-  silent! execute 'cd ~/.vim/plugged/' . a:dir
+  normal ZQ
 endfunction
 
-nnoremap <space><space> :<c-u>call SelectFunction()<CR>
-function! SelectFunction()
-  let g:mode = 'n'
-  execute 'SelectFunction'
+" }}}
+
+" ## タブ操作 ---------------------- {{{
+
+function! MoveTabRight()
+  silent! execute '+tabm'
 endfunction
 
-command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
-      \ 'source': 'cat ~/.vim/functions/normal',
-      \ 'sink':  function('s:select_function_handler'),
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
-
-if exists('*s:select_function_handler')
-else
-  function! s:select_function_handler(line)
-    execute a:line
-    unlet g:mode
-  endfunction
-endif
-
-vnoremap <space><space> :<c-u>call SelectVisualFunction()<CR>
-function! SelectVisualFunction()
-  let g:mode = 'v'
-  let [line_start, column_start] = getpos("'<")[1:2]
-  let [line_end, column_end] = getpos("'>")[1:2]
-  let g:firstline = line_start
-  let g:lastline = line_end
-  execute 'SelectVidualFunction'
+function! MoveTabLeft()
+  silent! execute '-tabm'
 endfunction
 
-command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
-      \ 'source': 'cat ~/.vim/functions/visual',
-      \ 'sink':  function('s:select_visual_function_handler'),
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
+function! s:actuality_tab_count()
+  let ws = s:list_windows()
+  let tab_count = 0
+  let non_tab_count = 0
+  for win in ws
+    if win =~ '^.*\s\[No\-Name\]\s.*'
+      let non_tab_count = non_tab_count + 1
+    else
+      let tab_count = tab_count + 1
+    endif
+  endfor
+  return tab_count
+endfunction
 
-function! s:select_visual_function_handler(line) range
-  execute a:line
-  unlet g:mode
-  unlet g:firstline
-  unlet g:lastline
+" }}}
+
+" ## セッション操作 ---------------------- {{{
+
+command! SaveSession call SaveSession()
+function! SaveSession()
+  let current_dir = s:getCurrentDirectory()
+  silent! execute 'mks! ~/.vim/sessions/' . current_dir
+  echom 'saved current session : ' .current_dir
 endfunction
 
 command! -bang SwitchSession call SwitchSession()
@@ -1583,26 +1077,119 @@ function! s:delete_sessions(sessions)
   endfor
 endfunction
 
-function! ListTermBufNums()
-  redir => bufs
-  silent ls!('R')
-  redir END
-  let buflist = split(bufs, "\n")
-  let listbufnums = []
-  for buf in buflist
-    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
-    call add(listbufnums, num)
-  endfor
-  return listbufnums
+" }}}
+
+" ## ウィンドウ操作 ---------------------- {{{
+
+command! SwapWindow call SwapWindow()
+function! SwapWindow()
+  silent! exec "normal \<c-w>\<c-r>"
 endfunction
 
-command! -bang DiffFileGitBranch call DiffFileGitBranch()
-function! DiffFileGitBranch()
+function! s:delete_windows(lines)
+  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[3]}))
+endfunction
+
+command! DeleteWindow call fzf#run(fzf#wrap({
+      \ 'source': s:list_windows(),
+      \ 'sink*': { lines -> s:delete_windows(lines) },
+      \ 'options': '--multi --reverse --bind ctrl-a:select-all,ctrl-d:deselect-all'
+      \ }))
+
+" https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
+function! s:list_windows()
+  let list = []
+  let tabnumber = 1
+
+  while tabnumber <= tabpagenr('$')
+    let buflist = tabpagebuflist(tabnumber)
+    let winnumber = 1
+    for buf in buflist
+      silent! let file = expandcmd('#'. buf .'<.rb')
+      let file = substitute(file, '#.*', '[No-Name]', '')
+      let line = tabnumber . ' ' . winnumber . ' ' . file . ' ' . buf
+      call add(list, line)
+      let winnumber = winnumber + 1
+    endfor
+    let tabnumber = tabnumber + 1
+  endwhile
+
+  return list
+endfunction
+
+" }}}
+
+" ## タブ操作 ---------------------- {{{
+
+command! CloseDupTabs :call CloseDuplicateTabs()
+function! CloseDuplicateTabs()
+  let cnt = 0
+  let i = 1
+
+  let tpbufflst = []
+  let dups = []
+  let tabpgbufflst = tabpagebuflist(i)
+  while type(tabpagebuflist(i)) == 3
+    if index(tpbufflst, tabpagebuflist(i)) >= 0
+      call add(dups,i)
+    else
+      call add(tpbufflst, tabpagebuflist(i))
+    endif
+
+    let i += 1
+    let cnt += 1
+  endwhile
+
+  call reverse(dups)
+
+  for tb in dups
+    exec "tabclose ".tb
+  endfor
+
+endfunction
+
+" }}}
+
+" ## バッファ操作 ---------------------- {{{
+
+function! DeleteBufsWithoutExistingWindows()
+  let allbufnums = ListAllBufNums()
+  let bufnums = ListBufNums()
+  for num in allbufnums
+    if (index(bufnums, num) < 0)
+      execute 'bwipeout! ' . num
+      echom num . ' is deleted!'
+    endif
+  endfor
+endfunction
+
+command! DeleteBuffers call DeleteBuffers()
+function! DeleteBuffers()
+  let allbufnums = ListAllBufNums()
+  for num in allbufnums
+    execute 'bwipeout! ' . num
+  endfor
+endfunction
+
+" https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
+
+function! s:delete_buffers(lines)
+  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! -bang DeleteBuffersByFZF call DeleteBuffersByFZF()
+function! DeleteBuffersByFZF()
   try
     call fzf#run(fzf#wrap({
-          \ 'source': 'git --no-pager branch | sed "/* /d"',
-          \ 'sink': function('s:select_diff_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'source': s:list_buffers(),
+          \ 'sink*': { lines -> s:delete_buffers(lines) },
+          \ 'options': '--multi --reverse --bind ctrl-a:select-all'
           \ }))
     if has('nvim')
       call feedkeys('i', 'n')
@@ -1614,8 +1201,63 @@ function! DiffFileGitBranch()
   endtry
 endfunction
 
-function! s:get_current_branch()
-  return substitute(FugitiveStatusline(), '^\[Git(\(.*\))\]', '\1', '')
+" }}}
+
+" ## レジスタ操作 ---------------------- {{{
+
+" https://github.com/junegunn/fzf.vim/issues/647#issuecomment-520259307
+function! s:get_registers() abort
+  redir => l:regs
+  silent registers
+  redir END
+
+  return split(l:regs, '\n')[1:]
+endfunction
+
+function! s:registers(...) abort
+  try
+    let l:opts = {
+          \ 'source': s:get_registers(),
+          \ 'sink': {x -> feedkeys(matchstr(x, '\v^\S+\ze.*') . (a:1 ? 'P' : 'p'), 'x')},
+          \ 'options': '--prompt="Reg> "'
+          \ }
+    call fzf#run(fzf#wrap(l:opts))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+command! -bang Registers call s:registers('<bang>' ==# '!')
+
+" }}}
+
+" ## Diff ---------------------- {{{
+
+command! DiffFile call DiffFile()
+function! DiffFile()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
+          \ 'sink':  function('s:diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:diff_files(line)
+  execute 'vertical diffsplit ' . a:line
 endfunction
 
 function! s:select_diff_files(branch)
@@ -1637,28 +1279,22 @@ function! s:select_diff_files(branch)
   endtry
 endfunction
 
-function! s:open_selected_files_with_another_tab(files)
-  let current_branch = s:get_current_branch()
-  for file in a:files
-    silent execute '$tabnew ' . file
-    execute 'Gvdiff ' . g:selected_branch . '...' . current_branch
-    SwapWindow
-  endfor
-  unlet g:selected_branch
-endfunction
+" }}}
 
-command! TemporaryNote call TemporaryNote()
-function! TemporaryNote()
+" ## プロジェクト横断 ---------------------- {{{
+
+command! SwitchProject call SwitchProject()
+function!  SwitchProject()
   try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
-          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-          \ 'sink*':   function('s:open_selected_file_by_some_way'),
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:open_project'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ })))
-    " if has('nvim')
-    "   call feedkeys('i', 'n')
-    " endif
+          \ }))
+    " https://github.com/junegunn/fzf/issues/1566#issuecomment-495041470
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
   catch
     echohl WarningMsg
     echom v:exception
@@ -1666,20 +1302,12 @@ function! TemporaryNote()
   endtry
 endfunction
 
-function! s:open_selected_file_by_some_way(line)
-  if len(a:line) == 2
-    if a:line[0] == 'enter'
-      exec "tab drop " . a:line[1]
-    elseif a:line[0] == 'ctrl-v'
-      execute 'vs ' . a:line[1]
-    elseif a:line[0] == 'ctrl-e'
-      execute 'e ' . a:line[1]
-    endif
-  else
-    for fi in a:line[1:]
-      exec 'tab drop ' . fi
-    endfor
-  endif
+function! s:open_project(project)
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteBuffers()
+  silent! execute 'cd ' . a:project
+  silent! exec 'set titlestring=' . s:getCurrentDirectory()
 endfunction
 
 command! -nargs=0 DiffAnotherProjectFile call s:ghq_list_diff_another_project_file()
@@ -1716,6 +1344,149 @@ function! s:diff_another_project_file(line)
     echohl None
   endtry
 endfunction
+
+function! s:open_file_in_another_project(lines)
+  unlet g:rg_in_another_project_file
+  if len(a:lines) < 2 | return | endif
+
+  let cmd = get({'ctrl-e': 'edit ',
+        \ 'ctrl-v': 'vertical split ',
+        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
+  for file in a:lines[1:]
+    exec cmd . split(file, ':')[0]
+  endfor
+endfunction
+
+command! -nargs=0 FindAnotherProjectFile call s:ghq_list_and_open_another_project_file()
+
+function! s:ghq_list_and_open_another_project_file()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ghq list --full-path',
+          \ 'sink':  function('s:open_another_project_file'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:open_another_project_file(line)
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'sink*':   function('s:open_selected_file_by_some_way')})))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+" }}}
+
+" ## 検索 ---------------------- {{{
+
+" https://github.com/junegunn/fzf/wiki/Examples-(vim)#narrow-ag-results-within-vim
+" bind は selection を参考に。http://manpages.ubuntu.com/manpages/focal/man1/fzf.1.html
+command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
+
+command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
+
+function! SearchByRG()
+  if mode() == 'n'
+    execute 'RG ' . input('RG/')
+  else
+    let selected = SelectedVisualModeText()
+    let @+=selected
+    echom 'Copyed! ' . selected
+    execute 'RG ' . selected
+    silent! exec "normal \<c-c>"
+    if has('nvim')
+      call feedkeys(' ')
+    endif
+  endif
+endfunction
+
+function! RGBySelectedText()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  echom 'Copyed! ' . selected
+  execute 'RG ' . selected
+endfunction
+
+command! RGFromAllFilesVisual call RGFromAllFilesVisual()
+function! RGFromAllFilesVisual()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  execute 'RGFromAllFiles ' . selected
+  silent! exec "normal \<c-c>"
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+command! RGFromAllFilesNormal call RGFromAllFilesNormal()
+function! RGFromAllFilesNormal()
+  execute 'RGFromAllFiles ' . input('RGFromAllFiles/')
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+function! VimGrepBySelectedText()
+  let selected = SelectedVisualModeText()
+  let @+=selected
+  echom 'Copyed! ' . selected
+  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
+endfunction
+
+command! RGInTemporaryNote call RGInTemporaryNote()
+function! RGInTemporaryNote()
+  execute 'RGInTemporaryNoteAndOpen ' . input('RGInTemporaryNote/')
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
 
 command! -nargs=0 RGInAnotherProject call s:ghq_list_rg_in_another_project()
 
@@ -1755,54 +1526,284 @@ command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap(
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
 
-function! s:open_file_in_another_project(lines)
-  unlet g:rg_in_another_project_file
-  if len(a:lines) < 2 | return | endif
+" }}}
 
-  let cmd = get({'ctrl-e': 'edit ',
-        \ 'ctrl-v': 'vertical split ',
-        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
-  for file in a:lines[1:]
-    exec cmd . split(file, ':')[0]
-  endfor
+" ## カスタム置換 ---------------------- {{{
+
+command! SnakeCase call SnakeCase()
+function! SnakeCase() range
+  let start_col = col('.')
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/\//g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
+  silent! exec 'normal ' . start_col . '|'
 endfunction
 
-command! RGInTemporaryNote call RGInTemporaryNote()
-function! RGInTemporaryNote()
-  execute 'RGInTemporaryNoteAndOpen ' . input('RGInTemporaryNote/')
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
+command! PascalCase call PascalCase()
+function! PascalCase() range
+  let start_col = col('.')
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)\/(\u)/\1::\2/g'
+  silent! exec 'normal ' . start_col . '|'
 endfunction
 
-command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
+function! CapitalCaseToSnakeCase() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/g'
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
+endfunction
 
-" https://github.com/junegunn/fzf.vim/issues/647#issuecomment-520259307
-function! s:get_registers() abort
-  redir => l:regs
-  silent registers
+command! RemoveUnderBar call RemoveUnderBar()
+function! RemoveUnderBar() range
+  let start_col = col('.')
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
+  silent! exec 'normal ' . start_col . '|'
+endfunction
+
+command! AddUnderBar call AddUnderBar()
+function! AddUnderBar() range
+  let start_col = col('.')
+  silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
+  silent! exec 'normal ' . start_col . '|'
+endfunction
+
+function! RemoveBeginningOfLineSpace() range
+  silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
+endfunction
+
+command! ModuleToColon call ModuleToColon()
+function! ModuleToColon() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass (.+)\n/::\1/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V \< .*//g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V\s//g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^:://g'
+  silent! execute a:firstline . ',' . a:lastline . 's/^/class /g'
+endfunction
+
+command! ColonToModule call ColonToModule()
+function! ColonToModule() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass /module /g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V::/ module /g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V module /\rmodule /g'
+endfunction
+
+command! CommaToBreakline call CommaToBreakline()
+function! CommaToBreakline() range
+  silent! execute g:firstline . ',' . g:lastline . 's/,/,\r/g'
+endfunction
+
+command! JsonToHash call JsonToHash()
+function! JsonToHash() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\"\(\w*\)\"\(:.*\)/\1\2/g'
+  silent! execute g:firstline . ',' . g:lastline . "s/\'/\\\\'/g"
+  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
+endfunction
+
+command! HashToJson call HashToJson()
+function! HashToJson() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\(\w*\)\:/\"\1\":/g'
+  silent! execute g:firstline . ',' . g:lastline . "s/'" . '/"/g'
+endfunction
+
+command! RocketToHash call RocketToHash()
+function! RocketToHash() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)"(\w+)".*\=\>/\1\2:/g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)(\w+):\s*/\1\2: /g'
+  silent! execute g:firstline . ',' . g:lastline . "s/\\v'/\\\\'/g"
+  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
+endfunction
+
+command! HashToRocket call HashToRocket()
+function! HashToRocket() range
+  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):\s*/\1\2: /g'
+  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):/\1"\2" =>/g'
+  silent! execute g:firstline . ',' . g:lastline . "s/\'/\"/g"
+endfunction
+
+" }}}
+
+" ## ヘルパー ---------------------- {{{
+
+function! s:getCurrentDirectory()
+  redir => path
+  silent pwd
   redir END
-
-  return split(l:regs, '\n')[1:]
+  let splited = split(path, '/')
+  return splited[-1]
 endfunction
 
-function! s:registers(...) abort
+function! SelectedVisualModeText()
+  let [line_start, column_start] = getpos("'<")[1:2]
+  let [line_end, column_end] = getpos("'>")[1:2]
+  let lines = getline(line_start, line_end)
+  if len(lines) == 0
+    return ''
+  endif
+  let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[0] = lines[0][column_start - 1:]
+  return join(lines, "\n")
+endfunction
+
+function! ChangeToFileFormat(text)
+  let snake_case = substitute(substitute(a:text, '\(\l\)\(\u\)', '\1_\L\2\e', "g"), '\(\u\)\(\u\)', '\1_\L\2\e', "g")
+  let down_case = tolower(snake_case)
+  let file_format = substitute(down_case, '::', '/', "g")
+  return file_format
+endfunction
+
+function! ChangeToFileFormatAndCopy()
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+endfunction
+
+function! ChangeToFileFormatAndCopyAndSearchFiles()
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+  execute 'Files'
+endfunction
+
+function! ChangeToFileFormatAndCopyAndSearchBuffers()
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+  execute 'Buffers'
+endfunction
+
+function! ChangeToFileFormatAndCopyAndSearchHistory()
+  let selected_text = SelectedVisualModeText()
+  let file_format = ChangeToFileFormat(selected_text)
+  let @+=file_format
+  echom 'Copyed! ' . file_format
+  execute 'History'
+endfunction
+
+function! ListBufNums()
+  let list = []
+  let tabnumber = 1
+
+  while tabnumber <= tabpagenr('$')
+    let buflist = tabpagebuflist(tabnumber)
+    for buf in buflist
+      call add(list, buf)
+    endfor
+    let tabnumber = tabnumber + 1
+  endwhile
+
+  return list
+endfunction
+
+function! ListAllBufNums()
+  redir => bufs
+  silent ls
+  redir END
+  let buflist = split(bufs, "\n")
+  let listbufnums = []
+  for buf in buflist
+    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
+    call add(listbufnums, num)
+  endfor
+  return listbufnums
+endfunction
+
+function! ListTermBufNums()
+  redir => bufs
+  silent ls!('R')
+  redir END
+  let buflist = split(bufs, "\n")
+  let listbufnums = []
+  for buf in buflist
+    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
+    call add(listbufnums, num)
+  endfor
+  return listbufnums
+endfunction
+
+nnoremap <space><space> :<c-u>call SelectFunction()<CR>
+function! SelectFunction()
+  let g:mode = 'n'
+  execute 'SelectFunction'
+endfunction
+
+command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
+      \ 'source': 'cat ~/.vim/functions/normal',
+      \ 'sink':  function('s:select_function_handler'),
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
+
+if exists('*s:select_function_handler')
+else
+  function! s:select_function_handler(line)
+    execute a:line
+    unlet g:mode
+  endfunction
+endif
+
+vnoremap <space><space> :<c-u>call SelectVisualFunction()<CR>
+function! SelectVisualFunction()
+  let g:mode = 'v'
+  let [line_start, column_start] = getpos("'<")[1:2]
+  let [line_end, column_end] = getpos("'>")[1:2]
+  let g:firstline = line_start
+  let g:lastline = line_end
+  execute 'SelectVidualFunction'
+endfunction
+
+command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
+      \ 'source': 'cat ~/.vim/functions/visual',
+      \ 'sink':  function('s:select_visual_function_handler'),
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
+
+function! s:select_visual_function_handler(line) range
+  execute a:line
+  unlet g:mode
+  unlet g:firstline
+  unlet g:lastline
+endfunction
+
+function! s:open_quickfix(line)
+  let parts = split(a:line, ':')
+  return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2],
+        \ 'text': join(parts[3:], ':')}
+endfunction
+
+" }}}
+
+" ## Git ---------------------- {{{
+
+command! OpenGitHub :call OpenGitHub()
+function! OpenGitHub()
+  if g:mode == 'n'
+    let line = a:firstline == a:lastline ? "#L" . line(".") : "#L" . a:firstline . "-L" . a:lastline
+  else
+    let line = g:firstline == g:lastline ? "#L" . line(".") : "#L" . g:firstline . "-L" . g:lastline
+  endif
+  let command = "~/.vim/functions/open_github.rb '" . expand("%:p") . "' '" . line . "'"
+  call asyncrun#run('', '', command)
+endfunction
+command! OpenGitHubBlame :GBInteractive
+
+command! -nargs=0 GitAdd call GitAdd()
+function! GitAdd()
+  AsyncRun -silent git add .
+  echom 'executed "git add ."'
+endfunction
+
+command! -bang DiffFileGitBranch call DiffFileGitBranch()
+function! DiffFileGitBranch()
   try
-    let l:opts = {
-          \ 'source': s:get_registers(),
-          \ 'sink': {x -> feedkeys(matchstr(x, '\v^\S+\ze.*') . (a:1 ? 'P' : 'p'), 'x')},
-          \ 'options': '--prompt="Reg> "'
-          \ }
-    call fzf#run(fzf#wrap(l:opts))
+    call fzf#run(fzf#wrap({
+          \ 'source': 'git --no-pager branch | sed "/* /d"',
+          \ 'sink': function('s:select_diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ }))
     if has('nvim')
       call feedkeys('i', 'n')
     endif
@@ -1813,59 +1814,71 @@ function! s:registers(...) abort
   endtry
 endfunction
 
-command! -bang Registers call s:registers('<bang>' ==# '!')
+function! s:get_current_branch()
+  return substitute(FugitiveStatusline(), '^\[Git(\(.*\))\]', '\1', '')
+endfunction
 
 " }}}
 
-" ## LSP 設定 ---------------------- {{{
+" ## ノート ---------------------- {{{
 
-" Dart
-let g:lsc_auto_map = v:true
-let g:lsc_server_commands = {
-      \ 'dart': 'dart_language_server',
-      \ 'ruby': 'solargraph stdio'
-      \ }
-let g:lsc_enable_autocomplete = v:true
-" Use all the defaults (recommended):
+command! TemporaryNote call TemporaryNote()
+function! TemporaryNote()
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
+          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'sink*':   function('s:open_selected_file_by_some_way'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ })))
+    " if has('nvim')
+    "   call feedkeys('i', 'n')
+    " endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
-" Apply the defaults with a few overrides:
-let g:lsc_auto_map = {'defaults': v:true, 'FindReferences': '<leader>r'}
+command! DiffTemporaryNote call DiffTemporaryNote()
+function! DiffTemporaryNote()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
+          \ 'sink':  function('s:diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
-" Setting a value to a blank string leaves that command unmapped:
-" let g:lsc_auto_map = {'defaults': v:true, 'FindImplementations': ''}
+command! -nargs=0 OpenNote call fzf#run(fzf#wrap({
+      \ 'source': 'ls ~/.vim/note',
+      \ 'sink':  function('s:open_note'),
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
 
-" ... or set only the commands you want mapped without defaults.
-nnoremap gd :LSClientGoToDefinition<cr>
-" nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
-" Complete default mappings are:
-" \ 'GoToDefinition': 'gd',
-" \ 'GoToDefinitionSplit': 'gd',
-let g:lsc_auto_map = {
-      \ 'FindReferences': 'gr',
-      \ 'NextReference': 'gn',
-      \ 'PreviousReference': '<C-p>',
-      \ 'FindImplementations': 'gI',
-      \ 'FindCodeActions': 'ga',
-      \ 'Rename': 'gR',
-      \ 'ShowHover': v:true,
-      \ 'DocumentSymbol': 'go',
-      \ 'WorkspaceSymbol': 'gS',
-      \ 'SignatureHelp': 'gm',
-      \ 'Completion': 'completefunc',
-      \}
+function! s:open_note(line)
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source':  'cat ~/.vim/note/' . a:line,
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ 'sink':   function('s:open_selected_file')}))
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
 
 " }}}
-
-" ## tmux 用設定 ---------------------- {{{
-
-" tmux の中で vim を開いているときに shift + 方向 キーを有効にする
-if &term =~ '^screen'
-  " tmux will send xterm-style keys when its xterm-keys option is on
-  execute "set <xUp>=\e[1;*A"
-  execute "set <xDown>=\e[1;*B"
-  execute "set <xRight>=\e[1;*C"
-  execute "set <xLeft>=\e[1;*D"
-endif
 
 " }}}
 
