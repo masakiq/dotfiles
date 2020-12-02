@@ -327,8 +327,8 @@ vnoremap ^ g^
 nnoremap $ g$
 " vnoremap $ g$
 
-nnoremap <C-e> <Esc>$
-nnoremap <C-a> <Esc>^
+nnoremap <C-e> $a
+nnoremap <C-a> ^i
 
 " }}}
 
@@ -653,7 +653,7 @@ noremap <space>oe :Fern . -drawer -toggle -keep<CR>
 " ## matze/vim-move ---------------------- {{{
 
 let g:move_map_keys = 0
-let g:move_auto_indent = 0
+" let g:move_auto_indent = 0
 let g:move_past_end_of_line = 0
 vmap <C-j> <Plug>MoveBlockDown
 vmap <C-k> <Plug>MoveBlockUp
