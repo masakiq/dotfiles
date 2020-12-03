@@ -646,7 +646,7 @@ let g:tabline_charmax = 40
 
 " ## lambdalisue/fern.vim ---------------------- {{{
 
-noremap <space>oe :Fern . -drawer -toggle -keep<CR>
+noremap <space>oe :Fern . -drawer -width=50 -toggle -keep -reveal=%<CR>
 
 " }}}
 
@@ -655,6 +655,8 @@ noremap <space>oe :Fern . -drawer -toggle -keep<CR>
 let g:move_map_keys = 0
 " let g:move_auto_indent = 0
 let g:move_past_end_of_line = 0
+nmap <C-j> <Plug>MoveLineDown
+nmap <C-k> <Plug>MoveLineUp
 vmap <C-j> <Plug>MoveBlockDown
 vmap <C-k> <Plug>MoveBlockUp
 vmap <C-h> <Plug>MoveBlockLeft
@@ -945,6 +947,12 @@ command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
 function! CopyCurrentPath()
   echo "copied current path: " . expand('%')
   let @+=expand('%')
+endfunction
+
+command! -nargs=0 CopyCurrentPathWithLineNumber call CopyCurrentPathWithLineNumber()
+function! CopyCurrentPathWithLineNumber()
+  echo 'copied current path: ' . expand('%') . ':' . line('.')
+  let @+=expand('%') . ':' . line('.')
 endfunction
 
 command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
