@@ -27,7 +27,7 @@ syntax enable
 set title
 
 " 行番号を表示 (nonumber:非表示)
-set number
+" set number
 
 " ルーラーを表示 (noruler:非表示)
 set ruler
@@ -285,8 +285,12 @@ vnoremap a <esc>G$vgg
 
 nnoremap V 0v$h
 
-" 検索ハイライトをトグル
-nnoremap <space>n :set hlsearch!<CR>
+" }}}
+
+" ### 表示系 ---------------------- {{{
+
+nnoremap <space>u :set hlsearch!<CR>
+nnoremap <space>n :call ToggleDisplayNumber()<cr>
 
 " }}}
 
@@ -844,6 +848,14 @@ function! s:switch_vim_plugin(dir)
   call SaveSession()
   call DeleteBuffers()
   silent! execute 'cd ~/.vim/plugged/' . a:dir
+endfunction
+
+" }}}
+
+" ## 表示系 ---------------------- {{{
+
+function! ToggleDisplayNumber()
+  silent! execute 'set invnumber'
 endfunction
 
 " }}}
