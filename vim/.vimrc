@@ -148,7 +148,7 @@ set nohlsearch
 " ## カーソル移動に関する設定 ---------------------- {{{
 
 " スクロールオフ
-set scrolloff=15
+set scrolloff=20
 
 " マウススクロール
 set mouse=a
@@ -289,7 +289,7 @@ nnoremap V 0v$h
 
 " ### 表示系 ---------------------- {{{
 
-nnoremap <space>u :set hlsearch!<CR>
+nnoremap <space>i :set hlsearch!<CR>
 nnoremap <space>n :call ToggleDisplayNumber()<cr>
 
 " }}}
