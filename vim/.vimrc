@@ -360,6 +360,7 @@ vnoremap <bs> c<Bs><C-r>"<Esc>wxb
 
 " ### ファイル操作系 ---------------------- {{{
 
+nnoremap <space>w :w!<cr>
 nnoremap <space>q :q!<cr>
 
 " }}}
