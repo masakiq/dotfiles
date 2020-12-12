@@ -897,7 +897,7 @@ function! s:open_files(lines)
         \   'ctrl-v': 'vertical split ',
         \   'enter': 'tab drop '
         \ },
-        \ a:lines[0], 'e ')
+        \ a:lines[0], 'tab drop  ')
   if a:lines[0] == 'ctrl-x'
     execute cmd . a:lines[1]
     let files = []
@@ -926,7 +926,7 @@ function! s:open_files_via_rg(lines)
         \   'ctrl-v': 'vertical split',
         \   'enter': 'GotoOrOpen tab'
         \ },
-        \ a:lines[0], 'e')
+        \ a:lines[0], 'GotoOrOpen tab')
   let list = map(a:lines[1:], 's:open_quickfix(v:val)')
 
   let first = list[0]
@@ -1020,6 +1020,24 @@ endfunction
 
 function! MoveTabLeft()
   silent! execute '-tabm'
+endfunction
+
+command! CopyAllTabFilePath call CopyAllTabFilePath()
+function! CopyAllTabFilePath()
+  let files = [expand('%')]
+  let max = 20
+  let index = 0
+  while index < max
+    sleep 100ms
+    let index = index + 1
+    silent! exec "normal gt"
+    let file=expand('%')
+    if file == files[0]
+       break
+    endif
+    call add(files, file)
+  endwhile
+  let @+=join(files, "\n")
 endfunction
 
 function! s:actuality_tab_count()
@@ -1809,7 +1827,14 @@ function! OpenGitHub()
   let command = "~/.vim/functions/open_github.rb '" . expand("%:p") . "' '" . line . "'"
   call asyncrun#run('', '', command)
 endfunction
+
 command! OpenGitHubBlame :GBInteractive
+
+command! CopyGitHubCompareUrl :call CopyGitHubCompareUrl()
+function! CopyGitHubCompareUrl()
+  let command = "~/.vim/functions/copy_github_compare_url.rb"
+  call asyncrun#run('', '', command)
+endfunction
 
 command! -nargs=0 GitAdd call GitAdd()
 function! GitAdd()
