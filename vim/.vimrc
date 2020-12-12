@@ -862,13 +862,20 @@ endfunction
 
 " ## ファイル操作 ---------------------- {{{
 
+command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
+      \ 'sink*': function('s:open_files'),
+      \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+      \ })))
+
 command! -bang FindAllFiles call FindAllFiles()
 function! FindAllFiles()
   try
     call fzf#run(fzf#wrap({
           \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-          \ 'sink*': function('s:find_and_open_files'),
-          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
+          \ 'sink*': function('s:open_files'),
+          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
           \ }))
     if has('nvim')
@@ -884,9 +891,42 @@ endfunction
 function! s:open_files(lines)
   if len(a:lines) < 2 | return | endif
 
-  let cmd = get({'ctrl-e': 'edit',
-        \ 'ctrl-v': 'vertical split',
-        \ 'enter': 'GotoOrOpen tab'}, a:lines[0], 'e')
+  let cmd = get(
+        \ {
+        \   'ctrl-e': 'edit ',
+        \   'ctrl-v': 'vertical split ',
+        \   'enter': 'tab drop '
+        \ },
+        \ a:lines[0], 'tab drop  ')
+  if a:lines[0] == 'ctrl-x'
+    execute cmd . a:lines[1]
+    let files = []
+    for f in a:lines[1:]
+      let files = add(files, f . ':1:1:1')
+    endfor
+    let list = map(files, 's:open_quickfix(v:val)')
+    if len(list) > 1
+      call setqflist(list)
+      copen
+      wincmd p
+    endif
+  else
+    for file in a:lines[1:]
+      exec cmd . file
+    endfor
+  endif
+endfunction
+
+function! s:open_files_via_rg(lines)
+  if len(a:lines) < 2 | return | endif
+
+  let cmd = get(
+        \ {
+        \   'ctrl-e': 'edit',
+        \   'ctrl-v': 'vertical split',
+        \   'enter': 'GotoOrOpen tab'
+        \ },
+        \ a:lines[0], 'GotoOrOpen tab')
   let list = map(a:lines[1:], 's:open_quickfix(v:val)')
 
   let first = list[0]
@@ -907,28 +947,6 @@ function! s:open_files(lines)
   endif
 endfunction
 
-command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
-      \ 'sink*': function('s:find_and_open_files'),
-      \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-      \ })))
-
-function! s:find_and_open_files(lines)
-  if len(a:lines) < 2 | return | endif
-
-  let cmd = get({'ctrl-e': 'edit ',
-        \ 'ctrl-v': 'vertical split ',
-        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
-  for file in a:lines[1:]
-    exec cmd . file
-  endfor
-endfunction
-
-function! s:open_selected_file(line)
-  execute 'vs ' . a:line
-endfunction
-
 function! s:open_selected_files_with_another_tab(files)
   let current_branch = s:get_current_branch()
   for file in a:files
@@ -937,22 +955,6 @@ function! s:open_selected_files_with_another_tab(files)
     SwapWindow
   endfor
   unlet g:selected_branch
-endfunction
-
-function! s:open_selected_file_by_some_way(line)
-  if len(a:line) == 2
-    if a:line[0] == 'enter'
-      exec "tab drop " . a:line[1]
-    elseif a:line[0] == 'ctrl-v'
-      execute 'vs ' . a:line[1]
-    elseif a:line[0] == 'ctrl-e'
-      execute 'e ' . a:line[1]
-    endif
-  else
-    for fi in a:line[1:]
-      exec 'tab drop ' . fi
-    endfor
-  endif
 endfunction
 
 command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
@@ -1018,6 +1020,24 @@ endfunction
 
 function! MoveTabLeft()
   silent! execute '-tabm'
+endfunction
+
+command! CopyAllTabFilePath call CopyAllTabFilePath()
+function! CopyAllTabFilePath()
+  let files = [expand('%')]
+  let max = 20
+  let index = 0
+  while index < max
+    sleep 100ms
+    let index = index + 1
+    silent! exec "normal gt"
+    let file=expand('%')
+    if file == files[0]
+       break
+    endif
+    call add(files, file)
+  endwhile
+  let @+=join(files, "\n")
 endfunction
 
 function! s:actuality_tab_count()
@@ -1401,8 +1421,8 @@ function! s:open_another_project_file(line)
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
           \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-          \ 'sink*':   function('s:open_selected_file_by_some_way')})))
+          \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
+          \ 'sink*':   function('s:open_files')})))
     if has('nvim')
       call feedkeys('i', 'n')
     endif
@@ -1422,7 +1442,7 @@ endfunction
 command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
       \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files'),
+      \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--delimiter : --preview-window +{2}-/2 '.
       \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
@@ -1433,7 +1453,7 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
 command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
       \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files'),
+      \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--delimiter : --preview-window +{2}-/2 '.
       \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
@@ -1500,8 +1520,8 @@ endfunction
 command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
       \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
+      \ 'sink*':    function('s:open_files_via_rg'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--delimiter : --preview-window +{2}-/2 '.
       \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
@@ -1790,8 +1810,7 @@ endfunction
 
 function! s:open_quickfix(line)
   let parts = split(a:line, ':')
-  return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2],
-        \ 'text': join(parts[3:], ':')}
+  return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2], 'text': join(parts[3:], ':')}
 endfunction
 
 " }}}
@@ -1808,7 +1827,14 @@ function! OpenGitHub()
   let command = "~/.vim/functions/open_github.rb '" . expand("%:p") . "' '" . line . "'"
   call asyncrun#run('', '', command)
 endfunction
+
 command! OpenGitHubBlame :GBInteractive
+
+command! CopyGitHubCompareUrl :call CopyGitHubCompareUrl()
+function! CopyGitHubCompareUrl()
+  let command = "~/.vim/functions/copy_github_compare_url.rb"
+  call asyncrun#run('', '', command)
+endfunction
 
 command! -nargs=0 GitAdd call GitAdd()
 function! GitAdd()
@@ -1847,8 +1873,8 @@ function! TemporaryNote()
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
           \ 'source': 'find ~/.vim/temporary_note -type file | sort',
-          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e ',
-          \ 'sink*':   function('s:open_selected_file_by_some_way'),
+          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
+          \ 'sink*':   function('s:open_files'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
           \ })))
     " if has('nvim')
@@ -1872,25 +1898,6 @@ function! DiffTemporaryNote()
     if has('nvim')
       call feedkeys('i', 'n')
     endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-command! -nargs=0 OpenNote call fzf#run(fzf#wrap({
-      \ 'source': 'ls ~/.vim/note',
-      \ 'sink':  function('s:open_note'),
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
-
-function! s:open_note(line)
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source':  'cat ~/.vim/note/' . a:line,
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'sink':   function('s:open_selected_file')}))
   catch
     echohl WarningMsg
     echom v:exception

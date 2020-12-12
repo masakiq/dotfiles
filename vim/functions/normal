@@ -9,8 +9,10 @@ FindAnotherProjectFile
 CopyCurrentPath
 CopyCurrentPathWithLineNumber
 CopyAbsolutePath
+CopyAllTabFilePath
 OpenGitHub
 OpenGitHubBlame
+CopyGitHubCompareUrl
 QuitAll
 QuitAllWithoutSaveSession
 TigOpenProjectRootDir
