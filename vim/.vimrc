@@ -138,7 +138,7 @@ set hlsearch
 " :vim(grep) したときに自動的にquickfix-windowを開く
 autocmd QuickFixCmdPost *grep* cwindow
 " quickfix-window のサイズ調整
-autocmd FileType qf 13wincmd_
+autocmd FileType qf 15wincmd_
 
 " 検索時のハイライトを無効化
 set nohlsearch
@@ -373,11 +373,6 @@ nnoremap <space>j <c-w>j
 nnoremap <space>k <c-w>k
 nnoremap <space>l <c-w>l
 
-" 画面分割
-nnoremap <space>sv :vs<CR><c-w>l
-nnoremap <space>sh :sp<CR><c-w>j
-" nnoremap <space>sx :sp<cr>:vs<cr><c-w>k:vs<cr><c-w>h15<c-w>+
-
 " ウインドウ幅を右に広げる
 nnoremap <space>. 41<c-w>>
 " ウインドウ幅を左に広げる
@@ -401,7 +396,6 @@ nnoremap <space>t :tabnew<CR>
 
 if has('gui_running')
 else
-  " 右のタブに移動
   nnoremap <right> :normal gt<CR>
   " 左のタブに移動
   nnoremap <left> :normal gT<CR>
@@ -411,6 +405,19 @@ else
   " 現タブを左に移動
   nnoremap <space><left> :-tabm<CR>
 endif
+
+" }}}
+
+" ### 検索系 ---------------------- {{{
+
+nnoremap <space>/ :call SearchByRG()<cr>
+vnoremap <space>/ :call RGBySelectedText()<cr>
+
+" }}}
+
+" ### セッション系 ---------------------- {{{
+
+nnoremap <space>os :call OpenSession()<cr>
 
 " }}}
 
@@ -490,22 +497,7 @@ else
   autocmd FileType which_key highlight WhichKeySeperator ctermfg=14
   autocmd FileType which_key highlight WhichKeyGroup ctermfg=11
   autocmd FileType which_key highlight WhichKeyDesc ctermfg=10
-  let g:which_key_map.o = {
-        \ 'name' : '+open' ,
-        \ 's' : ['SearchByRG()' , 'Search file from text'],
-        \ 'e' : ['ToggleNetrw()' , 'Open explore'],
-        \ }
   let g:which_key_map.q = 'Quit'
-  let g:which_key_map.s = {
-        \ 'name' : '+split',
-        \ 'h' : [ 'sp', 'Split horizontal' ],
-        \ 'v' : [ 'vs', 'Split virtical' ]
-        \ }
-  let g:which_key_map.m = {
-        \ 'name' : '+move',
-        \ "'" : [ 'MoveTabRight()', 'Move tab right' ],
-        \ ';' : [ 'MoveTabLeft()', 'Move tab left' ]
-        \ }
   let g:which_key_map.h = 'Move left'
   let g:which_key_map.j = 'Move down'
   let g:which_key_map.k = 'Move up'
@@ -603,6 +595,8 @@ endfunction
 
 " ## skywind3000/asyncrun.vim ---------------------- {{{
 
+noremap <space>a :call asyncrun#quickfix_toggle(20)<cr>
+
 " }}}
 
 " ## voldikss/vim-translator ---------------------- {{{
@@ -671,6 +665,7 @@ vmap <C-l> <Plug>MoveBlockRight
 
 " ## fzf 設定 ---------------------- {{{
 
+command! -nargs=+ GotoOrOpen call s:GotoOrOpen(<f-args>)
 function! s:GotoOrOpen(command, ...)
   for file in a:000
     if a:command == 'e'
@@ -681,7 +676,6 @@ function! s:GotoOrOpen(command, ...)
   endfor
 endfunction
 
-command! -nargs=+ GotoOrOpen call s:GotoOrOpen(<f-args>)
 let g:fzf_buffers_jump = 1
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 } }
@@ -724,8 +718,6 @@ command! -bang -nargs=? -complete=dir Files
       \ )
 command! -bang -nargs=? -complete=dir Buffers
       \ call fzf#vim#buffers(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
-command! -bang -nargs=? -complete=dir History
-      \ call fzf#vim#history(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 command! -bang -nargs=? -complete=dir Windows
       \ call fzf#vim#windows(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
@@ -739,10 +731,6 @@ endif
 nnoremap <space>ob :Buffers<CR>
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Buffers を開く
 vnoremap <space>ob :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
-
-nnoremap <space>oh :History<CR>
-" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :History を開く
-vnoremap <space>oh :call ChangeToFileFormatAndCopyAndSearchHistory()<cr>
 
 nnoremap <space>ow :Windows<CR>
 
@@ -866,7 +854,13 @@ endfunction
 command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
       \ 'sink*': function('s:open_files'),
-      \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x --color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110 ',
+      \ 'options': [
+      \   '--prompt', 'Files> ',
+      \   '--multi',
+      \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
+      \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ ],
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
       \ })))
 
@@ -876,7 +870,13 @@ function! FindAllFiles()
     call fzf#run(fzf#wrap({
           \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
           \ 'sink*': function('s:open_files'),
-          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
+          \ 'options': [
+          \   '--prompt', 'AllFiles> ',
+          \   '--multi',
+          \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
+          \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+          \ ],
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
           \ }))
     if has('nvim')
@@ -885,9 +885,9 @@ function! FindAllFiles()
   catch
     echohl WarningMsg
     echom v:exception
-    echohl None
   endtry
 endfunction
+echohl None
 
 function! s:open_files(lines)
   if len(a:lines) < 2 | return | endif
@@ -986,15 +986,10 @@ function! OpenTestFile()
   execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')
 endfunction
 
-command! RenameFile call RenameFile()
-function! RenameFile()
-  let old_name = expand('%')
-  let new_name = input('New file name: ', expand('%'), 'file')
-  if new_name != '' && new_name != old_name
-    exec ':saveas ' . new_name
-    exec ':silent !rm ' . old_name
-    redraw!
-  endif
+command! Reload call Reload()
+function! Reload()
+  silent! exec 'checktime'
+  call s:setTitle()
 endfunction
 
 command! QuitAll call QuitAll()
@@ -1009,6 +1004,35 @@ command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
 function! QuitAllWithoutSaveSession()
   call DeleteBuffers()
   normal ZQ
+endfunction
+
+" https://github.com/jesseleite/dotfiles/blob/c75ae5ebd0589361e1fe84a912f1580a9b1f9a15/vim/plugin-config/fzf.vim#L44-L86
+nnoremap <space>oh :CwdHistory<CR>
+command! -bang CwdHistory call fzf#run(fzf#wrap(s:preview(<bang>0, {
+  \ 'source': s:file_history_from_directory(getcwd()),
+  \ 'sink*': function('s:open_files'),
+  \ 'options': [
+  \   '--prompt', 'CwdHistory> ',
+  \   '--multi',
+  \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
+  \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+  \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+  \ ]}), <bang>0))
+
+function! s:file_history_from_directory(directory)
+  return fzf#vim#_uniq(filter(fzf#vim#_recent_files(), "s:file_is_in_directory(fnamemodify(v:val, ':p'), a:directory)"))
+endfunction
+
+function! s:file_is_in_directory(file, directory)
+  return filereadable(a:file) && match(a:file, a:directory . '/') == 0
+endfunction
+
+function! s:preview(bang, ...)
+  let preview_window = get(g:, 'fzf_preview_window', a:bang && &columns >= 80 || &columns >= 120 ? 'right': '')
+  if len(preview_window)
+    return call('fzf#vim#with_preview', add(copy(a:000), preview_window))
+  endif
+  return {}
 endfunction
 
 " }}}
@@ -1029,12 +1053,12 @@ function! CopyAllTabFilePath()
   let max = 20
   let index = 0
   while index < max
-    sleep 100ms
+    sleep 50ms
     let index = index + 1
     silent! exec "normal gt"
     let file=expand('%')
     if file == files[0]
-       break
+      break
     endif
     call add(files, file)
   endwhile
@@ -1066,6 +1090,19 @@ function! SaveSession()
   echom 'saved current session : ' .current_dir
 endfunction
 
+command! -bang OpenSession call OpenSession()
+function! OpenSession()
+  call fzf#run(fzf#wrap({
+        \ 'source': 'ls ~/.vim/sessions',
+        \ 'options': [
+        \   '--prompt', 'Session> ',
+        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+        \ ],
+        \ 'sink':  function('s:load_session'),
+        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+        \ }))
+endfunction
+
 command! -bang SwitchSession call SwitchSession()
 function! SwitchSession()
   try
@@ -1090,7 +1127,7 @@ function! s:load_session(session)
   call DeleteBuffers()
   silent! execute 'source ~/.vim/sessions/' . a:session
   silent! execute 'source $MYVIMRC'
-  silent! exec 'set titlestring=' . s:getCurrentDirectory()
+  call s:setTitle()
 endfunction
 
 command! -bang DeleteSessions call DeleteSessions()
@@ -1324,23 +1361,17 @@ endfunction
 
 " ## プロジェクト横断 ---------------------- {{{
 
-command! SwitchProject call SwitchProject()
-function!  SwitchProject()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:open_project'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    " https://github.com/junegunn/fzf/issues/1566#issuecomment-495041470
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
+nnoremap <space>op :call SwitchProject()<cr>
+function! SwitchProject()
+  call fzf#run(fzf#wrap({
+        \ 'source': 'ghq list --full-path',
+        \ 'sink':  function('s:open_project'),
+        \ 'options': [
+        \   '--prompt', 'Project> ',
+        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+        \ ],
+        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+        \ }))
 endfunction
 
 function! s:open_project(project)
@@ -1348,7 +1379,7 @@ function! s:open_project(project)
   call SaveSession()
   call DeleteBuffers()
   silent! execute 'cd ' . a:project
-  silent! exec 'set titlestring=' . s:getCurrentDirectory()
+  call s:setTitle()
 endfunction
 
 command! -nargs=0 DiffAnotherProjectFile call s:ghq_list_diff_another_project_file()
@@ -1445,6 +1476,7 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--prompt="RG> " '.
       \            '--delimiter : --preview-window +{2}-/2 '.
       \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
@@ -1456,6 +1488,7 @@ command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--prompt="RGFromAllFiles> " '.
       \            '--delimiter : --preview-window +{2}-/2 '.
       \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
@@ -1667,12 +1700,24 @@ endfunction
 
 " ## ヘルパー ---------------------- {{{
 
+function! s:setTitle()
+  let dir = s:getCurrentDirectory()
+  let branch = s:getCurrentBranch()
+  silent! exec 'set titlestring=' . dir . '---' . branch
+endfunction
+
 function! s:getCurrentDirectory()
   redir => path
   silent pwd
   redir END
   let splited = split(path, '/')
   return splited[-1]
+endfunction
+
+function! s:getCurrentBranch()
+  let inputfile = ".git/HEAD"
+  let line = readfile(inputfile)[0]
+  return substitute(line, "ref: refs/heads/", "", "g")
 endfunction
 
 function! SelectedVisualModeText()
@@ -1715,14 +1760,6 @@ function! ChangeToFileFormatAndCopyAndSearchBuffers()
   let @+=file_format
   echom 'Copyed! ' . file_format
   execute 'Buffers'
-endfunction
-
-function! ChangeToFileFormatAndCopyAndSearchHistory()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-  execute 'History'
 endfunction
 
 function! ListBufNums()
@@ -1775,6 +1812,10 @@ endfunction
 command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
       \ 'source': 'cat ~/.vim/functions/normal',
       \ 'sink':  function('s:select_function_handler'),
+      \ 'options': [
+      \   '--prompt', 'Function> ',
+      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ ],
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ }))
 
@@ -1799,6 +1840,10 @@ endfunction
 command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
       \ 'source': 'cat ~/.vim/functions/visual',
       \ 'sink':  function('s:select_visual_function_handler'),
+      \ 'options': [
+      \   '--prompt', 'Function> ',
+      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ ],
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ }))
 
@@ -1867,6 +1912,23 @@ endfunction
 
 " }}}
 
+" ## 履歴 ---------------------- {{{
+
+nnoremap <space>or :History:<cr>
+command! -bang CommandHistory call CommandHistory()
+function! CommandHistory()
+  try
+    execute 'History:'
+    call feedkeys('i', 'n')
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+" }}}
+
 " ## ノート ---------------------- {{{
 
 command! TemporaryNote call TemporaryNote()
@@ -1874,7 +1936,13 @@ function! TemporaryNote()
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
           \ 'source': 'find ~/.vim/temporary_note -type file | sort',
-          \ 'options': '--multi --bind=ctrl-i:toggle-down,ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
+          \ 'options': [
+          \   '--prompt', 'Note> ',
+          \   '--multi',
+          \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
+          \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+          \ ],
           \ 'sink*':   function('s:open_files'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
           \ })))
