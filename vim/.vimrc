@@ -646,6 +646,12 @@ let g:tabline_charmax = 40
 " ## lambdalisue/fern.vim ---------------------- {{{
 
 noremap <space>oe :Fern . -drawer -width=50 -toggle -keep -reveal=%<CR>
+let g:fern#mark_symbol                       = '●'
+let g:fern#renderer#default#collapsed_symbol = '▷ '
+let g:fern#renderer#default#expanded_symbol  = '▼ '
+let g:fern#renderer#default#leading          = ' '
+let g:fern#renderer#default#leaf_symbol      = ' '
+let g:fern#renderer#default#root_symbol      = '~ '
 
 " }}}
 
@@ -1077,6 +1083,41 @@ function! s:actuality_tab_count()
     endif
   endfor
   return tab_count
+endfunction
+
+command! -bang CloseRightTab call CloseRightTab('<bang>')
+function! CloseRightTab(bang)
+  let cur=tabpagenr()
+  while cur < tabpagenr('$')
+    exe 'tabclose' . a:bang . ' ' . (cur + 1)
+  endwhile
+endfunction
+
+command! -bang CloseLeftTab call CloseLeftTab('<bang>')
+function! CloseLeftTab(bang)
+  while tabpagenr() > 1
+    exe 'tabclose' . a:bang . ' 1'
+  endwhile
+endfunction
+
+command! -bang CloseTabs call CloseTabs('<bang>')
+function! CloseTabs(bang)
+  call CloseRightTab(a:bang)
+  call CloseLeftTab(a:bang)
+endfunction
+
+command! MergeTab call MergeTab()
+function! MergeTab()
+  let bufnums = tabpagebuflist()
+  hide tabclose
+  topleft vsplit
+  for n in bufnums
+    execute 'sbuffer ' . n
+    wincmd _
+  endfor
+  wincmd t
+  quit
+  wincmd =
 endfunction
 
 " }}}
@@ -1886,6 +1927,18 @@ command! -nargs=0 GitAdd call GitAdd()
 function! GitAdd()
   AsyncRun -silent git add .
   echom 'executed "git add ."'
+endfunction
+
+command! GitPush :call GitPush()
+function! GitPush()
+  let command = "~/.vim/functions/git_push.rb"
+  call asyncrun#run('', '', command)
+endfunction
+
+command! GitPull :call GitPull()
+function! GitPull()
+  AsyncRun -silent git pull
+  echom 'executed "git pull"'
 endfunction
 
 command! -bang DiffFileGitBranch call DiffFileGitBranch()

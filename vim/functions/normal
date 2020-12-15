@@ -1,7 +1,8 @@
 GitAdd
+GitPush
+GitPull
 FindAllFiles
 FindAnotherProjectFile
-SwitchSession
 DeleteSessions
 SaveSession
 RGFromAllFilesNormal
@@ -40,3 +41,8 @@ DisableLinterOnSave
 EnableLinterOnSave
 Reload
 CommandHistory
+AsyncStop
+CloseTabs
+CloseRightTab
+CloseLeftTab
+MergeTab
