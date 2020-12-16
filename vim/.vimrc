@@ -1925,18 +1925,32 @@ endfunction
 
 command! -nargs=0 GitAdd call GitAdd()
 function! GitAdd()
+  AsyncStop
+  sleep 50ms
   AsyncRun -silent git add .
   echom 'executed "git add ."'
 endfunction
 
 command! GitPush :call GitPush()
 function! GitPush()
-  let command = "~/.vim/functions/git_push.rb"
+  AsyncStop
+  sleep 50ms
+  AsyncRun -silent git push
+  echom 'executed "git push"'
+endfunction
+
+command! GitAddCommitPush :call GitAddCommitPush()
+function! GitAddCommitPush()
+  AsyncStop
+  sleep 50ms
+  let command = "~/.vim/functions/git_add_commit_push.rb"
   call asyncrun#run('', '', command)
 endfunction
 
 command! GitPull :call GitPull()
 function! GitPull()
+  AsyncStop
+  sleep 50ms
   AsyncRun -silent git pull
   echom 'executed "git pull"'
 endfunction
@@ -1961,6 +1975,19 @@ endfunction
 
 function! s:get_current_branch()
   return substitute(FugitiveStatusline(), '^\[Git(\(.*\))\]', '\1', '')
+endfunction
+
+" }}}
+
+" ## Util ---------------------- {{{
+
+command! ExecInstall :call ExecInstall()
+function! ExecInstall()
+  AsyncStop
+  sleep 50ms
+  let command = "./install.sh"
+  call asyncrun#run('', '', command)
+  echom 'executed "./install.sh"'
 endfunction
 
 " }}}

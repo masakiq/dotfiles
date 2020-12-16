@@ -1,6 +1,7 @@
 GitAdd
 GitPush
 GitPull
+GitAddCommitPush
 FindAllFiles
 FindAnotherProjectFile
 DeleteSessions
@@ -46,3 +47,4 @@ CloseTabs
 CloseRightTab
 CloseLeftTab
 MergeTab
+ExecInstall
