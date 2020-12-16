@@ -10,7 +10,7 @@ def repository_url
   remote_url.sub(%r{\Assh://git@github\.com}, 'https://github.com') if remote_url.start_with?('ssh://git@github.com')
 end
 
-github_compare_url = "#{repository_url}/compare/commit..commit"
+github_compare_url = "#{repository_url}/compare/commit...commit"
 
 `printf #{github_compare_url} | pbcopy`
 exit 0
