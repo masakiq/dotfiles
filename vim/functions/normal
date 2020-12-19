@@ -3,8 +3,8 @@ GitPush
 GitPull
 GitAddCommitPush
 GitSelectBranch
-FindAllFiles
-FindAnotherProjectFile
+OpenAllFiles
+OpenAnotherProjectFile
 DeleteSessions
 SaveSession
 RGFromAllFilesNormal

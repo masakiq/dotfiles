@@ -728,7 +728,7 @@ command! -bang -nargs=? -complete=dir Windows
 
 if has('gui_running')
 else
-  nnoremap <space>of :FindFiles<CR>
+  nnoremap <space>of :OpenFiles<CR>
   " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
   vnoremap <space>of :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
 endif
@@ -856,7 +856,7 @@ endfunction
 
 " ## ファイル操作 ---------------------- {{{
 
-command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
+command! -bang OpenFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
       \ 'sink*': function('s:open_files'),
       \ 'options': [
@@ -869,8 +869,8 @@ command! -bang FindFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
       \ })))
 
-command! -bang FindAllFiles call FindAllFiles()
-function! FindAllFiles()
+command! -bang OpenAllFiles call OpenAllFiles()
+function! OpenAllFiles()
   try
     call fzf#run(fzf#wrap({
           \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
@@ -1516,7 +1516,7 @@ function! s:open_file_in_another_project(lines)
   endfor
 endfunction
 
-command! -nargs=0 FindAnotherProjectFile call s:ghq_list_and_open_another_project_file()
+command! -nargs=0 OpenAnotherProjectFile call s:ghq_list_and_open_another_project_file()
 
 function! s:ghq_list_and_open_another_project_file()
   try
