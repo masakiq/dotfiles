@@ -2,6 +2,7 @@ GitAdd
 GitPush
 GitPull
 GitAddCommitPush
+GitSelectBranch
 FindAllFiles
 FindAnotherProjectFile
 DeleteSessions

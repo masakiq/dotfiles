@@ -1964,6 +1964,31 @@ function! GitPull()
   echom 'executed "git pull"'
 endfunction
 
+command! GitSelectBranch :call GitSelectBranch()
+function! GitSelectBranch()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'ls .git/refs/heads',
+          \ 'sink':  function('s:git_checkout'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:git_checkout(branch)
+  silent! execute '!git checkout ' . a:branch
+  call s:setTitle()
+  Reload
+  echom 'select branch to ' . a:branch
+endfunction
+
 command! -bang DiffFileGitBranch call DiffFileGitBranch()
 function! DiffFileGitBranch()
   try
