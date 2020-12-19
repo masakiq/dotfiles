@@ -966,14 +966,14 @@ endfunction
 
 command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
 function! CopyCurrentPath()
-  echo "copied current path: " . expand('%')
   let @+=expand('%')
+  echo "copied current path: " . expand('%')
 endfunction
 
 command! -nargs=0 CopyCurrentPathWithLineNumber call CopyCurrentPathWithLineNumber()
 function! CopyCurrentPathWithLineNumber()
-  echo 'copied current path: ' . expand('%') . ':' . line('.')
   let @+=expand('%') . ':' . line('.')
+  echo 'copied current path: ' . expand('%') . ':' . line('.')
 endfunction
 
 command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
@@ -1118,6 +1118,15 @@ function! MergeTab()
   wincmd t
   quit
   wincmd =
+endfunction
+
+command! SeparateTab call SeparateTab()
+function! SeparateTab()
+  wincmd l
+  let file=expand('%')
+  exec 'close'
+  exec 'tab drop ' . file
+  normal gT
 endfunction
 
 " }}}

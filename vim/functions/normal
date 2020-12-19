@@ -47,4 +47,5 @@ CloseTabs
 CloseRightTab
 CloseLeftTab
 MergeTab
+SeparateTab
 ExecInstall
