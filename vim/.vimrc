@@ -903,23 +903,27 @@ function! s:open_files(lines)
         \   'ctrl-v': 'vertical split ',
         \   'enter': 'tab drop '
         \ },
-        \ a:lines[0], 'tab drop  ')
+        \ a:lines[0], 'tab drop ')
   if a:lines[0] == 'ctrl-x'
-    execute cmd . a:lines[1]
-    let files = []
-    for f in a:lines[1:]
-      let files = add(files, f . ':1:1:1')
-    endfor
-    let list = map(files, 's:open_quickfix(v:val)')
-    if len(list) > 1
-      call setqflist(list)
-      copen
-      wincmd p
-    endif
+    call s:open_quickfix_list(cmd, a:lines[1:])
   else
     for file in a:lines[1:]
       exec cmd . file
     endfor
+  endif
+endfunction
+
+function! s:open_quickfix_list(cmd, list)
+  execute a:cmd . ' ' . a:list[0]
+  let files = []
+  for file in a:list[0:]
+    let files = add(files, file . ':1:1:1')
+  endfor
+  let file_list = map(files, 's:open_quickfix(v:val)')
+  if len(file_list) > 1
+    call setqflist(file_list)
+    copen
+    wincmd p
   endif
 endfunction
 
@@ -977,8 +981,24 @@ endfunction
 
 command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
 function! CopyAbsolutePath()
-  echo "copied absolute path: " . expand('%:p')
   let @+=expand('%:p')
+  echo "copied absolute path: " . expand('%:p')
+endfunction
+
+command! OpenFilesFromClipboard call OpenFilesFromClipboard()
+function! OpenFilesFromClipboard()
+  let list=@+
+  let files = split(list, "\n")
+  for file in files
+    silent! exec 'tab drop ' . file
+  endfor
+endfunction
+
+command! OpenFilesQuickfixFromClipboard call OpenFilesQuickfixFromClipboard()
+function! OpenFilesQuickfixFromClipboard()
+  let list=@+
+  let files = split(list, "\n")
+  call s:open_quickfix_list('edit', files)
 endfunction
 
 command! OpenImplementationFile call OpenImplementationFile()
@@ -1062,6 +1082,24 @@ function! CopyAllTabFilePath()
     let index = index + 1
     silent! exec "normal gt"
     let file=expand('%')
+    if file == files[0]
+      break
+    endif
+    call add(files, file)
+  endwhile
+  let @+=join(files, "\n")
+endfunction
+
+command! CopyAllTabFileAbsolutePath call CopyAllTabFileAbsolutePath()
+function! CopyAllTabFileAbsolutePath()
+  let files = [expand('%:p')]
+  let max = 20
+  let index = 0
+  while index < max
+    sleep 50ms
+    let index = index + 1
+    silent! exec "normal gt"
+    let file=expand('%:p')
     if file == files[0]
       break
     endif
