@@ -1913,8 +1913,14 @@ endfunction
 
 " ## Git ---------------------- {{{
 
-command! OpenGitHub :call OpenGitHub()
-function! OpenGitHub()
+command! OpenGitHubRepo :call OpenGitHubRepo()
+function! OpenGitHubRepo()
+  let command = '~/.vim/functions/open_github.rb'
+  call asyncrun#run('', '', command)
+endfunction
+
+command! OpenGitHubFile :call OpenGitHubFile()
+function! OpenGitHubFile()
   if g:mode == 'n'
     let line = a:firstline == a:lastline ? "#L" . line(".") : "#L" . a:firstline . "-L" . a:lastline
   else

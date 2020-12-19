@@ -22,7 +22,12 @@ def relative_file_path(absolute_file_path)
   absolute_file_path.sub(repository_root_path, '')
 end
 
-github_url = "#{repository_url}/blob/#{commit}#{relative_file_path(absolute_file_path)}#{line}"
+github_url =
+  if absolute_file_path && line
+    "#{repository_url}/blob/#{commit}#{relative_file_path(absolute_file_path)}#{line}"
+  else
+    repository_url
+  end
 
 `printf #{github_url} | pbcopy`
 `open #{github_url}`

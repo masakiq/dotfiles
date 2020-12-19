@@ -14,7 +14,8 @@ CopyCurrentPath
 CopyCurrentPathWithLineNumber
 CopyAbsolutePath
 CopyAllTabFilePath
-OpenGitHub
+OpenGitHubRepo
+OpenGitHubFile
 OpenGitHubBlame
 CopyGitHubCompareUrl
 QuitAll
