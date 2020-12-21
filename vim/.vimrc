@@ -354,7 +354,7 @@ vnoremap * c*<C-r>"*<Esc>b
 vnoremap ~ c~<C-r>"~<Esc>b
 vnoremap <space> c<space><C-r>" <Esc>b
 " 選択した両側を一文字ずつ削除
-vnoremap <bs> c<Bs><C-r>"<Esc>wxb
+vnoremap <bs> c<Right><Bs><Bs><C-r>"<Esc>b
 
 " }}}
 
@@ -468,7 +468,7 @@ Plug 'dart-lang/dart-vim-plugin',             { 'commit': '8ff9e1abd264f16fd1d19
 Plug 'dense-analysis/ale',                    { 'commit': 'f996ede5999c99b1b3e3cecc02dbd06cb286d3ff' }
 Plug 'tpope/vim-fugitive',                    { 'commit': 'bebe504e38d0a20c30d6dd666c4c793b3cc66104' }
 Plug 'skywind3000/asyncrun.vim',              { 'commit': '5c8e58138b121c0a0268748b45c3f8d62c7f91ab' }
-Plug 'natebosch/vim-lsc',                     { 'commit': 'b3d239f71c02b274fcb74ebc57b836810f978da9' }
+Plug 'natebosch/vim-lsc',                     { 'commit': 'e5e2967' }
   Plug 'natebosch/vim-lsc-dart',              { 'commit': '844a9d6581ad00679e9777ddfa401b94723abdb9' }
 Plug 'voldikss/vim-translator',               { 'commit': '3f85e419a6cc929dc5afa52b32b1dc4509f582e7' }
 Plug 'chriskempson/base16-vim',               { 'commit': '6191622d5806d4448fa2285047936bdcee57a098' }
