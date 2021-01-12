@@ -434,6 +434,13 @@ endif
 
 " }}}
 
+" ### quickfix ---------------------- {{{
+
+nnoremap <space>; :colder<CR>
+nnoremap <space>' :cnewer<CR>
+
+" }}}
+
 " }}}
 
 " ## スニペット設定 ---------------------- {{{
