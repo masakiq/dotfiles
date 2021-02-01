@@ -189,8 +189,8 @@ set wildmode=longest:full,full
 set formatoptions+=mM
 
 " タイポチェック
-set spell spelllang=en_us
-set nospell
+set spell spelllang+=cjk
+" set nospell
 
 " バッファ切り替え時のワーニングを無視
 set hidden
