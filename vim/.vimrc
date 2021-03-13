@@ -992,6 +992,14 @@ function! CopyAbsolutePath()
   echo "copied absolute path: " . expand('%:p')
 endfunction
 
+command! -nargs=0 CopyCurrentFile call CopyCurrentFile()
+function! CopyCurrentFile()
+  let filepath = expand("%")
+  let filename = fnamemodify(filepath, ":t")
+  let @+= filename
+  echo "copied current file: " . filename
+endfunction
+
 command! OpenFilesFromClipboard call OpenFilesFromClipboard()
 function! OpenFilesFromClipboard()
   let list=@+
@@ -1079,8 +1087,8 @@ function! MoveTabLeft()
   silent! execute '-tabm'
 endfunction
 
-command! CopyAllTabFilePath call CopyAllTabFilePath()
-function! CopyAllTabFilePath()
+command! CopyAllTabPath call CopyAllTabPath()
+function! CopyAllTabPath()
   let files = [expand('%')]
   let max = 20
   let index = 0
@@ -1097,8 +1105,8 @@ function! CopyAllTabFilePath()
   let @+=join(files, "\n")
 endfunction
 
-command! CopyAllTabFileAbsolutePath call CopyAllTabFileAbsolutePath()
-function! CopyAllTabFileAbsolutePath()
+command! CopyAllTabAbsolutePath call CopyAllTabAbsolutePath()
+function! CopyAllTabAbsolutePath()
   let files = [expand('%:p')]
   let max = 20
   let index = 0

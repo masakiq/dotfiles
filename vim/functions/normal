@@ -13,8 +13,9 @@ RGInTemporaryNote
 CopyCurrentPath
 CopyCurrentPathWithLineNumber
 CopyAbsolutePath
-CopyAllTabFilePath
-CopyAllTabFileAbsolutePath
+CopyCurrentFile
+CopyAllTabPath
+CopyAllTabAbsolutePath
 OpenGitHubRepo
 OpenGitHubFile
 OpenGitHubBlame
