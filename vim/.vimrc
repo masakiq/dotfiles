@@ -643,7 +643,7 @@ let g:VM_maps["Case Conversion Menu"] = 'C'
 
 " }}}
 
-" ## maeda1150/vim-tabline ---------------------- {{{
+" ## masakiq/vim-tabline ---------------------- {{{
 
 let g:tabline_charmax = 40
 
@@ -849,6 +849,12 @@ function! s:switch_vim_plugin(dir)
   call SaveSession()
   call DeleteBuffers()
   silent! execute 'cd ~/.vim/plugged/' . a:dir
+endfunction
+
+command! GetLatestCommitsForVimFunctions :call GetLatestCommitsForVimFunctions()
+function! GetLatestCommitsForVimFunctions()
+  let command = '~/.vim/functions/get_latest_commits_for_vim_functions.rb'
+  silent! execute 'r!' . command
 endfunction
 
 " }}}
