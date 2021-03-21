@@ -22,8 +22,8 @@ set fileformats=unix,dos,mac
 
 " シンタックス
 syntax enable
-
 " タイトルを表示する
+
 set title
 
 " 行番号を表示 (nonumber:非表示)
@@ -115,10 +115,10 @@ hi StatusLineNC         ctermfg=238 ctermbg=87
 hi WildMenu             ctermfg=238 ctermbg=87
 
 " 補完の色調整
-hi Pmenu ctermbg=0
-hi PmenuSel ctermbg=4
-hi PmenuSbar ctermbg=2
-hi PmenuThumb ctermfg=3
+hi Pmenu ctermfg=4 ctermbg=0
+hi PmenuSel ctermfg=243 ctermbg=45
+hi PmenuSbar ctermbg=238 ctermfg=238
+hi PmenuThumb ctermbg=248 ctermfg=248
 
 " }}}
 
