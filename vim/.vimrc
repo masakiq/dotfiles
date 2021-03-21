@@ -110,11 +110,15 @@ hi Visual               ctermfg=255 ctermbg=38
 " hide the `~` at the start of an empty line
 hi EndOfBuffer          ctermfg=235 ctermbg=none
 hi Folded               ctermfg=44  ctermbg=241
-hi Pmenu                ctermfg=12  ctermbg=239
 hi StatusLine           ctermfg=238 ctermbg=87
 hi StatusLineNC         ctermfg=238 ctermbg=87
 hi WildMenu             ctermfg=238 ctermbg=87
 
+" 補完の色調整
+hi Pmenu ctermbg=0
+hi PmenuSel ctermbg=4
+hi PmenuSbar ctermbg=2
+hi PmenuThumb ctermfg=3
 
 " }}}
 
@@ -355,6 +359,22 @@ vnoremap ~ c~<C-r>"~<Esc>b
 vnoremap <space> c<space><C-r>" <Esc>b
 " 選択した両側を一文字ずつ削除
 vnoremap <bs> c<Right><Bs><Bs><C-r>"<Esc>b
+
+" }}}
+
+" ### 補完系 ---------------------- {{{
+
+inoremap { {}<LEFT>
+inoremap [ []<LEFT>
+inoremap ( ()<LEFT>
+inoremap " ""<LEFT>
+inoremap ' ''<LEFT>
+
+" 補完時の挙動を一般的な IDE と同じにする
+set completeopt=menuone,noinsert
+inoremap <expr><CR>  pumvisible() ? "<C-y>" : "<CR>"
+inoremap <expr><C-n> pumvisible() ? "<Down>" : "<C-n>"
+inoremap <expr><C-p> pumvisible() ? "<Up>" : "<C-p>"
 
 " }}}
 
