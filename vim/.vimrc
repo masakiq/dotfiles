@@ -27,7 +27,7 @@ syntax enable
 set title
 
 " 行番号を表示 (nonumber:非表示)
-" set number
+set number
 
 " ルーラーを表示 (noruler:非表示)
 set ruler
