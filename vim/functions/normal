@@ -52,3 +52,5 @@ MergeTab
 SeparateTab
 ExecInstall
 GetLatestCommitsForVimFunctions
+StartCopyStatusMessages
+FinishCopyStatusMessages

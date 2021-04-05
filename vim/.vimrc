@@ -1442,6 +1442,15 @@ endfunction
 
 command! -bang Registers call s:registers('<bang>' ==# '!')
 
+command! -bang StartCopyStatusMessages call s:start_copy_status_messages()
+function! s:start_copy_status_messages() abort
+  redir @+
+endfunction
+command! -bang FinishCopyStatusMessages call s:finish_copy_status_messages()
+function! s:finish_copy_status_messages() abort
+  redir END
+endfunction
+
 " }}}
 
 " ## Diff ---------------------- {{{
