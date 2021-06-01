@@ -482,29 +482,29 @@ nnoremap <space>' :cnewer<CR>
 
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
-Plug 'dense-analysis/ale', { 'commit': '3838ae118d8f05fa1b1be7952a1c8aa3055d6728' }
-Plug 'skywind3000/asyncrun.vim', { 'commit': '3cb5b3398c2e4a8dff3094c1975de7a72b773d11' }
+Plug 'dense-analysis/ale', { 'commit': 'bee8eccb421968d1f2628c15e9f2bfcc3d0418aa' }
+Plug 'skywind3000/asyncrun.vim', { 'commit': '168d6b4be9d003ed14ef5d0e1668f01145327e68' }
 Plug 'chriskempson/base16-vim', { 'commit': '6191622d5806d4448fa2285047936bdcee57a098' }
-Plug 'dart-lang/dart-vim-plugin', { 'commit': 'a2821046c45d25258aeddd4d64d607070b93dd88' }
-Plug 'lambdalisue/fern.vim', { 'commit': '31c76b351f6d995009dcd117d7910b80df96928a' }
-Plug 'junegunn/fzf.vim', { 'commit': '1ef72b14ccd05fdbdb01d253b91a74c4760ae655' }
+Plug 'dart-lang/dart-vim-plugin', { 'commit': 'd874c13dca7300178546de62e1aff7d4812640c7' }
+Plug 'lambdalisue/fern.vim', { 'commit': '5409f2ef04e1959b5a8d177c962a57f2f2cb78ae' }
+Plug 'junegunn/fzf.vim', { 'commit': 'a88311b222eb9f90fa9fa72292e61d15c6767866' }
 Plug 'haya14busa/incsearch-easymotion.vim', { 'commit': 'fcdd3aee6f4c0eef1a515727199ece8d6c6041b5' }
 Plug 'haya14busa/incsearch-fuzzy.vim', { 'commit': 'b08fa8fbfd633e2f756fde42bfb5251d655f5403' }
 Plug 'haya14busa/incsearch.vim', { 'commit': '25e2547fb0566460f5999024f7a0de7b3775201f' }
 Plug 'tyru/open-browser.vim', { 'commit': 'd6f1784685abdd86500fdb5fa2fbaf2aab833f18' }
 Plug 'kannokanno/previm', { 'commit': 'd29cce267e0114ff852167c6fbf35b220dba764c' }
 Plug 'easymotion/vim-easymotion', { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
-Plug 'tpope/vim-fugitive', { 'commit': '10ed587f655578657e203735a9e439e823aab5fc' }
-Plug 'ruanyl/vim-gh-line', { 'commit': '119fd11a6d504e9c672b6361338fe1382de9399d' }
-Plug 'natebosch/vim-lsc', { 'commit': '4b3c07ccedecb101c75ff974e5d1526933f69e03' }
+Plug 'tpope/vim-fugitive', { 'commit': '0868c30cc08a4cf49b5f43e08412c671b19fa3f0' }
+Plug 'ruanyl/vim-gh-line', { 'commit': '4ca32f57f5f95cd3436c3f9ee7657a9b9c0ca763' }
+Plug 'natebosch/vim-lsc', { 'commit': '4b0fc48037c628f14209f30616a19287d9e54823' }
 Plug 'natebosch/vim-lsc-dart', { 'commit': 'e2dc59f71282735d2eb05d6487d2e1db09a9d77b' }
-Plug 'tpope/vim-markdown', { 'commit': '855b8915e0857f90cee180e1753ce1910d71c5b1' }
+Plug 'tpope/vim-markdown', { 'commit': '9d87cc19179496db50fb6d902987737c4b522e38' }
 Plug 'matze/vim-move', { 'commit': '1460aa915c521864c926aa51fe20bf6bb8eaa065' }
 Plug 'tpope/vim-surround', { 'commit': 'f51a26d3710629d031806305b6c8727189cd1935' }
 Plug 'masakiq/vim-tabline', { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
 Plug 'voldikss/vim-translator', { 'commit': '167d864db6f2d57e0f7e087e5e3d1c6f356269a7' }
-Plug 'mg979/vim-visual-multi', { 'commit': '4c99296b8f29d8936de8c33d98f0acdafcdbd388' }
-Plug 'liuchengxu/vim-which-key', { 'commit': '68bd1775277ad5677ebf5cdc774ca3ba4755d457' }
+Plug 'mg979/vim-visual-multi', { 'commit': '17fed1b0471e224c59b9ae1b8a3cbeea570dd14b' }
+Plug 'liuchengxu/vim-which-key', { 'commit': 'da2934fcd36350b871ed8ccd54c8eae3a0dfc8ae' }
 call plug#end()
 
 " }}}
