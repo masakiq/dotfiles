@@ -1,5 +1,6 @@
 #!/bin/sh
 ln -s `pwd`/vim/.vimrc ~/.vimrc
+mkdir ~/.config/nvim
 ln -s `pwd`/vim/.vimrc ~/.config/nvim/init.vim
 ln -s `pwd`/vim/.vimrc ~/.ideavimrc
 mkdir ~/.vim/functions
