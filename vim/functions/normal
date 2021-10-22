@@ -27,8 +27,10 @@ QuitAllWithoutSaveSession
 LoadVIMRC
 SwitchVimPlugin
 OpenMarkdown
-OpenImplementationFile
+OpenImplFile
+OpenImplControllerFile
 OpenTestFile
+OpenTestRequestFile
 DeleteBuffers
 DeleteBuffersByFZF
 SwapWindow
