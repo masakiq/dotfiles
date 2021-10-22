@@ -1044,14 +1044,24 @@ function! OpenFilesQuickfixFromClipboard()
   call s:open_quickfix_list('edit', files)
 endfunction
 
-command! OpenImplementationFile call OpenImplementationFile()
-function! OpenImplementationFile()
+command! OpenImplFile call OpenImplFile()
+function! OpenImplFile()
   execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')
+endfunction
+
+command! OpenImplControllerFile call OpenImplControllerFile()
+function! OpenImplControllerFile()
+  execute ':vs ' . substitute(substitute(expand('%'), '^spec/requests', 'app/controllers', ''), '\v(.+)_spec.rb', '\1_controller.rb', '')
 endfunction
 
 command! OpenTestFile call OpenTestFile()
 function! OpenTestFile()
   execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')
+endfunction
+
+command! OpenTestRequestFile call OpenTestRequestFile()
+function! OpenTestRequestFile()
+  execute ':vs ' . substitute(substitute(expand('%'), '^app/controllers', 'spec/requests', ''), '\v(.+)_controller.rb', '\1_spec.rb', '')
 endfunction
 
 command! Reload call Reload()
