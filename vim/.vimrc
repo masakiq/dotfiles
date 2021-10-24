@@ -1202,7 +1202,7 @@ function! MergeTab()
   hide tabclose
   topleft vsplit
   for n in bufnums
-    execute 'sbuffer ' . n
+    execute 'vertical sb ' . n
     wincmd _
   endfor
   wincmd t
