@@ -1202,7 +1202,7 @@ function! MergeTab()
   hide tabclose
   topleft vsplit
   for n in bufnums
-    execute 'sbuffer ' . n
+    execute 'vertical sb ' . n
     wincmd _
   endfor
   wincmd t
@@ -1261,11 +1261,11 @@ function! SwitchSession()
   endtry
 endfunction
 
-function! s:load_session(session)
+function! s:load_session(...)
   call DeleteBufsWithoutExistingWindows()
   call SaveSession()
   call DeleteBuffers()
-  silent! execute 'source ~/.vim/sessions/' . a:session
+  silent! execute 'source ~/.vim/sessions/' . a:1
   silent! execute 'source $MYVIMRC'
   call s:setTitle()
 endfunction
