@@ -1,24 +1,41 @@
 font:
   size: 13
-  # normal:
-  #   family: Meslo LG M DZ for Powerline
-  # bold:
-  #   family: Meslo LG M DZ for Powerline
-  # italic:
-  #   family: Meslo LG M DZ for Powerline
-  #     #colors:
+# https://github.com/alacritty/alacritty/wiki/Color-schemes
+# Colors (Dracula)
+colors:
+  # Default colors
   primary:
-    background: '0x002b36'
-    foreground: '0x839496'
-  cursor:
-    text: '0x002b36'
-    cursor: '0x839496'
+    background: '#000000'
+    foreground: '#f8f8f2'
+
+  # Normal colors
+  normal:
+    black:   '#000000'
+    red:     '#ff5555'
+    green:   '#50fa7b'
+    yellow:  '#f1fa8c'
+    blue:    '#caa9fa'
+    magenta: '#ff79c6'
+    cyan:    '#8be9fd'
+    white:   '#bfbfbf'
+
+  # Bright colors
+  bright:
+    black:   '#575b70'
+    red:     '#ff6e67'
+    green:   '#5af78e'
+    yellow:  '#f4f99d'
+    blue:    '#caa9fa'
+    magenta: '#ff92d0'
+    cyan:    '#9aedfe'
+    white:   '#e6e6e6'
 key_bindings:
   - { key: A, mods: Alt, chars: "\x1ba" }
   - { key: S, mods: Alt, chars: "\x1bs" }
   - { key: C, mods: Alt, chars: "\x1bc" }
   - { key: T, mods: Control, command: { program: "open", args: ["/Applications/iTerm.app"] } }
-    #  - { key: Key2, mods: Alt|Command, command: { program: "open", args: ["/Applications/iTerm.app"] } }
-    #  - { key: Key4, mods: Alt|Command, command: { program: "open", args: ["/Applications/Google\ Chrome.app"] } }
-    #  - { key: Key5, mods: Alt|Command, command: { program: "open", args: ["/Applications/Sequel\ Pro.app"] } }
-background_opacity: 0.85
+  - { key: Return, mods: Command, action: ToggleSimpleFullscreen }
+# background_opacity: 0.85
+window:
+  startup_mode: SimpleFullscreen
+  decorations: none
