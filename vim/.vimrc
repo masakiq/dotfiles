@@ -45,7 +45,7 @@ set wrap
 set laststatus=2
 
 " コマンドラインの高さ
-set cmdheight=2
+set cmdheight=1
 
 " コマンドをステータス行に表示
 set showcmd
@@ -82,10 +82,10 @@ hi SpellLocal cterm=underline
 set autoread
 
 " diff のカラー設定
-hi DiffAdd    cterm=none ctermfg=45  ctermbg=19
-hi DiffDelete cterm=none ctermfg=45  ctermbg=19
-hi DiffChange cterm=none ctermfg=45  ctermbg=19
-hi DiffText   cterm=none ctermfg=191 ctermbg=19
+hi DiffAdd    cterm=none ctermfg=45  ctermbg=none
+hi DiffDelete cterm=none ctermfg=45  ctermbg=none
+hi DiffChange cterm=none ctermfg=45  ctermbg=none
+hi DiffText   cterm=none ctermfg=191 ctermbg=none
 
 hi Identifier           ctermfg=115
 hi Type                 ctermfg=45
@@ -98,7 +98,7 @@ hi SignColumn           ctermbg=0
 
 hi LineNr               ctermfg=31
 hi CursorLineNr         ctermfg=87  cterm=none
-hi CursorLine           cterm=none
+hi CursorLine           cterm=none ctermbg=238
 
 hi SpellCap             ctermfg=87  ctermbg=31
 hi SpellRare            ctermfg=87  ctermbg=63
@@ -119,6 +119,35 @@ hi Pmenu ctermfg=4 ctermbg=0
 hi PmenuSel ctermfg=243 ctermbg=45
 hi PmenuSbar ctermbg=238 ctermfg=238
 hi PmenuThumb ctermbg=248 ctermfg=248
+
+" 非アクティブのときに白くする
+hi ColorColumn ctermbg=238
+if exists('+colorcolumn')
+  function! s:DimInactiveWindows()
+    for i in range(1, tabpagewinnr(tabpagenr(), '$'))
+      let l:range = ""
+      if i != winnr()
+        if &wrap
+         " HACK: when wrapping lines is enabled, we use the maximum number
+         " of columns getting highlighted. This might get calculated by
+         " looking for the longest visible line and using a multiple of
+         " winwidth().
+         let l:width=256 " max
+        else
+         let l:width=winwidth(i)
+        endif
+        let l:range = join(range(1, l:width), ',')
+      endif
+      call setwinvar(i, '&colorcolumn', l:range)
+    endfor
+  endfunction
+  augroup DimInactiveWindows
+    au!
+    au WinEnter * call s:DimInactiveWindows()
+    au WinEnter * set cursorline
+    au WinLeave * set nocursorline
+  augroup END
+endif
 
 " }}}
 
@@ -152,7 +181,7 @@ set nohlsearch
 " ## カーソル移動に関する設定 ---------------------- {{{
 
 " スクロールオフ
-set scrolloff=20
+set scrolloff=15
 
 " マウススクロール
 set mouse=a
@@ -1506,6 +1535,9 @@ endfunction
 
 function! s:diff_files(line)
   execute 'vertical diffsplit ' . a:line
+  set wrap
+  silent! exec "normal \<c-w>h"
+  set wrap
 endfunction
 
 function! s:select_diff_files(branch)
