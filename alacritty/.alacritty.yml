@@ -39,7 +39,6 @@ key_bindings:
 window:
   startup_mode: SimpleFullscreen
   decorations: none
-background_opacity: 0.85
 shell:
   program: /opt/homebrew/bin/fish
   args:
