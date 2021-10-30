@@ -1519,6 +1519,44 @@ command! DiffFile call DiffFile()
 function! DiffFile()
   try
     call fzf#run(fzf#wrap({
+          \ 'source': s:list_tabs(),
+          \ 'sink':  function('s:diff_files'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:list_tabs()
+  let list = []
+  let tabnumber = 1
+
+  while tabnumber <= tabpagenr('$')
+    let buflist = tabpagebuflist(tabnumber)
+    let winnumber = 1
+    for buf in buflist
+      silent! let file = expandcmd('#'. buf)
+      let file = substitute(file, '#.*', '[No-Name]', '')
+      let line = file
+      call add(list, line)
+      let winnumber = winnumber + 1
+    endfor
+    let tabnumber = tabnumber + 1
+  endwhile
+
+  return list
+endfunction
+
+command! DiffFileInDirectory call DiffFileInDirectory()
+function! DiffFileInDirectory()
+  try
+    call fzf#run(fzf#wrap({
           \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
           \ 'sink':  function('s:diff_files'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }

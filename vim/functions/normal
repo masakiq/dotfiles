@@ -38,6 +38,7 @@ PlugInstall
 PlugUpdate
 PlugClean
 DiffFile
+DiffFileInDirectory
 DiffFileGitBranch
 DiffTemporaryNote
 DiffAnotherProjectFile
