@@ -506,6 +506,7 @@ nnoremap <space>' :cnewer<CR>
 call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " -------------------------------------------
 
 Plug 'dense-analysis/ale', { 'commit': '16898417e68ffb6034b2a6de0c1b25502bd846d8' }
@@ -834,11 +835,17 @@ inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'wid
 
 " ## LSP 設定 ---------------------- {{{
 
-" Dart
+" ## neoclide/coc.nvim {{{
+
+nmap <silent> gd <Plug>(coc-definition)
+
+" }}}
+
+" ## natebosch/vim-lsc, natebosch/vim-lsc-dart {{{
+" For Dart
 let g:lsc_auto_map = v:true
 let g:lsc_server_commands = {
-      \ 'dart': 'dart_language_server',
-      \ 'ruby': 'solargraph stdio'
+      \ 'dart': 'dart_language_server'
       \ }
 let g:lsc_enable_autocomplete = v:true
 " Use all the defaults (recommended):
@@ -850,7 +857,7 @@ let g:lsc_auto_map = {'defaults': v:true, 'FindReferences': '<leader>r'}
 " let g:lsc_auto_map = {'defaults': v:true, 'FindImplementations': ''}
 
 " ... or set only the commands you want mapped without defaults.
-nnoremap gd :LSClientGoToDefinition<cr>
+nnoremap gh :LSClientGoToDefinition<cr>
 " nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
 " Complete default mappings are:
 " \ 'GoToDefinition': 'gd',
@@ -868,6 +875,7 @@ let g:lsc_auto_map = {
       \ 'SignatureHelp': 'gm',
       \ 'Completion': 'completefunc',
       \}
+" }}}
 
 " }}}
 
