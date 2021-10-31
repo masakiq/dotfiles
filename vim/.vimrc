@@ -921,9 +921,9 @@ function! s:switch_vim_plugin(dir)
   silent! execute 'cd ~/.vim/plugged/' . a:dir
 endfunction
 
-command! GetLatestCommitsForVimFunctions :call GetLatestCommitsForVimFunctions()
-function! GetLatestCommitsForVimFunctions()
-  let command = '~/.vim/functions/get_latest_commits_for_vim_functions.rb'
+command! PlugGetLatestCommits :call PlugGetLatestCommits()
+function! PlugGetLatestCommits()
+  let command = '~/.vim/functions/plug_get_latest_commits.rb'
   silent! execute 'r!' . command
 endfunction
 

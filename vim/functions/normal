@@ -37,6 +37,7 @@ SwapWindow
 PlugInstall
 PlugUpdate
 PlugClean
+PlugGetLatestCommits
 DiffFile
 DiffFileInDirectory
 DiffFileGitBranch
@@ -54,6 +55,5 @@ CloseLeftTab
 MergeTab
 SeparateTab
 ExecInstall
-GetLatestCommitsForVimFunctions
 StartCopyStatusMessages
 FinishCopyStatusMessages
