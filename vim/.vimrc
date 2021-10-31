@@ -108,7 +108,7 @@ hi Search               ctermfg=255 ctermbg=63
 hi Todo                 ctermfg=255 ctermbg=34
 hi Visual               ctermfg=255 ctermbg=38
 " hide the `~` at the start of an empty line
-hi EndOfBuffer          ctermfg=235 ctermbg=none
+hi EndOfBuffer          ctermfg=232 ctermbg=none
 hi Folded               ctermfg=44  ctermbg=241
 hi StatusLine           ctermfg=238 ctermbg=87
 hi StatusLineNC         ctermfg=238 ctermbg=87
