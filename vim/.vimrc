@@ -527,6 +527,7 @@ Plug 'natebosch/vim-lsc', { 'commit': '4b0fc48037c628f14209f30616a19287d9e54823'
 Plug 'natebosch/vim-lsc-dart', { 'commit': 'e2dc59f71282735d2eb05d6487d2e1db09a9d77b' }
 Plug 'tpope/vim-markdown', { 'commit': 'ed76403b2e0622bc137df4576275a9fd3720b875' }
 Plug 'matze/vim-move', { 'commit': '6442747a3d3084e3c1214388192b8308fcf391b8' }
+Plug 'rwrede/vim-ruby-fold', { 'commit': 'eb7af0d14a7e94af4b8e397806fa8d4c4d2fde96' }
 Plug 'tpope/vim-surround', { 'commit': 'aeb933272e72617f7c4d35e1f003be16836b948d' }
 Plug 'masakiq/vim-tabline', { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
 Plug 'voldikss/vim-translator', { 'commit': '9e3080193409c385d29adb156e9ab15af125ede0' }
@@ -742,6 +743,12 @@ vmap <C-j> <Plug>MoveBlockDown
 vmap <C-k> <Plug>MoveBlockUp
 vmap <C-h> <Plug>MoveBlockLeft
 vmap <C-l> <Plug>MoveBlockRight
+
+" }}}
+
+" ## rwrede/vim-ruby-fold ---------------------- {{{
+
+let g:ruby_fold_lines_limit = 300
 
 " }}}
 
