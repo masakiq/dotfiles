@@ -55,5 +55,6 @@ CloseLeftTab
 MergeTab
 SeparateTab
 ExecInstall
+CopyStatusMessage
 StartCopyStatusMessages
 FinishCopyStatusMessages

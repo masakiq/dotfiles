@@ -349,6 +349,9 @@ vnoremap x "+x
 " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れる
 vnoremap fy :call ChangeToFileFormatAndCopy()<cr>w
 
+" message をコピーする
+nnoremap <space>m :let @+ =execute('1messages')<CR>:echo 'last messages copied!'<CR>
+
 " }}}
 
 " ### 移動系 ---------------------- {{{
@@ -1522,6 +1525,43 @@ endfunction
 command! -bang FinishCopyStatusMessages call s:finish_copy_status_messages()
 function! s:finish_copy_status_messages() abort
   redir END
+endfunction
+
+command! CopyStatusMessage call CopyStatusMessage()
+function! CopyStatusMessage()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': s:get_status_messages(),
+          \ 'sink':  function('s:copy_message'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+    if has('nvim')
+      call feedkeys('i', 'n')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:get_status_messages()
+  let lines = filter(split(s:redir('messages'), "\n"), 'v:val !=# ""')
+  return uniq(lines)
+endfunction
+
+function! s:copy_message(message)
+  let @+ = a:message
+endfunction
+
+function! s:redir(cmd) abort
+  let [verbose, verbosefile] = [&verbose, &verbosefile]
+  set verbose=0 verbosefile=
+  redir => str
+    execute 'silent!' a:cmd
+  redir END
+  let [&verbose, &verbosefile] = [verbose, verbosefile]
+  return str
 endfunction
 
 " }}}
