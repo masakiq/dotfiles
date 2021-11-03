@@ -1167,13 +1167,14 @@ function! QuitAllWithoutSaveSession()
   normal ZQ
 endfunction
 
+nnoremap <space>oh :History<CR>
+
 " https://github.com/jesseleite/dotfiles/blob/c75ae5ebd0589361e1fe84a912f1580a9b1f9a15/vim/plugin-config/fzf.vim#L44-L86
-nnoremap <space>oh :CwdHistory<CR>
-command! -bang CwdHistory call fzf#run(fzf#wrap(s:preview(<bang>0, {
+command! -bang OpenHistoryFileInProject call fzf#run(fzf#wrap(s:preview(<bang>0, {
   \ 'source': s:file_history_from_directory(getcwd()),
   \ 'sink*': function('s:open_files'),
   \ 'options': [
-  \   '--prompt', 'CwdHistory> ',
+  \   '--prompt', 'OpenHistoryFileInProject> ',
   \   '--multi',
   \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
   \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',

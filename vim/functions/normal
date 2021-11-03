@@ -5,6 +5,7 @@ GitAddCommitPush
 GitSelectBranch
 OpenAllFiles
 OpenAnotherProjectFile
+OpenHistoryFileInProject
 DeleteSessions
 SaveSession
 RGFromAllFilesNormal
