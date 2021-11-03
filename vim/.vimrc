@@ -376,15 +376,14 @@ nnoremap <space>' :cnewer<CR>
 call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'dracula/vim', { 'as': 'dracula' }
 " -------------------------------------------
-
 Plug 'dense-analysis/ale', { 'commit': '16898417e68ffb6034b2a6de0c1b25502bd846d8' }
 Plug 'skywind3000/asyncrun.vim', { 'commit': '168d6b4be9d003ed14ef5d0e1668f01145327e68' }
 Plug 'jiangmiao/auto-pairs', { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
 Plug 'chriskempson/base16-vim', { 'commit': '6191622d5806d4448fa2285047936bdcee57a098' }
+Plug 'neoclide/coc.nvim', { 'commit': '287c743c9f227fdf0e1db452bbb8ae3c5caffc36' }
 Plug 'dart-lang/dart-vim-plugin', { 'commit': '08764627ce85fc0c0bf9d8fd11b3cf5fc05d58ba' }
+Plug 'dracula/vim', { 'commit': 'e5f09746562ef0226d3484a01609ceca41700a3d', 'as': 'dracula' }
 Plug 'lambdalisue/fern.vim', { 'commit': '41197d23b2975fb373b0affc090ff4fe52a7429c' }
 Plug 'junegunn/fzf.vim', { 'commit': '0452b71830b1a219b8cdc68141ee58ec288ea711' }
 Plug 'haya14busa/incsearch-easymotion.vim', { 'commit': 'fcdd3aee6f4c0eef1a515727199ece8d6c6041b5' }
@@ -399,7 +398,7 @@ Plug 'natebosch/vim-lsc', { 'commit': '4b0fc48037c628f14209f30616a19287d9e54823'
 Plug 'natebosch/vim-lsc-dart', { 'commit': 'e2dc59f71282735d2eb05d6487d2e1db09a9d77b' }
 Plug 'tpope/vim-markdown', { 'commit': 'ed76403b2e0622bc137df4576275a9fd3720b875' }
 Plug 'matze/vim-move', { 'commit': '6442747a3d3084e3c1214388192b8308fcf391b8' }
-Plug 'masakiq/vim-ruby-fold', { 'commit': '991ce49784a28f15b39d087ca6fefccd776cc2d5' }
+Plug 'masakiq/vim-ruby-fold', { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b' }
 Plug 'tpope/vim-surround', { 'commit': 'aeb933272e72617f7c4d35e1f003be16836b948d' }
 Plug 'masakiq/vim-tabline', { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
 Plug 'voldikss/vim-translator', { 'commit': '9e3080193409c385d29adb156e9ab15af125ede0' }
