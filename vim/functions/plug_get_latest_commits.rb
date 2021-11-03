@@ -18,5 +18,9 @@ def commit
 end
 
 execute_in_vim_dir do
-  puts "Plug '#{repo_name}', { 'commit': '#{commit}' }"
+  if repo_name == 'dracula/vim'
+    puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'as': 'dracula' }"
+  else
+    puts "Plug '#{repo_name}', { 'commit': '#{commit}' }"
+  end
 end
