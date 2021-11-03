@@ -18,139 +18,6 @@ set fileformats=unix,dos,mac
 
 " }}}
 
-" ## 画面表示に関する設定 ---------------------- {{{
-
-" シンタックス
-syntax enable
-" タイトルを表示する
-
-set title
-
-" 行番号を表示 (nonumber:非表示)
-set number
-
-" ルーラーを表示 (noruler:非表示)
-set ruler
-
-" タブや改行を表示 (list:表示)
-set nolist
-
-" どの文字でタブや改行を表示するかを設定
-"set listchars=tab:>-,extends:<,trail:-,eol:<
-
-" 長い行を折り返して表示
-set wrap
-
-" 常にステータス行を表示
-set laststatus=2
-
-" コマンドラインの高さ
-set cmdheight=1
-
-" コマンドをステータス行に表示
-set showcmd
-
-" モードを表示する
-set showmode
-
-" 画面のカラースキーマCygwinでみやすい色使い
-" colorscheme  tortetorte
-
-" アンダーライン
-set cursorline
-
-" ウィンドウ間のバーをカスタマイズ
-hi VertSplit ctermfg=0 ctermbg=31
-set fillchars+=vert:│
-
-augroup BgHighlight
-  autocmd!
-  autocmd WinEnter * set cul
-  autocmd WinLeave * set nocul
-augroup END
-
-" シンタックスエラーを下線にする
-hi clear SpellBad
-hi SpellBad cterm=underline
-hi SpellCap cterm=underline
-hi SpellRare cterm=underline
-hi SpellLocal cterm=underline
-
-" autocmd TerminalOpen * set nonu
-
-" ファイルを読み込み
-set autoread
-
-" diff のカラー設定
-hi DiffAdd    cterm=none ctermfg=45  ctermbg=none
-hi DiffDelete cterm=none ctermfg=45  ctermbg=none
-hi DiffChange cterm=none ctermfg=45  ctermbg=none
-hi DiffText   cterm=none ctermfg=191 ctermbg=none
-
-hi Identifier           ctermfg=115
-hi Type                 ctermfg=45
-hi PreProc              ctermfg=219
-hi Constant             ctermfg=147
-hi Statement            ctermfg=199
-hi CursorColumn         ctermbg=19
-hi lscCurrentParameter  ctermbg=19
-hi SignColumn           ctermbg=0
-
-hi LineNr               ctermfg=31
-hi CursorLineNr         ctermfg=87  cterm=none
-hi CursorLine           cterm=none ctermbg=238
-
-hi SpellCap             ctermfg=87  ctermbg=31
-hi SpellRare            ctermfg=87  ctermbg=63
-hi SpellLocal           ctermfg=87  ctermbg=71
-hi Error                ctermfg=255 ctermbg=199
-hi Search               ctermfg=255 ctermbg=63
-hi Todo                 ctermfg=255 ctermbg=34
-hi Visual               ctermfg=255 ctermbg=38
-" hide the `~` at the start of an empty line
-hi EndOfBuffer          ctermfg=232 ctermbg=none
-hi Folded               ctermfg=44  ctermbg=241
-hi StatusLine           ctermfg=238 ctermbg=87
-hi StatusLineNC         ctermfg=238 ctermbg=87
-hi WildMenu             ctermfg=238 ctermbg=87
-
-" 補完の色調整
-hi Pmenu ctermfg=4 ctermbg=0
-hi PmenuSel ctermfg=243 ctermbg=45
-hi PmenuSbar ctermbg=238 ctermfg=238
-hi PmenuThumb ctermbg=248 ctermfg=248
-
-" 非アクティブのときに白くする
-hi ColorColumn ctermbg=238
-if exists('+colorcolumn')
-  function! s:DimInactiveWindows()
-    for i in range(1, tabpagewinnr(tabpagenr(), '$'))
-      let l:range = ""
-      if i != winnr()
-        if &wrap
-         " HACK: when wrapping lines is enabled, we use the maximum number
-         " of columns getting highlighted. This might get calculated by
-         " looking for the longest visible line and using a multiple of
-         " winwidth().
-         let l:width=256 " max
-        else
-         let l:width=winwidth(i)
-        endif
-        let l:range = join(range(1, l:width), ',')
-      endif
-      call setwinvar(i, '&colorcolumn', l:range)
-    endfor
-  endfunction
-  augroup DimInactiveWindows
-    au!
-    au WinEnter * call s:DimInactiveWindows()
-    au WinEnter * set cursorline
-    au WinLeave * set nocursorline
-  augroup END
-endif
-
-" }}}
-
 " ## 検索の挙動に関する設定 ---------------------- {{{
 
 " 検索時に大文字小文字を無視 (noignorecase:無視しない)
@@ -510,6 +377,7 @@ call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'dracula/vim', { 'as': 'dracula' }
 " -------------------------------------------
 
 Plug 'dense-analysis/ale', { 'commit': '16898417e68ffb6034b2a6de0c1b25502bd846d8' }
@@ -538,6 +406,152 @@ Plug 'voldikss/vim-translator', { 'commit': '9e3080193409c385d29adb156e9ab15af12
 Plug 'mg979/vim-visual-multi', { 'commit': 'e20908963d9b0114e5da1eacbc516e4b09cf5803' }
 Plug 'liuchengxu/vim-which-key', { 'commit': '2c915b6de918c073fbd83809e51343651f00f9a8' }
 call plug#end()
+
+" }}}
+
+" ## 画面表示に関する設定 ---------------------- {{{
+
+" シンタックス
+syntax enable
+" タイトルを表示する
+
+set title
+
+" 行番号を表示 (nonumber:非表示)
+set number
+
+" ルーラーを表示 (noruler:非表示)
+set ruler
+
+" タブや改行を表示 (list:表示)
+set nolist
+
+" どの文字でタブや改行を表示するかを設定
+"set listchars=tab:>-,extends:<,trail:-,eol:<
+
+" 長い行を折り返して表示
+set wrap
+
+" 常にステータス行を表示
+set laststatus=2
+
+" コマンドラインの高さ
+set cmdheight=1
+
+" コマンドをステータス行に表示
+set showcmd
+
+" モードを表示する
+set showmode
+
+" 画面のカラースキーマCygwinでみやすい色使い
+" colorscheme  tortetorte
+
+" アンダーライン
+set cursorline
+
+augroup BgHighlight
+  autocmd!
+  autocmd WinEnter * set cul
+  autocmd WinLeave * set nocul
+augroup END
+
+" シンタックスエラーを下線にする
+hi clear SpellBad
+hi SpellBad cterm=underline
+hi SpellCap cterm=underline
+hi SpellRare cterm=underline
+hi SpellLocal cterm=underline
+
+" autocmd TerminalOpen * set nonu
+
+" ファイルを読み込み
+set autoread
+
+" カラースキーマ設定
+colorscheme dracula
+
+" Background color
+hi Normal               ctermfg=none ctermbg=none
+" hide the `~` at the start of an empty line
+hi EndOfBuffer          ctermfg=232 ctermbg=none
+
+" ウィンドウ間のバーをカスタマイズ
+hi VertSplit ctermfg=0 ctermbg=31
+set fillchars+=vert:│
+
+" 補完の色調整
+hi Pmenu ctermfg=4 ctermbg=0
+hi PmenuSel ctermfg=243 ctermbg=45
+hi PmenuSbar ctermbg=238 ctermfg=238
+hi PmenuThumb ctermbg=248 ctermfg=248
+
+hi Folded               ctermfg=44  ctermbg=241
+hi StatusLine           ctermfg=238 ctermbg=87
+hi StatusLineNC         ctermfg=238 ctermbg=87
+hi WildMenu             ctermfg=238 ctermbg=87
+
+hi SpellCap             ctermfg=87  ctermbg=31
+hi SpellRare            ctermfg=87  ctermbg=63
+hi SpellLocal           ctermfg=87  ctermbg=71
+hi Error                ctermfg=255 ctermbg=199
+hi Search               ctermfg=255 ctermbg=63
+hi Todo                 ctermfg=255 ctermbg=34
+hi Visual               ctermfg=255 ctermbg=38
+
+hi LineNr               ctermfg=31
+hi CursorLineNr         ctermfg=87  cterm=none
+hi CursorLine           cterm=none ctermbg=238
+
+hi DiffAdd    cterm=none ctermfg=45  ctermbg=none
+hi DiffDelete cterm=none ctermfg=45  ctermbg=none
+hi DiffChange cterm=none ctermfg=45  ctermbg=none
+hi DiffText   cterm=none ctermfg=191 ctermbg=none
+
+hi Identifier           ctermfg=115
+hi Type                 ctermfg=45
+hi PreProc              ctermfg=219
+hi Constant             ctermfg=147
+hi Statement            ctermfg=199
+hi CursorColumn         ctermbg=19
+hi lscCurrentParameter  ctermbg=19
+hi SignColumn           ctermbg=0
+
+hi LineNr               ctermfg=31
+hi CursorLineNr         ctermfg=87  cterm=none
+hi CursorLine           cterm=none ctermbg=238
+
+hi Comment  ctermfg=White
+hi SpellBad  ctermfg=White ctermbg=none
+
+" 非アクティブのときに白くする
+hi ColorColumn ctermbg=238
+if exists('+colorcolumn')
+  function! s:DimInactiveWindows()
+    for i in range(1, tabpagewinnr(tabpagenr(), '$'))
+      let l:range = ""
+      if i != winnr()
+        if &wrap
+         " HACK: when wrapping lines is enabled, we use the maximum number
+         " of columns getting highlighted. This might get calculated by
+         " looking for the longest visible line and using a multiple of
+         " winwidth().
+         let l:width=256 " max
+        else
+         let l:width=winwidth(i)
+        endif
+        let l:range = join(range(1, l:width), ',')
+      endif
+      call setwinvar(i, '&colorcolumn', l:range)
+    endfor
+  endfunction
+  augroup DimInactiveWindows
+    au!
+    au WinEnter * call s:DimInactiveWindows()
+    au WinEnter * set cursorline
+    au WinLeave * set nocursorline
+  augroup END
+endif
 
 " }}}
 
