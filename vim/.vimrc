@@ -1563,8 +1563,13 @@ function! CopyStatusMessage()
 endfunction
 
 function! s:get_status_messages()
+  let n = a:0 > 0 ? a:1 : 200
   let lines = filter(split(s:redir('messages'), "\n"), 'v:val !=# ""')
-  return uniq(lines)
+  if n > len(lines)
+    let n = len(lines)
+  endif
+  let lines = lines[len(lines) - n :]
+  return reverse(uniq(lines))
 endfunction
 
 function! s:copy_message(message)
