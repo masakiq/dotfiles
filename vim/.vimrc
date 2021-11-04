@@ -377,33 +377,33 @@ call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
 " -------------------------------------------
-Plug 'dense-analysis/ale', { 'commit': '16898417e68ffb6034b2a6de0c1b25502bd846d8' }
-Plug 'skywind3000/asyncrun.vim', { 'commit': '168d6b4be9d003ed14ef5d0e1668f01145327e68' }
-Plug 'jiangmiao/auto-pairs', { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
-Plug 'chriskempson/base16-vim', { 'commit': '6191622d5806d4448fa2285047936bdcee57a098' }
-Plug 'neoclide/coc.nvim', { 'commit': '287c743c9f227fdf0e1db452bbb8ae3c5caffc36' }
-Plug 'dart-lang/dart-vim-plugin', { 'commit': '08764627ce85fc0c0bf9d8fd11b3cf5fc05d58ba' }
-Plug 'dracula/vim', { 'commit': 'e5f09746562ef0226d3484a01609ceca41700a3d', 'as': 'dracula' }
-Plug 'lambdalisue/fern.vim', { 'commit': '41197d23b2975fb373b0affc090ff4fe52a7429c' }
-Plug 'junegunn/fzf.vim', { 'commit': '0452b71830b1a219b8cdc68141ee58ec288ea711' }
+Plug 'dense-analysis/ale',                  { 'commit': '16898417e68ffb6034b2a6de0c1b25502bd846d8' }
+Plug 'skywind3000/asyncrun.vim',            { 'commit': '168d6b4be9d003ed14ef5d0e1668f01145327e68' }
+Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
+Plug 'chriskempson/base16-vim',             { 'commit': '6191622d5806d4448fa2285047936bdcee57a098' }
+Plug 'neoclide/coc.nvim',                   { 'commit': '287c743c9f227fdf0e1db452bbb8ae3c5caffc36' }
+Plug 'dart-lang/dart-vim-plugin',           { 'commit': '08764627ce85fc0c0bf9d8fd11b3cf5fc05d58ba' }
+Plug 'dracula/vim',                         { 'commit': 'e5f09746562ef0226d3484a01609ceca41700a3d', 'as': 'dracula' }
+Plug 'lambdalisue/fern.vim',                { 'commit': '41197d23b2975fb373b0affc090ff4fe52a7429c' }
+Plug 'junegunn/fzf.vim',                    { 'commit': '0452b71830b1a219b8cdc68141ee58ec288ea711' }
 Plug 'haya14busa/incsearch-easymotion.vim', { 'commit': 'fcdd3aee6f4c0eef1a515727199ece8d6c6041b5' }
-Plug 'haya14busa/incsearch-fuzzy.vim', { 'commit': 'b08fa8fbfd633e2f756fde42bfb5251d655f5403' }
-Plug 'haya14busa/incsearch.vim', { 'commit': '25e2547fb0566460f5999024f7a0de7b3775201f' }
-Plug 'tyru/open-browser.vim', { 'commit': '80ec3f2bb0a86ac13c998e2f2c86e16e6d2f20bb' }
-Plug 'kannokanno/previm', { 'commit': '0bc7677d492f75eff60757496c899b00e8a3855f' }
-Plug 'easymotion/vim-easymotion', { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
-Plug 'tpope/vim-fugitive', { 'commit': '2e66b3ad05d85f09d870f82671b8503cf8fa4297' }
-Plug 'ruanyl/vim-gh-line', { 'commit': '4ca32f57f5f95cd3436c3f9ee7657a9b9c0ca763' }
-Plug 'natebosch/vim-lsc', { 'commit': '4b0fc48037c628f14209f30616a19287d9e54823' }
-Plug 'natebosch/vim-lsc-dart', { 'commit': 'e2dc59f71282735d2eb05d6487d2e1db09a9d77b' }
-Plug 'tpope/vim-markdown', { 'commit': 'ed76403b2e0622bc137df4576275a9fd3720b875' }
-Plug 'matze/vim-move', { 'commit': '6442747a3d3084e3c1214388192b8308fcf391b8' }
-Plug 'masakiq/vim-ruby-fold', { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b' }
-Plug 'tpope/vim-surround', { 'commit': 'aeb933272e72617f7c4d35e1f003be16836b948d' }
-Plug 'masakiq/vim-tabline', { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
-Plug 'voldikss/vim-translator', { 'commit': '9e3080193409c385d29adb156e9ab15af125ede0' }
-Plug 'mg979/vim-visual-multi', { 'commit': 'e20908963d9b0114e5da1eacbc516e4b09cf5803' }
-Plug 'liuchengxu/vim-which-key', { 'commit': '2c915b6de918c073fbd83809e51343651f00f9a8' }
+Plug 'haya14busa/incsearch-fuzzy.vim',      { 'commit': 'b08fa8fbfd633e2f756fde42bfb5251d655f5403' }
+Plug 'haya14busa/incsearch.vim',            { 'commit': '25e2547fb0566460f5999024f7a0de7b3775201f' }
+Plug 'tyru/open-browser.vim',               { 'commit': '80ec3f2bb0a86ac13c998e2f2c86e16e6d2f20bb' }
+Plug 'kannokanno/previm',                   { 'commit': '0bc7677d492f75eff60757496c899b00e8a3855f' }
+Plug 'easymotion/vim-easymotion',           { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
+Plug 'tpope/vim-fugitive',                  { 'commit': '2e66b3ad05d85f09d870f82671b8503cf8fa4297' }
+Plug 'ruanyl/vim-gh-line',                  { 'commit': '4ca32f57f5f95cd3436c3f9ee7657a9b9c0ca763' }
+Plug 'natebosch/vim-lsc',                   { 'commit': '4b0fc48037c628f14209f30616a19287d9e54823' }
+Plug 'natebosch/vim-lsc-dart',              { 'commit': 'e2dc59f71282735d2eb05d6487d2e1db09a9d77b' }
+Plug 'tpope/vim-markdown',                  { 'commit': 'ed76403b2e0622bc137df4576275a9fd3720b875' }
+Plug 'matze/vim-move',                      { 'commit': '6442747a3d3084e3c1214388192b8308fcf391b8' }
+Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b' }
+Plug 'tpope/vim-surround',                  { 'commit': 'aeb933272e72617f7c4d35e1f003be16836b948d' }
+Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
+Plug 'voldikss/vim-translator',             { 'commit': '9e3080193409c385d29adb156e9ab15af125ede0' }
+Plug 'mg979/vim-visual-multi',              { 'commit': 'e20908963d9b0114e5da1eacbc516e4b09cf5803' }
+Plug 'liuchengxu/vim-which-key',            { 'commit': '2c915b6de918c073fbd83809e51343651f00f9a8' }
 call plug#end()
 
 " }}}
@@ -449,6 +449,14 @@ set showmode
 " アンダーライン
 set cursorline
 
+" autocmd TerminalOpen * set nonu
+
+" ファイルを読み込み
+set autoread
+
+" カラースキーマ設定
+colorscheme dracula
+
 augroup BgHighlight
   autocmd!
   autocmd WinEnter * set cul
@@ -461,14 +469,6 @@ hi SpellBad cterm=underline
 hi SpellCap cterm=underline
 hi SpellRare cterm=underline
 hi SpellLocal cterm=underline
-
-" autocmd TerminalOpen * set nonu
-
-" ファイルを読み込み
-set autoread
-
-" カラースキーマ設定
-colorscheme dracula
 
 " Background color
 hi Normal               ctermfg=none ctermbg=none
@@ -525,7 +525,6 @@ hi CursorLineNr         ctermfg=87  cterm=none
 hi CursorLine           cterm=none ctermbg=238
 
 hi Comment  ctermfg=White
-hi SpellBad  ctermfg=White ctermbg=none
 
 " 非アクティブのときに白くする
 hi ColorColumn ctermbg=238
@@ -708,7 +707,8 @@ endfunction
 " ## mg979/vim-visual-multi ---------------------- {{{
 
 let g:VM_maps = {}
-let g:VM_maps["Align"]                = '<M-a>'
+"let g:VM_maps["Align"]                = '<M-a>'
+let g:VM_maps["Align"]                = 'A'
 let g:VM_maps["Surround"]             = 'S'
 let g:VM_maps["Case Conversion Menu"] = 'C'
 
