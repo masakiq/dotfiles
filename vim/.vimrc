@@ -502,10 +502,6 @@ hi Search               ctermfg=255 ctermbg=63
 hi Todo                 ctermfg=255 ctermbg=34
 hi Visual               ctermfg=255 ctermbg=38
 
-hi LineNr               ctermfg=31
-hi CursorLineNr         ctermfg=87  cterm=none
-hi CursorLine           cterm=none ctermbg=238
-
 hi DiffAdd    cterm=none ctermfg=45  ctermbg=none
 hi DiffDelete cterm=none ctermfg=45  ctermbg=none
 hi DiffChange cterm=none ctermfg=45  ctermbg=none
@@ -522,7 +518,12 @@ hi SignColumn           ctermbg=0
 
 hi LineNr               ctermfg=31
 hi CursorLineNr         ctermfg=87  cterm=none
-hi CursorLine           cterm=none ctermbg=238
+hi CursorLine           ctermbg=238 cterm=none
+
+" タブ
+hi TabLineSel           ctermfg=87  cterm=none
+hi TabLine              ctermfg=31  ctermbg=none cterm=none
+hi TabLineFill          ctermfg=31  ctermbg=none cterm=none
 
 hi Comment  ctermfg=White
 
