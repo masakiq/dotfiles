@@ -774,6 +774,15 @@ let g:ruby_fold_lines_limit = 300
 
 " }}}
 
+"## neoclide/coc.nvim ---------------------- {{{
+
+command! FormatSQL :call FormatSQL()
+function! FormatSQL()
+  call CocAction('format')
+endfunction
+
+" }}}
+
 " ## fzf 設定 ---------------------- {{{
 
 command! -nargs=+ GotoOrOpen call s:GotoOrOpen(<f-args>)
