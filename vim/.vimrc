@@ -1650,26 +1650,6 @@ function! s:open_project(project)
   call s:setTitle()
 endfunction
 
-nnoremap <space>on :call SwitchNote()<cr>
-function! SwitchNote()
-  call fzf#run(fzf#wrap({
-        \ 'source': 'cat ~/.vim/functions/notes',
-        \ 'sink':  function('s:switch_note'),
-        \ 'options': [
-        \   '--prompt', 'Note> ',
-        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-        \ ],
-        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-        \ }))
-endfunction
-
-function! s:switch_note(note)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'cd $' . a:note
-endfunction
-
 function! s:open_file_in_another_project(lines)
   unlet g:rg_in_another_project_file
   if len(a:lines) < 2 | return | endif
@@ -2272,9 +2252,30 @@ endfunction
 " }}}
 
 " ## ノート ---------------------- {{{
+"
+command! -bang SwitchNote call SwitchNote()
+function! SwitchNote()
+  call fzf#run(fzf#wrap({
+        \ 'source': 'cat ~/.vim/functions/notes',
+        \ 'sink':  function('s:switch_note'),
+        \ 'options': [
+        \   '--prompt', 'Note> ',
+        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+        \ ],
+        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+        \ }))
+endfunction
 
-command! LocalNote call LocalNote()
-function! LocalNote()
+function! s:switch_note(note)
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteBuffers()
+  silent! execute 'cd $' . a:note
+endfunction
+
+nnoremap <space>on :call OpenLocalNote()<cr>
+command! OpenLocalNote call OpenLocalNote()
+function! OpenLocalNote()
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
           \ 'source': 'find $LOCAL_NOTE_ROOT -type file | sort',
@@ -2298,8 +2299,8 @@ function! LocalNote()
   endtry
 endfunction
 
-command! CloudNote call CloudNote()
-function! CloudNote()
+command! OpenCloudNote call OpenCloudNote()
+function! OpenCloudNote()
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
           \ 'source': 'find $CLOUD_NOTE_ROOT -type file | sort',

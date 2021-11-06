@@ -6,8 +6,8 @@ GitSelectBranch
 OpenAllFiles
 OpenAnotherProjectFile
 OpenHistoryFileInProject
-CloudNote
-LocalNote
+OpenCloudNote
+OpenLocalNote
 DeleteSessions
 SaveSession
 RGFromAllFilesNormal
@@ -29,6 +29,7 @@ OpenFilesQuickfixFromClipboard
 QuitAll
 QuitAllWithoutSaveSession
 LoadVIMRC
+SwitchNote
 SwitchVimPlugin
 OpenMarkdown
 OpenImplFile
