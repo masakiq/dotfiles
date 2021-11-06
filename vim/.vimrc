@@ -854,8 +854,6 @@ vnoremap <space>ob :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
 
 nnoremap <space>ow :Windows<CR>
 
-nnoremap <space>on :LocalNote<CR>
-
 " 単語補完
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
 " ファイル名補完
@@ -1688,6 +1686,26 @@ function! s:open_project(project)
   call DeleteBuffers()
   silent! execute 'cd ' . a:project
   call s:setTitle()
+endfunction
+
+nnoremap <space>on :call SwitchNote()<cr>
+function! SwitchNote()
+  call fzf#run(fzf#wrap({
+        \ 'source': 'cat ~/.vim/functions/notes',
+        \ 'sink':  function('s:switch_note'),
+        \ 'options': [
+        \   '--prompt', 'Note> ',
+        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+        \ ],
+        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+        \ }))
+endfunction
+
+function! s:switch_note(note)
+  call DeleteBufsWithoutExistingWindows()
+  call SaveSession()
+  call DeleteBuffers()
+  silent! execute 'cd $' . a:note
 endfunction
 
 function! s:open_file_in_another_project(lines)
