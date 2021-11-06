@@ -394,8 +394,6 @@ Plug 'kannokanno/previm',                   { 'commit': '0bc7677d492f75eff607574
 Plug 'easymotion/vim-easymotion',           { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
 Plug 'tpope/vim-fugitive',                  { 'commit': '2e66b3ad05d85f09d870f82671b8503cf8fa4297' }
 Plug 'ruanyl/vim-gh-line',                  { 'commit': '4ca32f57f5f95cd3436c3f9ee7657a9b9c0ca763' }
-Plug 'natebosch/vim-lsc',                   { 'commit': '4b0fc48037c628f14209f30616a19287d9e54823' }
-Plug 'natebosch/vim-lsc-dart',              { 'commit': 'e2dc59f71282735d2eb05d6487d2e1db09a9d77b' }
 Plug 'tpope/vim-markdown',                  { 'commit': 'ed76403b2e0622bc137df4576275a9fd3720b875' }
 Plug 'matze/vim-move',                      { 'commit': '6442747a3d3084e3c1214388192b8308fcf391b8' }
 Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b' }
@@ -867,42 +865,6 @@ inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'wid
 
 nmap <silent> gd <Plug>(coc-definition)
 
-" }}}
-
-" ## natebosch/vim-lsc, natebosch/vim-lsc-dart {{{
-" For Dart
-let g:lsc_auto_map = v:true
-let g:lsc_server_commands = {
-      \ 'dart': 'dart_language_server'
-      \ }
-let g:lsc_enable_autocomplete = v:true
-" Use all the defaults (recommended):
-
-" Apply the defaults with a few overrides:
-let g:lsc_auto_map = {'defaults': v:true, 'FindReferences': '<leader>r'}
-
-" Setting a value to a blank string leaves that command unmapped:
-" let g:lsc_auto_map = {'defaults': v:true, 'FindImplementations': ''}
-
-" ... or set only the commands you want mapped without defaults.
-nnoremap gh :LSClientGoToDefinition<cr>
-" nnoremap gd :vertical LSClientGoToDefinitionSplit<cr>
-" Complete default mappings are:
-" \ 'GoToDefinition': 'gd',
-" \ 'GoToDefinitionSplit': 'gd',
-let g:lsc_auto_map = {
-      \ 'FindReferences': 'gr',
-      \ 'NextReference': 'gn',
-      \ 'PreviousReference': '<C-p>',
-      \ 'FindImplementations': 'gI',
-      \ 'FindCodeActions': 'ga',
-      \ 'Rename': 'gR',
-      \ 'ShowHover': v:true,
-      \ 'DocumentSymbol': 'go',
-      \ 'WorkspaceSymbol': 'gS',
-      \ 'SignatureHelp': 'gm',
-      \ 'Completion': 'completefunc',
-      \}
 " }}}
 
 " }}}
