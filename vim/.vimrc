@@ -854,7 +854,7 @@ vnoremap <space>ob :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
 
 nnoremap <space>ow :Windows<CR>
 
-nnoremap <space>on :TemporaryNote<CR>
+nnoremap <space>on :LocalNote<CR>
 
 " 単語補完
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.3, 'height': 0.9, 'xoffset': 1 }})
@@ -1639,24 +1639,6 @@ function! s:list_tabs()
   return list
 endfunction
 
-command! DiffFileInDirectory call DiffFileInDirectory()
-function! DiffFileInDirectory()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
-          \ 'sink':  function('s:diff_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
 function! s:diff_files(line)
   execute 'vertical diffsplit ' . a:line
   set wrap
@@ -1706,41 +1688,6 @@ function! s:open_project(project)
   call DeleteBuffers()
   silent! execute 'cd ' . a:project
   call s:setTitle()
-endfunction
-
-command! -nargs=0 DiffAnotherProjectFile call s:ghq_list_diff_another_project_file()
-
-function! s:ghq_list_diff_another_project_file()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:diff_another_project_file'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:diff_another_project_file(line)
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . './.git/*" -type f'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'sink':   function('s:diff_files')})))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
 endfunction
 
 function! s:open_file_in_another_project(lines)
@@ -1869,16 +1816,35 @@ function! VimGrepBySelectedText()
   execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
 endfunction
 
-command! RGInTemporaryNote call RGInTemporaryNote()
-function! RGInTemporaryNote()
-  execute 'RGInTemporaryNoteAndOpen ' . input('RGInTemporaryNote/')
+command! RGInLocalNote call RGInLocalNote()
+function! RGInLocalNote()
+  execute 'RGInLocalNoteAndOpen ' . input('RGInLocalNote/')
   if has('nvim')
     call feedkeys('i', 'n')
   endif
 endfunction
 
-command! -nargs=* RGInTemporaryNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg '%s' ~/.vim/temporary_note --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
+command! -nargs=* RGInLocalNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg '%s' $LOCAL_NOTE_ROOT --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
+      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+      \ 'sink*':    function('s:open_files_via_rg'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
+
+command! RGInCloudNote call RGInCloudNote()
+function! RGInCloudNote()
+  execute 'RGInCloudNoteAndOpen ' . input('RGInCloudNote/')
+  if has('nvim')
+    call feedkeys('i', 'n')
+  endif
+endfunction
+
+command! -nargs=* RGInCloudNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg '%s' $CLOUD_NOTE_ROOT --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
       \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
@@ -2327,11 +2293,11 @@ endfunction
 
 " ## ノート ---------------------- {{{
 
-command! TemporaryNote call TemporaryNote()
-function! TemporaryNote()
+command! LocalNote call LocalNote()
+function! LocalNote()
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
+          \ 'source': 'find $LOCAL_NOTE_ROOT -type file | sort',
           \ 'options': [
           \   '--prompt', 'Note> ',
           \   '--multi',
@@ -2352,17 +2318,24 @@ function! TemporaryNote()
   endtry
 endfunction
 
-command! DiffTemporaryNote call DiffTemporaryNote()
-function! DiffTemporaryNote()
+command! CloudNote call CloudNote()
+function! CloudNote()
   try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'find ~/.vim/temporary_note -type file | sort',
-          \ 'sink':  function('s:diff_files'),
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+          \ 'source': 'find $CLOUD_NOTE_ROOT -type file | sort',
+          \ 'options': [
+          \   '--prompt', 'Note> ',
+          \   '--multi',
+          \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
+          \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+          \ ],
+          \ 'sink*':   function('s:open_files'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
+          \ })))
+    " if has('nvim')
+    "   call feedkeys('i', 'n')
+    " endif
   catch
     echohl WarningMsg
     echom v:exception

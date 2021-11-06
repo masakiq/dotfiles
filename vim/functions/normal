@@ -6,11 +6,14 @@ GitSelectBranch
 OpenAllFiles
 OpenAnotherProjectFile
 OpenHistoryFileInProject
+CloudNote
+LocalNote
 DeleteSessions
 SaveSession
 RGFromAllFilesNormal
 RGInAnotherProject
-RGInTemporaryNote
+RGInLocalNote
+RGInCloudNote
 CopyCurrentPath
 CopyCurrentPathWithLineNumber
 CopyAbsolutePath
@@ -40,10 +43,7 @@ PlugUpdate
 PlugClean
 PlugGetLatestCommits
 DiffFile
-DiffFileInDirectory
 DiffFileGitBranch
-DiffTemporaryNote
-DiffAnotherProjectFile
 Registers
 DisableLinterOnSave
 EnableLinterOnSave
