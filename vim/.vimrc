@@ -1158,7 +1158,7 @@ endfunction
 command! Reload call Reload()
 function! Reload()
   silent! exec 'checktime'
-  call s:setTitle()
+  "call s:setTitle()
 endfunction
 
 command! QuitAll call QuitAll()
@@ -1359,7 +1359,7 @@ function! s:load_session(...)
   call DeleteBuffers()
   silent! execute 'source ~/.vim/sessions/' . a:1
   silent! execute 'source $MYVIMRC'
-  call s:setTitle()
+  "call s:setTitle()
 endfunction
 
 command! -bang DeleteSessions call DeleteSessions()
