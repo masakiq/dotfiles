@@ -457,11 +457,11 @@ set autoread
 " カラースキーマ設定
 colorscheme dracula
 
-augroup BgHighlight
-  autocmd!
-  autocmd WinEnter * set cul
-  autocmd WinLeave * set nocul
-augroup END
+"augroup BgHighlight
+"  autocmd!
+"  autocmd WinEnter * set cul
+"  autocmd WinLeave * set nocul
+"augroup END
 
 " シンタックスエラーを下線にする
 hi clear SpellBad
@@ -473,14 +473,15 @@ hi SpellLocal cterm=underline
 " Background color
 hi Normal               ctermfg=none ctermbg=none
 " hide the `~` at the start of an empty line
-hi EndOfBuffer          ctermfg=232 ctermbg=none
+hi EndOfBuffer          ctermfg=238 ctermbg=238
+" hi NonText ctermbg=238
 
 " fold した行に `-` を付与しないための設定
 " https://vi.stackexchange.com/questions/14217/how-to-hide-horizontal-line-between-windows#answer-14222
 set fillchars=stl:_     " fill active window's statusline with _
 set fillchars+=stlnc:_  " also fill inactive windows
 " ウィンドウ間のバーをカスタマイズ
-hi VertSplit ctermfg=0 ctermbg=31
+hi VertSplit ctermfg=16 ctermbg=16
 set fillchars+=vert:│
 
 " 補完の色調整
@@ -516,7 +517,7 @@ hi CursorColumn         ctermbg=19
 hi lscCurrentParameter  ctermbg=19
 hi SignColumn           ctermbg=0
 
-hi LineNr               ctermfg=31
+hi LineNr               ctermfg=31  ctermbg=none
 hi CursorLineNr         ctermfg=87  cterm=none
 hi CursorLine           ctermbg=238 cterm=none
 
@@ -552,7 +553,9 @@ if exists('+colorcolumn')
     au!
     au WinEnter * call s:DimInactiveWindows()
     au WinEnter * set cursorline
+    "au WinEnter * highlight LineNr ctermfg=31  ctermbg=0
     au WinLeave * set nocursorline
+    "au WinLeave * highlight LineNr ctermfg=31  ctermbg=238
   augroup END
 endif
 
