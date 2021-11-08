@@ -473,7 +473,7 @@ hi SpellLocal cterm=underline
 " Background color
 hi Normal               ctermfg=none ctermbg=none
 " hide the `~` at the start of an empty line
-hi EndOfBuffer          ctermfg=238 ctermbg=238
+hi EndOfBuffer          ctermfg=16 ctermbg=none
 " hi NonText ctermbg=238
 
 " fold した行に `-` を付与しないための設定
