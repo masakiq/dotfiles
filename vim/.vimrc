@@ -774,8 +774,8 @@ let g:ruby_fold_lines_limit = 300
 
 "## neoclide/coc.nvim ---------------------- {{{
 
-command! FormatSQL :call FormatSQL()
-function! FormatSQL()
+command! Format :call Format()
+function! Format()
   call CocAction('format')
 endfunction
 
