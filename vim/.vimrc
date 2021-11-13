@@ -454,6 +454,9 @@ set cursorline
 " ファイルを読み込み
 set autoread
 
+" 最初は折りたたむ
+au BufRead * normal zR
+
 " カラースキーマ設定
 colorscheme dracula
 
