@@ -524,6 +524,9 @@ hi LineNr               ctermfg=31  ctermbg=none
 hi CursorLineNr         ctermfg=87  cterm=none
 hi CursorLine           ctermbg=238 cterm=none
 
+" For coc.nvim
+hi CocFloating          ctermfg=255 ctermbg=97
+
 " タブ
 hi TabLineSel           ctermfg=87  cterm=none
 hi TabLine              ctermfg=31  ctermbg=none cterm=none
