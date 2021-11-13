@@ -956,7 +956,7 @@ endfunction
 " ## ファイル操作 ---------------------- {{{
 
 command! -bang OpenFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source': 'find . -not -path "./.git/*" -not -path "./vendor/*" -type f | cut -d "/" -f2-',
+      \ 'source': 'rg --hidden --files | grep -v .git',
       \ 'sink*': function('s:open_files'),
       \ 'options': [
       \   '--prompt', 'Files> ',
@@ -972,7 +972,7 @@ command! -bang OpenAllFiles call OpenAllFiles()
 function! OpenAllFiles()
   try
     call fzf#run(fzf#wrap({
-          \ 'source': 'find . -not -path "./.git/*" -type f | cut -d "/" -f2-',
+          \ 'source': 'rg --hidden --files --no-ignore | grep -v .git',
           \ 'sink*': function('s:open_files'),
           \ 'options': [
           \   '--prompt', 'AllFiles> ',
