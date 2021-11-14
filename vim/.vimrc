@@ -666,7 +666,7 @@ let g:ale_fixers = {
       \ 'dart': ['dartfmt'],
       \ 'ruby': ['rubocop'],
       \}
-let g:ale_fix_on_save = 1
+let g:ale_fix_on_save = 0
 
 command! -nargs=0 DisableLinterOnSave call DisableLinterOnSave()
 function! DisableLinterOnSave()
