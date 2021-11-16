@@ -396,6 +396,7 @@ Plug 'previm/previm',                       { 'commit': '0bc7677d492f75eff607574
 Plug 'easymotion/vim-easymotion',           { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
 Plug 'tpope/vim-fugitive',                  { 'commit': '2e66b3ad05d85f09d870f82671b8503cf8fa4297' }
 Plug 'ruanyl/vim-gh-line',                  { 'commit': '4ca32f57f5f95cd3436c3f9ee7657a9b9c0ca763' }
+Plug 'maxmellon/vim-jsx-pretty',            { 'commit': '6989f1663cc03d7da72b5ef1c03f87e6ddb70b41' }
 Plug 'tpope/vim-markdown',                  { 'commit': 'ed76403b2e0622bc137df4576275a9fd3720b875' }
 Plug 'matze/vim-move',                      { 'commit': '6442747a3d3084e3c1214388192b8308fcf391b8' }
 Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b' }
@@ -795,6 +796,13 @@ command! Format :call Format()
 function! Format()
   call CocAction('format')
 endfunction
+
+" }}}
+
+"## maxmellon/vim-jsx-pretty ---------------------- {{{
+
+let g:html_indent_script1 = "inc"
+let g:html_indent_style1 = "inc"
 
 " }}}
 
