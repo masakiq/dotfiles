@@ -523,13 +523,13 @@ hi SignColumn           ctermbg=0
 
 hi LineNr               ctermfg=31  ctermbg=none
 hi CursorLineNr         ctermfg=87  cterm=none
-hi CursorLine           ctermbg=238 cterm=none
+hi CursorLine           ctermbg=237 cterm=none
 
 " For coc.nvim
-hi CocFloating                      ctermfg=255   ctermbg=235
-hi FgCocInfoFloatBgCocFloating      ctermfg=255   ctermbg=18
-hi FgCocWarningFloatBgCocFloating   ctermfg=255   ctermbg=172
-hi FgCocErrorFloatBgCocFloating     ctermfg=255   ctermbg=160
+hi CocFloating                      ctermfg=255   ctermbg=239
+hi FgCocInfoFloatBgCocFloating      ctermfg=123   ctermbg=239
+hi FgCocWarningFloatBgCocFloating   ctermfg=230   ctermbg=239
+hi FgCocErrorFloatBgCocFloating     ctermfg=219   ctermbg=239
 
 " タブ
 hi TabLineSel           ctermfg=87  cterm=none
@@ -539,7 +539,7 @@ hi TabLineFill          ctermfg=31  ctermbg=none cterm=none
 hi Comment  ctermfg=White
 
 " 非アクティブのときに白くする
-hi ColorColumn ctermbg=238
+hi ColorColumn ctermbg=237
 if exists('+colorcolumn')
   function! s:DimInactiveWindows()
     for i in range(1, tabpagewinnr(tabpagenr(), '$'))
