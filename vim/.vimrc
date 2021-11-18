@@ -970,7 +970,7 @@ endfunction
 " ## ファイル操作 ---------------------- {{{
 
 command! -bang OpenFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source': 'rg --hidden --files | grep -v .git',
+      \ 'source': 'rg --hidden --files --sortr modified | grep -v .git',
       \ 'sink*': function('s:open_files'),
       \ 'options': [
       \   '--prompt', 'Files> ',
