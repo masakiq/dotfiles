@@ -181,7 +181,7 @@ vnoremap E $h
 " ビジュアルモードでライン選択(ただし行末の改行は除く)
 vnoremap V 0<esc>v$h
 
-vnoremap a <esc>G$vgg
+vnoremap a <esc>G$vgg0
 
 nnoremap V 0v$h
 
