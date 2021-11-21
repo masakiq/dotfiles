@@ -42,6 +42,7 @@ SwapWindow
 PlugInstall
 PlugUpdate
 PlugClean
+PlugStatus
 PlugGetLatestCommits
 DiffFile
 DiffFileGitBranch
