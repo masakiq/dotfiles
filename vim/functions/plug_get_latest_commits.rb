@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 def execute_in_vim_dir(&block)
   vim_plugs = `ls ~/.vim/plugged`.split("\n")
@@ -18,8 +19,17 @@ def commit
 end
 
 execute_in_vim_dir do
-  if repo_name == 'dracula/vim'
+  case repo_name
+  when 'dracula/vim'
     puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'as': 'dracula' }"
+  when 'masakiq/vim-ruby-fold'
+    puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'for': 'ruby' }"
+  when 'dart-lang/dart-vim-plugin'
+    puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'for': 'dart' }"
+  when 'maxmellon/vim-jsx-pretty'
+    puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'for': ['javascript', 'typescript'] }"
+  when 'tyru/open-browser.vim', 'previm/previm', 'rcmdnk/vim-markdown'
+    puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'for': 'markdown' }"
   else
     puts "Plug '#{repo_name}', { 'commit': '#{commit}' }"
   end
