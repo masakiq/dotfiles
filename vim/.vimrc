@@ -402,7 +402,6 @@ Plug 'matze/vim-move',                      { 'commit': '6442747a3d3084e3c121438
 Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b' }
 Plug 'tpope/vim-surround',                  { 'commit': 'aeb933272e72617f7c4d35e1f003be16836b948d' }
 Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
-Plug 'voldikss/vim-translator',             { 'commit': '9e3080193409c385d29adb156e9ab15af125ede0' }
 Plug 'mg979/vim-visual-multi',              { 'commit': 'e20908963d9b0114e5da1eacbc516e4b09cf5803' }
 Plug 'liuchengxu/vim-which-key',            { 'commit': '2c915b6de918c073fbd83809e51343651f00f9a8' }
 call plug#end()
@@ -686,35 +685,6 @@ endfunction
 " ## skywind3000/asyncrun.vim ---------------------- {{{
 
 noremap <space>a :call asyncrun#quickfix_toggle(20)<cr>
-
-" }}}
-
-" ## voldikss/vim-translator ---------------------- {{{
-
-let g:translator_window_type = 'normal'
-let g:translator_default_engines = ['google']
-let g:translator_window_max_width = 0.4
-let g:translator_window_max_height = 0.9
-
-command! -nargs=* TransEnToJaPopup call TransEnToJaPopup()
-function! TransEnToJaPopup() range
-  execute "'<,'>TranslateW --source_lang=en --target_lang=ja"
-endfunction
-
-command! -nargs=* TransJaToEnPopup call TransJaToEnPopup()
-function! TransJaToEnPopup() range
-  execute "'<,'>TranslateW --source_lang=ja --target_lang=en"
-endfunction
-
-command! -nargs=* TransEnToJaReplace call TransEnToJaReplace()
-function! TransEnToJaReplace() range
-  execute "'<,'>TranslateR --source_lang=en --target_lang=ja"
-endfunction
-
-command! -nargs=* TransJaToEnReplace call TransJaToEnReplace()
-function! TransJaToEnReplace() range
-  execute "'<,'>TranslateR --source_lang=ja --target_lang=en"
-endfunction
 
 " }}}
 
