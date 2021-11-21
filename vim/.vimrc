@@ -382,7 +382,6 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
 Plug 'dense-analysis/ale',                  { 'commit': '16898417e68ffb6034b2a6de0c1b25502bd846d8' }
 Plug 'skywind3000/asyncrun.vim',            { 'commit': '168d6b4be9d003ed14ef5d0e1668f01145327e68' }
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
-Plug 'chriskempson/base16-vim',             { 'commit': '6191622d5806d4448fa2285047936bdcee57a098' }
 Plug 'neoclide/coc.nvim',                   { 'commit': '287c743c9f227fdf0e1db452bbb8ae3c5caffc36' }
 Plug 'dart-lang/dart-vim-plugin',           { 'commit': '08764627ce85fc0c0bf9d8fd11b3cf5fc05d58ba' }
 Plug 'dracula/vim',                         { 'commit': 'e5f09746562ef0226d3484a01609ceca41700a3d', 'as': 'dracula' }
