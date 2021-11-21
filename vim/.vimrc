@@ -392,6 +392,7 @@ Plug 'haya14busa/incsearch-fuzzy.vim',      { 'commit': 'b08fa8fbfd633e2f756fde4
 Plug 'haya14busa/incsearch.vim',            { 'commit': '25e2547fb0566460f5999024f7a0de7b3775201f' }
 Plug 'tyru/open-browser.vim',               { 'commit': '80ec3f2bb0a86ac13c998e2f2c86e16e6d2f20bb', 'for': 'markdown' }
 Plug 'previm/previm',                       { 'commit': '0bc7677d492f75eff60757496c899b00e8a3855f', 'for': 'markdown' }
+Plug 'tpope/vim-dispatch',                  { 'commit': 'a99a671aff87f77da9ac3461e589393b5ecfcd88' }
 Plug 'easymotion/vim-easymotion',           { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
 Plug 'tpope/vim-fugitive',                  { 'commit': '2e66b3ad05d85f09d870f82671b8503cf8fa4297' }
 Plug 'ruanyl/vim-gh-line',                  { 'commit': '4ca32f57f5f95cd3436c3f9ee7657a9b9c0ca763' }
@@ -401,6 +402,7 @@ Plug 'matze/vim-move',                      { 'commit': '6442747a3d3084e3c121438
 Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b', 'for': 'ruby' }
 Plug 'tpope/vim-surround',                  { 'commit': 'aeb933272e72617f7c4d35e1f003be16836b948d' }
 Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
+Plug 'vim-test/vim-test',                   { 'commit': '8d942aa3b0eea1d53cccd1ee87a241b651f485ee' }
 Plug 'mg979/vim-visual-multi',              { 'commit': 'e20908963d9b0114e5da1eacbc516e4b09cf5803' }
 Plug 'liuchengxu/vim-which-key',            { 'commit': '2c915b6de918c073fbd83809e51343651f00f9a8' }
 call plug#end()
@@ -772,6 +774,42 @@ endfunction
 
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
+
+" }}}
+
+"## tpope/vim-dispatch & vim-test/vim-test for test ---------------------- {{{
+
+function! DockerTransformer(cmd) abort
+  let services_name = system("docker-compose ps --services | grep spring")
+  if matchstr(services_name, "spring") == "spring"
+    return 'docker-compose exec ' . substitute(services_name, "\n", "", "") . ' spring ' . a:cmd
+  elseif matchstr(services_name, "api") == "api"
+    return 'docker-compose exec ' . substitute(services_name, "\n", "", "") . ' ' . a:cmd
+  elseif matchstr(services_name, "web") == "web"
+    return 'docker-compose exec ' . substitute(services_name, "\n", "", "") . ' ' . a:cmd
+  else
+    return a:cmd
+  endif
+endfunction
+
+let g:test#custom_transformations = {'docker': function('DockerTransformer')}
+let g:test#transformation = 'docker'
+let g:test#strategy = 'dispatch'
+let test#ruby#rspec#executable = 'rspec'
+
+command! -nargs=0 TestFileWithTerminal call TestFileWithTerminal()
+function! TestFileWithTerminal()
+  let g:test#strategy = 'neovim'
+  exec 'TestFile'
+  let g:test#strategy = 'dispatch'
+endfun
+
+command! -nargs=0 TestNearestWithTerminal call TestNearestWithTerminal()
+function! TestNearestWithTerminal()
+  let g:test#strategy = 'neovim'
+  exec 'TestNearest'
+  let g:test#strategy = 'dispatch'
+endfun
 
 " }}}
 

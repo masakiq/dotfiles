@@ -62,3 +62,7 @@ CopyStatusMessage
 StartCopyStatusMessages
 FinishCopyStatusMessages
 Format
+TestFile
+TestNearest
+TestFileWithTerminal
+TestNearestWithTerminal
