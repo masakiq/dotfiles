@@ -758,18 +758,6 @@ let g:ruby_fold_lines_limit = 300
 
 " }}}
 
-"## neoclide/coc.nvim ---------------------- {{{
-
-" https://github.com/neoclide/coc-tsserver/issues/282#issuecomment-819364074
-nmap <space>p <Plug>(coc-codeaction-cursor)
-
-command! Format :call Format()
-function! Format()
-  call CocAction('format')
-endfunction
-
-" }}}
-
 "## maxmellon/vim-jsx-pretty ---------------------- {{{
 
 let g:html_indent_script1 = "inc"
@@ -896,6 +884,18 @@ inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'wid
 " ## neoclide/coc.nvim {{{
 
 nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gr <Plug>(coc-references)
+
+" https://github.com/neoclide/coc-tsserver/issues/282#issuecomment-819364074
+nmap <space>p <Plug>(coc-codeaction-cursor)
+
+nmap <space>r <Plug>(coc-rename)
+
+nmap <space>f :call Format()<cr>
+command! Format :call Format()
+function! Format()
+  call CocAction('format')
+endfunction
 
 " }}}
 
