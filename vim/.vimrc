@@ -2154,6 +2154,15 @@ endfunction
 
 " ## Git ---------------------- {{{
 
+command! LazyGit :call LazyGit()
+function! LazyGit()
+  if has('nvim')
+    exec 'tabnew | term lazygit'
+  else
+    exec 'tab term ++close lazygit'
+  endif
+endfunction
+
 command! OpenGitHubRepo :call OpenGitHubRepo()
 function! OpenGitHubRepo()
   let command = '~/.vim/functions/open_github.rb'

@@ -20,6 +20,7 @@ CopyAbsolutePath
 CopyCurrentFile
 CopyAllTabPath
 CopyAllTabAbsolutePath
+LazyGit
 OpenGitHubRepo
 OpenGitHubFile
 OpenGitHubBlame
