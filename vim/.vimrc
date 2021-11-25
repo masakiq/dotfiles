@@ -540,6 +540,7 @@ hi TabLineFill          ctermfg=31  ctermbg=none cterm=none
 
 " txt ファイルの highlight
 autocmd BufRead,BufNewFile *.txt set syntax=conf
+
 hi Comment  ctermfg=White
 
 " 非アクティブのときに白くする
@@ -791,21 +792,21 @@ endfunction
 
 let g:test#custom_transformations = {'docker': function('DockerTransformer')}
 let g:test#transformation = 'docker'
-let g:test#strategy = 'dispatch'
+let g:test#strategy = 'neovim'
 let test#ruby#rspec#executable = 'rspec'
 
-command! -nargs=0 TestFileWithTerminal call TestFileWithTerminal()
-function! TestFileWithTerminal()
-  let g:test#strategy = 'neovim'
-  exec 'TestFile'
+command! -nargs=0 TestFileWithQuickfix call TestFileWithQuickfix()
+function! TestFileWithQuickfix()
   let g:test#strategy = 'dispatch'
+  exec 'TestFile'
+  let g:test#strategy = 'neovim'
 endfun
 
-command! -nargs=0 TestNearestWithTerminal call TestNearestWithTerminal()
-function! TestNearestWithTerminal()
-  let g:test#strategy = 'neovim'
-  exec 'TestNearest'
+command! -nargs=0 TestNearestWithQuickfix call TestNearestWithQuickfix()
+function! TestNearestWithQuickfix()
   let g:test#strategy = 'dispatch'
+  exec 'TestNearest'
+  let g:test#strategy = 'neovim'
 endfun
 
 " }}}
