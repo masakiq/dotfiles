@@ -538,6 +538,8 @@ hi TabLineSel           ctermfg=87  cterm=none
 hi TabLine              ctermfg=31  ctermbg=none cterm=none
 hi TabLineFill          ctermfg=31  ctermbg=none cterm=none
 
+" txt ファイルの highlight
+autocmd BufRead,BufNewFile *.txt set syntax=conf
 hi Comment  ctermfg=White
 
 " 非アクティブのときに白くする
