@@ -398,6 +398,7 @@ Plug 'easymotion/vim-easymotion',           { 'commit': 'd75d9591e415652b25d9e0a
 Plug 'tpope/vim-fugitive',                  { 'commit': '2e66b3ad05d85f09d870f82671b8503cf8fa4297' }
 Plug 'ruanyl/vim-gh-line',                  { 'commit': '4ca32f57f5f95cd3436c3f9ee7657a9b9c0ca763' }
 Plug 'maxmellon/vim-jsx-pretty',            { 'commit': '6989f1663cc03d7da72b5ef1c03f87e6ddb70b41', 'for': ['javascript', 'typescript'] }
+Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33b14a84336dee2a78f' }
 Plug 'rcmdnk/vim-markdown',                 { 'commit': 'd58fef2c76ec3d3ef6b6be90c3f53d1657bb4512', 'for': 'markdown' }
 Plug 'matze/vim-move',                      { 'commit': '6442747a3d3084e3c1214388192b8308fcf391b8' }
 Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b', 'for': 'ruby' }
