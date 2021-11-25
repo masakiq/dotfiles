@@ -625,6 +625,11 @@ nmap f <Plug>(easymotion-overwin-f2)
 " nmap f <Plug>(easymotion-sn)
 let g:EasyMotion_smartcase = 1
 
+" Migemo (日本語用)
+" https://github.com/easymotion/vim-easymotion#migemo-feature-for-japanese-user
+" <Leader><Leader>sa で「あ」を検索する
+let g:EasyMotion_use_migemo = 1
+
 function! s:config_easyfuzzymotion(...) abort
   return extend(copy({
         \   'converters': [incsearch#config#fuzzyword#converter()],
