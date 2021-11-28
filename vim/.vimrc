@@ -379,7 +379,7 @@ call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
 " -------------------------------------------
-Plug 'dense-analysis/ale',                  { 'commit': '16898417e68ffb6034b2a6de0c1b25502bd846d8' }
+" Plug 'dense-analysis/ale',                  { 'commit': '16898417e68ffb6034b2a6de0c1b25502bd846d8' }
 Plug 'skywind3000/asyncrun.vim',            { 'commit': '168d6b4be9d003ed14ef5d0e1668f01145327e68' }
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
 Plug 'neoclide/coc.nvim',                   { 'commit': '287c743c9f227fdf0e1db452bbb8ae3c5caffc36' }
@@ -668,28 +668,28 @@ let g:dart_style_guide = 2
 
 " ## dense-analysis/ale ---------------------- {{{
 
-let g:ale_lint_on_text_changed = 0
-let g:ale_linters = {
-      \ 'dart': ['dartfmt'],
-      \ 'ruby': ['rubocop'],
-      \ }
-let g:ale_fixers = {
-      \ 'dart': ['dartfmt'],
-      \ 'ruby': ['rubocop'],
-      \}
-let g:ale_fix_on_save = 0
-
-command! -nargs=0 DisableLinterOnSave call DisableLinterOnSave()
-function! DisableLinterOnSave()
-  let g:ale_fix_on_save = 0
-  echo 'disable linter'
-endfunction
-
-command! -nargs=0 EnableLinterOnSave call EnableLinterOnSave()
-function! EnableLinterOnSave()
-  let g:ale_fix_on_save = 1
-  echo 'enable linter'
-endfunction
+" let g:ale_lint_on_text_changed = 0
+" let g:ale_linters = {
+"       \ 'dart': ['dartfmt'],
+"       \ 'ruby': ['rubocop'],
+"       \ }
+" let g:ale_fixers = {
+"       \ 'dart': ['dartfmt'],
+"       \ 'ruby': ['rubocop'],
+"       \}
+" let g:ale_fix_on_save = 0
+"
+" command! -nargs=0 DisableLinterOnSave call DisableLinterOnSave()
+" function! DisableLinterOnSave()
+"   let g:ale_fix_on_save = 0
+"   echo 'disable linter'
+" endfunction
+"
+" command! -nargs=0 EnableLinterOnSave call EnableLinterOnSave()
+" function! EnableLinterOnSave()
+"   let g:ale_fix_on_save = 1
+"   echo 'enable linter'
+" endfunction
 
 " }}}
 
