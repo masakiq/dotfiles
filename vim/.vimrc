@@ -219,6 +219,8 @@ vnoremap fy :call ChangeToFileFormatAndCopy()<cr>w
 " message をコピーする
 nnoremap <space>m :let @+ =execute('1messages')<CR>:echo 'last messages copied!'<CR>
 
+nnoremap <space>c :CopyCurrentPath<cr>
+
 " }}}
 
 " ### 移動系 ---------------------- {{{
@@ -581,9 +583,12 @@ endif
 if has('gui_running')
 else
   let g:which_key_map =  {}
-  call which_key#register('<Space>', "g:which_key_map")
-  nnoremap <silent> <space> :WhichKey '<Space>'<CR>
-  vnoremap <silent> <space> :<c-u>WhichKeyVisual '<Space>'<CR>
+  call which_key#register('<space>', "g:which_key_map")
+  call which_key#register('<leader>', "g:which_key_map")
+  nnoremap <silent> <space> :WhichKey '<space>'<CR>
+  nnoremap <silent> <leader> :WhichKey '<leader>'<CR>
+  vnoremap <silent> <space> :<c-u>WhichKeyVisual '<space>'<CR>
+  vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<leader>'<CR>
   set timeoutlen=200
   let g:which_key_use_floating_win = 1
   " let g:which_key_vertical = 1
@@ -777,6 +782,7 @@ let g:html_indent_style1 = "inc"
 
 "## tpope/vim-dispatch & vim-test/vim-test for test ---------------------- {{{
 
+nnoremap <leader>t :TestFile<cr>
 function! DockerTransformer(cmd) abort
   let services_name = system("docker-compose ps --services | grep spring")
   if matchstr(services_name, "spring") == "spring"
@@ -813,7 +819,8 @@ endfun
 
 "## tpope/vim-commentary ---------------------- {{{
 
-noremap <space>c :Commentary<cr>
+" noremap <space>c :Commentary<cr>
+noremap <leader>c :Commentary<cr>
 
 " }}}
 
