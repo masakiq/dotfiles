@@ -379,7 +379,6 @@ call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
 " -------------------------------------------
-" Plug 'dense-analysis/ale',                  { 'commit': '16898417e68ffb6034b2a6de0c1b25502bd846d8' }
 Plug 'skywind3000/asyncrun.vim',            { 'commit': '168d6b4be9d003ed14ef5d0e1668f01145327e68' }
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
 Plug 'neoclide/coc.nvim',                   { 'commit': '287c743c9f227fdf0e1db452bbb8ae3c5caffc36' }
