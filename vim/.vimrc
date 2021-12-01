@@ -957,9 +957,6 @@ function! SwitchVimPlugin()
           \ 'sink':  function('s:switch_vim_plugin'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
           \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
   catch
     echohl WarningMsg
     echom v:exception
