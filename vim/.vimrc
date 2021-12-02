@@ -239,6 +239,9 @@ nnoremap $ g$
 nnoremap <C-e> $a
 nnoremap <C-a> ^i
 
+nnoremap <C-u> 5k
+nnoremap <C-d> 5j
+
 " }}}
 
 " ### 変換系 ---------------------- {{{
