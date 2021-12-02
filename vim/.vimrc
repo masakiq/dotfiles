@@ -489,8 +489,8 @@ hi EndOfBuffer          ctermfg=16 ctermbg=none
 
 " fold した行に `-` を付与しないための設定
 " https://vi.stackexchange.com/questions/14217/how-to-hide-horizontal-line-between-windows#answer-14222
-set fillchars=stl:_     " fill active window's statusline with _
-set fillchars+=stlnc:_  " also fill inactive windows
+" set fillchars=stl:_     " fill active window's statusline with _
+" set fillchars+=stlnc:_  " also fill inactive windows
 " ウィンドウ間のバーをカスタマイズ
 hi VertSplit ctermfg=16 ctermbg=16
 set fillchars+=vert:│
@@ -502,9 +502,10 @@ hi PmenuSbar ctermbg=238 ctermfg=238
 hi PmenuThumb ctermbg=248 ctermfg=248
 
 hi Folded               ctermfg=44  ctermbg=241
-hi StatusLine           ctermfg=238 ctermbg=87
-hi StatusLineNC         ctermfg=238 ctermbg=87
 hi WildMenu             ctermfg=238 ctermbg=87
+
+hi StatusLine           ctermfg=87  ctermbg=none
+hi StatusLineNC         ctermfg=31  ctermbg=none
 
 hi SpellCap             ctermfg=87  ctermbg=31
 hi SpellRare            ctermfg=87  ctermbg=63
