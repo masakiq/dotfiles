@@ -397,7 +397,6 @@ Plug 'haya14busa/incsearch.vim',            { 'commit': '25e2547fb0566460f599902
 Plug 'tyru/open-browser.vim',               { 'commit': '80ec3f2bb0a86ac13c998e2f2c86e16e6d2f20bb', 'for': 'markdown' }
 Plug 'previm/previm',                       { 'commit': '0bc7677d492f75eff60757496c899b00e8a3855f', 'for': 'markdown' }
 Plug 'tpope/vim-commentary',                { 'commit': '627308e30639be3e2d5402808ce18690557e8292' }
-Plug 'tpope/vim-dispatch',                  { 'commit': 'a99a671aff87f77da9ac3461e589393b5ecfcd88' }
 Plug 'easymotion/vim-easymotion',           { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
 Plug 'tpope/vim-fugitive',                  { 'commit': '2e66b3ad05d85f09d870f82671b8503cf8fa4297' }
 Plug 'ruanyl/vim-gh-line',                  { 'commit': '4ca32f57f5f95cd3436c3f9ee7657a9b9c0ca763' }
@@ -784,7 +783,7 @@ let g:html_indent_style1 = "inc"
 
 " }}}
 
-"## tpope/vim-dispatch & vim-test/vim-test for test ---------------------- {{{
+"## vim-test/vim-test ---------------------- {{{
 
 nnoremap <leader>t :TestFile<cr>
 function! DockerTransformer(cmd) abort
@@ -804,20 +803,6 @@ let g:test#custom_transformations = {'docker': function('DockerTransformer')}
 let g:test#transformation = 'docker'
 let g:test#strategy = 'neovim'
 let test#ruby#rspec#executable = 'rspec'
-
-command! -nargs=0 TestFileWithQuickfix call TestFileWithQuickfix()
-function! TestFileWithQuickfix()
-  let g:test#strategy = 'dispatch'
-  exec 'TestFile'
-  let g:test#strategy = 'neovim'
-endfun
-
-command! -nargs=0 TestNearestWithQuickfix call TestNearestWithQuickfix()
-function! TestNearestWithQuickfix()
-  let g:test#strategy = 'dispatch'
-  exec 'TestNearest'
-  let g:test#strategy = 'neovim'
-endfun
 
 " }}}
 
