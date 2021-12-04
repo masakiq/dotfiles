@@ -1672,15 +1672,16 @@ endfunction
 
 nnoremap <space>op :call SwitchProject()<cr>
 function! SwitchProject()
-  call fzf#run(fzf#wrap({
+  call fzf#run(fzf#vim#with_preview(fzf#wrap({
         \ 'source': 'ghq list --full-path',
         \ 'sink':  function('s:open_project'),
         \ 'options': [
         \   '--prompt', 'Project> ',
         \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \ ],
+        \ 'placeholder': '{}/README.md',
         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-        \ }))
+        \ })))
 endfunction
 
 function! s:open_project(project)
