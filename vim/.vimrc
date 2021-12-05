@@ -785,7 +785,11 @@ let g:html_indent_style1 = "inc"
 
 "## vim-test/vim-test ---------------------- {{{
 
-nnoremap <leader>t :TestFile<cr>
+nnoremap <leader>t :RunTest<cr>
+
+command! -nargs=0 RunTest :TestFile<cr>
+command! -nargs=0 RunTestNearest :TestNearest<cr>
+
 function! DockerTransformer(cmd) abort
   let services_name = system("docker-compose ps --services | grep spring")
   if matchstr(services_name, "spring") == "spring"
@@ -802,6 +806,7 @@ endfunction
 let g:test#custom_transformations = {'docker': function('DockerTransformer')}
 let g:test#transformation = 'docker'
 let g:test#strategy = 'neovim'
+let g:test#neovim#start_normal = 1
 let test#ruby#rspec#executable = 'rspec'
 
 " }}}
@@ -2373,6 +2378,66 @@ function! OpenCloudNote()
     echom v:exception
     echohl None
   endtry
+endfunction
+
+" }}}
+
+" ## 実行 ---------------------- {{{
+
+nnoremap <leader>r :RunExec<cr>
+command! -nargs=0 RunExec call RunExec()
+function! RunExec() abort
+  let currentfile=expand('%')
+  let type=&filetype
+  let types = [ 'ruby', 'javascript' ]
+  if (index(types, type) < 0)
+    echohl WarningMsg | echon 'Can not run!! Available filetype are only ' | echohl ErrorMsg | echon join(types, ',') | echohl None
+    return
+  endif
+  execute 'botright new'
+  let cmd=''
+  if type == 'ruby'
+    if IsRailsProject() == 1
+      let cmd=cmd . 'rails runner ' . currentfile
+    else
+      let cmd=cmd . 'ruby ' . currentfile
+    endif
+  elseif type == 'javascript'
+    let cmd=cmd . 'node ' . currentfile
+  endif
+  let cmd=DockerTransformer(cmd)
+  call termopen(cmd)
+  startinsert
+endfunction
+
+function! IsRailsProject() abort
+  let is_rails = system("grep 'rails' 'Gemfile' >/dev/null && echo $status")
+  let is_rails = substitute(is_rails, "\n", "", "")
+  if is_rails == '0'
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+nnoremap <leader>d :RunDebug<cr>
+command! -nargs=0 RunDebug call RunDebug()
+function! RunDebug() abort
+  let currentfile=expand('%')
+  let type=&filetype
+  let types = [ 'javascript' ]
+  if (index(types, type) < 0)
+    echohl WarningMsg | echon 'Can not run with debug mode!! Available filetype are only ' | echohl ErrorMsg | echon join(types, ',') | echohl None
+    return
+  endif
+  execute 'botright new'
+  let cmd=''
+  if type == 'javascript'
+    let cmd=cmd . 'node inspect ' . currentfile
+  endif
+  let cmd=DockerTransformer(cmd)
+  call termopen(cmd)
+  startinsert
 endfunction
 
 " }}}

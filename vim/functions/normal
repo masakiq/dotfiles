@@ -63,5 +63,7 @@ CopyStatusMessage
 StartCopyStatusMessages
 FinishCopyStatusMessages
 Format
-TestFile
-TestNearest
+RunExec
+RunDebug
+RunTest
+RunTestNearest
