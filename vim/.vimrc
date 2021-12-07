@@ -503,8 +503,8 @@ hi PmenuThumb ctermbg=248 ctermfg=248
 hi Folded               ctermfg=44  ctermbg=241
 hi WildMenu             ctermfg=238 ctermbg=87
 
-hi StatusLine           ctermfg=87  ctermbg=none
-hi StatusLineNC         ctermfg=31  ctermbg=none
+hi StatusLine           ctermfg=87  ctermbg=238
+hi StatusLineNC         ctermfg=31  ctermbg=238
 
 hi SpellCap             ctermfg=87  ctermbg=31
 hi SpellRare            ctermfg=87  ctermbg=63
