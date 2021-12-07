@@ -2389,7 +2389,7 @@ command! -nargs=0 RunExec call RunExec()
 function! RunExec() abort
   let currentfile=expand('%')
   let type=&filetype
-  let types = [ 'ruby', 'javascript' ]
+  let types = [ 'ruby', 'javascript', 'typescript' ]
   if (index(types, type) < 0)
     echohl WarningMsg | echon 'Can not run!! Available filetype are only ' | echohl ErrorMsg | echon join(types, ',') | echohl None
     return
@@ -2404,6 +2404,8 @@ function! RunExec() abort
     endif
   elseif type == 'javascript'
     let cmd=cmd . 'node ' . currentfile
+  elseif type == 'typescript'
+    let cmd=cmd . 'npx ts-node ' . currentfile
   endif
   let cmd=DockerTransformer(cmd)
   call termopen(cmd)
