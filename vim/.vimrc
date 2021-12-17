@@ -900,7 +900,7 @@ inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'wid
 
 " ## neoclide/coc.nvim {{{
 
-nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
 
 " https://github.com/neoclide/coc-tsserver/issues/282#issuecomment-819364074
@@ -913,6 +913,27 @@ command! Format :call Format()
 function! Format()
   call CocAction('format')
 endfunction
+
+" 定義ジャンプするときにウィンドウの開き方を選択する
+" https://zenn.dev/skanehira/articles/2021-12-12-vim-coc-nvim-jump-split
+function! ChoseAction(actions) abort
+  echo join(map(copy(a:actions), { _, v -> v.text }), ", ") .. ": "
+  let result = getcharstr()
+  let result = filter(a:actions, { _, v -> v.text =~# printf(".*\(%s\).*", result)})
+  return len(result) ? result[0].value : ""
+endfunction
+
+        " \ {"text": "(s)plit", "value": "split"},
+function! CocJumpAction() abort
+  let actions = [
+        \ {"text": "(e)dit", "value": "edit"},
+        \ {"text": "(v)slit", "value": "vsplit"},
+        \ {"text": "(t)ab", "value": "tabedit"},
+        \ ]
+  return ChoseAction(actions)
+endfunction
+
+nnoremap <silent> gd :<C-u>call CocActionAsync('jumpDefinition', CocJumpAction())<CR>
 
 " }}}
 
