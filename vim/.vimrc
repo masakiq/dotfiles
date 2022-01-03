@@ -137,8 +137,14 @@ let mapleader = ','
 set timeout timeoutlen=800 ttimeoutlen=100
 
 inoremap jk <esc>
+inoremap <silent> ｊｋ <esc>
 inoremap <C-c> <esc>
 vnoremap <C-c> <esc>
+
+nnoremap あ a
+nnoremap い i
+nnoremap お o
+
 " 以下はクリップボードが正常に働かなくなる
 " :inoremap <esc> <nop>
 " :inoremap <c-[> <nop>
@@ -184,6 +190,12 @@ vnoremap V 0<esc>v$h
 vnoremap a <esc>G$vgg0
 
 nnoremap V 0v$h
+
+" インサートモードを抜けるときに IME を "英数" に切り替える
+" https://mitsuse.jp/2017/01/02/disable-input-source-on-insert-leave-in-vim/
+if executable('swim')
+  autocmd InsertLeave * :call system('swim use com.apple.keylayout.ABC')
+endif
 
 " }}}
 
