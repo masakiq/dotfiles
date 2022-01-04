@@ -259,22 +259,22 @@ nnoremap <C-d> 5j
 " ### 変換系 ---------------------- {{{
 
 " 選択した両側を指定した記号で囲む　
-vnoremap ' c'<C-r>"'<Esc>b
-vnoremap " c"<C-r>""<Esc>b
-vnoremap ` c`<C-r>"`<Esc>b
-vnoremap ( c(<C-r>")<Esc>b
-vnoremap ) c(<C-r>")<Esc>b
-vnoremap [ c[<C-r>"]<Esc>b
-vnoremap ] c[<C-r>"]<Esc>b
-vnoremap { c{<C-r>"}<Esc>b
-vnoremap } c{<C-r>"}<Esc>b
-vnoremap < c<<C-r>"><Esc>b
-vnoremap > c<<C-r>"><Esc>b
-vnoremap * c*<C-r>"*<Esc>b
-vnoremap ~ c~<C-r>"~<Esc>b
-vnoremap <space> c<space><C-r>" <Esc>b
+vnoremap ' c'<C-r>"'<Esc>
+vnoremap " c"<C-r>""<Esc>
+vnoremap ` c`<C-r>"`<Esc>
+vnoremap ( c(<C-r>")<Esc>
+vnoremap ) c(<C-r>")<Esc>
+vnoremap [ c[<C-r>"]<Esc>
+vnoremap ] c[<C-r>"]<Esc>
+vnoremap { c{<C-r>"}<Esc>
+vnoremap } c{<C-r>"}<Esc>
+vnoremap < c<<C-r>"><Esc>
+vnoremap > c<<C-r>"><Esc>
+vnoremap * c*<C-r>"*<Esc>
+vnoremap ~ c~<C-r>"~<Esc>
+vnoremap <space> c<space><C-r>" <Esc>
 " 選択した両側を一文字ずつ削除
-vnoremap <bs> c<Right><Bs><Bs><C-r>"<Esc>b
+vnoremap <bs> c<Right><Bs><Bs><C-r>"<Esc>
 
 " }}}
 
