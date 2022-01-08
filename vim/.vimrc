@@ -1023,18 +1023,21 @@ endfunction
 
 " ## ファイル操作 ---------------------- {{{
 
-command! -bang OpenFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source': 'rg --hidden --files --sortr modified | grep -v .git',
-      \ 'sink*': function('s:open_files'),
-      \ 'options': [
-      \   '--prompt', 'Files> ',
-      \   '--multi',
-      \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-      \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
-      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ ],
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-      \ })))
+command! OpenFiles call OpenFiles()
+function! OpenFiles()
+  call fzf#run(fzf#vim#with_preview(fzf#wrap({
+        \ 'source': 'rg --hidden --files --sortr modified | grep -v .git',
+        \ 'sink*': function('s:open_files'),
+        \ 'options': [
+        \   '--prompt', 'Files> ',
+        \   '--multi',
+        \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
+        \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+        \ ],
+        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+        \ })))
+endfunction
 
 command! -bang OpenAllFiles call OpenAllFiles()
 function! OpenAllFiles()
@@ -1183,7 +1186,9 @@ endfunction
 
 command! OpenImplControllerFile call OpenImplControllerFile()
 function! OpenImplControllerFile()
-  execute ':vs ' . substitute(substitute(expand('%'), '^spec/requests', 'app/controllers', ''), '\v(.+)_spec.rb', '\1_controller.rb', '')
+  let controller_dir=substitute(substitute(expand('%'), '^spec/requests', 'app/controllers', ''), '\v(.+)\/.+_spec.rb', '\1', '')
+  call OpenFiles()
+  call feedkeys('i' . controller_dir)
 endfunction
 
 command! OpenTestFile call OpenTestFile()
@@ -1193,7 +1198,9 @@ endfunction
 
 command! OpenTestRequestFile call OpenTestRequestFile()
 function! OpenTestRequestFile()
-  execute ':vs ' . substitute(substitute(expand('%'), '^app/controllers', 'spec/requests', ''), '\v(.+)_controller.rb', '\1_spec.rb', '')
+  let request_spec_dir=substitute(substitute(expand('%'), '^app/controllers', 'spec/requests', ''), '\v(.+)_controller.rb', '\1', '')
+  call OpenFiles()
+  call feedkeys('i' . request_spec_dir)
 endfunction
 
 command! Reload call Reload()
