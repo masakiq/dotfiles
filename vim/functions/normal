@@ -33,10 +33,6 @@ LoadVIMRC
 SwitchNote
 SwitchVimPlugin
 OpenMarkdown
-OpenImplFile
-OpenImplControllerFile
-OpenTestFile
-OpenTestRequestFile
 DeleteBuffers
 DeleteBuffersByFZF
 SwapWindow

@@ -1179,28 +1179,34 @@ function! OpenFilesQuickfixFromClipboard()
   call s:open_quickfix_list('edit', files)
 endfunction
 
-command! OpenImplFile call OpenImplFile()
-function! OpenImplFile()
-  execute ':vs ' . substitute(substitute(expand('%'), '^spec', 'app', ''), '\v(.+)_spec.rb', '\1.rb', '')
-endfunction
-
-command! OpenImplControllerFile call OpenImplControllerFile()
-function! OpenImplControllerFile()
-  let controller_dir=substitute(substitute(expand('%'), '^spec/requests', 'app/controllers', ''), '\v(.+)\/.+_spec.rb', '\1', '')
+nnoremap <space>ot :OpenTargetFile<CR>
+command! OpenTargetFile call OpenTargetFile()
+function! OpenTargetFile()
+  let target_path=''
+  let path=expand('%')
+  if path =~ '^app/'
+    if path =~ '^app/controllers/'
+      let target_path=substitute(substitute(expand('%'), '^app/controllers/', 'spec/requests/', ''), '\v(.+)_controller.rb', '\1', '')
+    else
+      let target_path=substitute(substitute(expand('%'), '^app/', 'spec/', ''), '\v(.+).rb', '\1', '')
+    endif
+  elseif path =~ '^lib/'
+    let target_path=substitute(substitute(expand('%'), '^lib/', 'spec/lib/', ''), '\v(.+).rb', '\1', '')
+  elseif path =~ '^spec/'
+    if path =~ '^spec/requests/'
+      let target_path=substitute(substitute(expand('%'), '^spec/requests/', 'app/controllers/', ''), '\v(.+)\/.+_spec.rb', '\1', '')
+    elseif path =~ '^spec/lib/'
+      let target_path=substitute(substitute(expand('%'), '^spec/lib/', 'lib/', ''), '\v(.+)_spec.rb', '\1', '')
+    else
+      let target_path=substitute(substitute(expand('%'), '^spec/', 'app/', ''), '\v(.+)_spec.rb', '\1', '')
+    endif
+  endif
+  if target_path == ''
+    echom 'no target file'
+    return
+  endif
   call OpenFiles()
-  call feedkeys('i' . controller_dir)
-endfunction
-
-command! OpenTestFile call OpenTestFile()
-function! OpenTestFile()
-  execute ':vs ' . substitute(substitute(expand('%'), '^app', 'spec', ''), '\v(.+).rb', '\1_spec.rb', '')
-endfunction
-
-command! OpenTestRequestFile call OpenTestRequestFile()
-function! OpenTestRequestFile()
-  let request_spec_dir=substitute(substitute(expand('%'), '^app/controllers', 'spec/requests', ''), '\v(.+)_controller.rb', '\1', '')
-  call OpenFiles()
-  call feedkeys('i' . request_spec_dir)
+  call feedkeys(target_path)
 endfunction
 
 command! Reload call Reload()
