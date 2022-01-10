@@ -560,6 +560,15 @@ autocmd BufRead,BufNewFile *.txt set syntax=conf
 
 hi Comment  ctermfg=White
 
+" *.log のシンタックスをカスタマイズ
+hi keywordWhen        ctermfg=green
+hi matchBehavesLikeTo ctermfg=magenta
+augroup vimrcsyntax
+  autocmd!
+  au FileType log syntax keyword keywordWhen when containedin=ALL
+  au FileType log syntax match matchBehavesLikeTo /behaves like/ containedin=ALL
+augroup END
+
 " 非アクティブのときに白くする
 "hi ColorColumn ctermbg=237
 "if exists('+colorcolumn')
