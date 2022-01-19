@@ -161,25 +161,25 @@ inoremap <C-a> <Home>
 inoremap <C-k> <esc>`^DA
 
 " 方向キーとバックスペースキーを無効にする
-vnoremap <Up>    <nop>
-vnoremap <Down>  <nop>
-vnoremap <Left>  <nop>
-vnoremap <Right> <nop>
+" vnoremap <Up>    <nop>
+" vnoremap <Down>  <nop>
+" vnoremap <Left>  <nop>
+" vnoremap <Right> <nop>
 vnoremap <Bs>    <nop>
-inoremap <Up>    <nop>
-inoremap <Down>  <nop>
-inoremap <Left>  <nop>
-inoremap <Right> <nop>
+" inoremap <Up>    <nop>
+" inoremap <Down>  <nop>
+" inoremap <Left>  <nop>
+" inoremap <Right> <nop>
 " inoremap <Bs>    <nop> for multi cursor
-nnoremap <Up>    <nop>
-nnoremap <Down>  <nop>
-nnoremap <Left>  <nop>
-nnoremap <Right> <nop>
+" nnoremap <Up>    <nop>
+" nnoremap <Down>  <nop>
+" nnoremap <Left>  <nop>
+" nnoremap <Right> <nop>
 nnoremap <Bs>    <nop>
-tnoremap <Up>    <nop>
-tnoremap <Down>  <nop>
-tnoremap <Left>  <nop>
-tnoremap <Right> <nop>
+" tnoremap <Up>    <nop>
+" tnoremap <Down>  <nop>
+" tnoremap <Left>  <nop>
+" tnoremap <Right> <nop>
 tnoremap <Bs>    <nop>
 
 " ビジュアルモードで単語の最後まで選択する
@@ -253,6 +253,9 @@ nnoremap <C-a> ^i
 
 nnoremap <C-u> 5k
 nnoremap <C-d> 5j
+
+inoremap <M-right> <right><right><right><right><right>
+inoremap <M-left> <left><left><left><left><left>
 
 " }}}
 
