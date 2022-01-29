@@ -32,7 +32,7 @@ QuitAllWithoutSaveSession
 LoadVIMRC
 SwitchNote
 SwitchVimPlugin
-OpenMarkdown
+MarkdownPreview
 DeleteBuffers
 DeleteBuffersByFZF
 SwapWindow

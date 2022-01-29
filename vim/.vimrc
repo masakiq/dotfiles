@@ -398,6 +398,7 @@ autocmd FileType markdown :iabbrev tab <table><CR><esc>i  <thead><CR><esc>i    <
 call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 " -------------------------------------------
 Plug 'skywind3000/asyncrun.vim',            { 'commit': '78fc6f541f63adb208f2068ed9d1abc0a8b2e903' }
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
@@ -409,8 +410,6 @@ Plug 'junegunn/fzf.vim',                    { 'commit': 'd6aa21476b2854694e6aa7b
 Plug 'haya14busa/incsearch-easymotion.vim', { 'commit': 'fcdd3aee6f4c0eef1a515727199ece8d6c6041b5' }
 Plug 'haya14busa/incsearch-fuzzy.vim',      { 'commit': 'b08fa8fbfd633e2f756fde42bfb5251d655f5403' }
 Plug 'haya14busa/incsearch.vim',            { 'commit': '25e2547fb0566460f5999024f7a0de7b3775201f' }
-Plug 'tyru/open-browser.vim',               { 'commit': '80ec3f2bb0a86ac13c998e2f2c86e16e6d2f20bb', 'for': 'markdown' }
-Plug 'previm/previm',                       { 'commit': '0bc7677d492f75eff60757496c899b00e8a3855f', 'for': 'markdown' }
 Plug 'tpope/vim-commentary',                { 'commit': '627308e30639be3e2d5402808ce18690557e8292' }
 Plug 'easymotion/vim-easymotion',           { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
 Plug 'tpope/vim-fugitive',                  { 'commit': 'b1c3cdffc94c2cbe48777db5cf8bc9156b17d070' }
@@ -673,20 +672,6 @@ function! s:config_easyfuzzymotion(...) abort
         \ }), get(a:, 1, {}))
 endfunction
 noremap <silent><expr> <space>f incsearch#go(<SID>config_easyfuzzymotion())
-
-" }}}
-
-" ## plugin kannokanno/previm ---------------------- {{{
-
-autocmd BufRead,BufNewFile *.mkd  set filetype=markdown
-autocmd BufRead,BufNewFile *.md  set filetype=markdown
-command! -nargs=0 OpenMarkdown call OpenMarkdown()
-function! OpenMarkdown()
-  PrevimOpen
-endfunction
-" 自動で折りたたまないようにする
-let g:vim_markdown_folding_disabled=1
-let g:previm_enable_realtime = 1
 
 " }}}
 

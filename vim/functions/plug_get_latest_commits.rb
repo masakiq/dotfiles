@@ -28,8 +28,10 @@ execute_in_vim_dir do
     puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'for': 'dart' }"
   when 'maxmellon/vim-jsx-pretty'
     puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'for': ['javascript', 'typescript'] }"
-  when 'tyru/open-browser.vim', 'previm/previm', 'rcmdnk/vim-markdown'
+  when 'rcmdnk/vim-markdown'
     puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'for': 'markdown' }"
+  when 'iamcco/markdown-preview.nvim'
+    # ignore
   else
     puts "Plug '#{repo_name}', { 'commit': '#{commit}' }"
   end
