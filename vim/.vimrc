@@ -827,6 +827,12 @@ noremap <leader>c :Commentary<cr>
 
 " }}}
 
+"## iamcco/markdown-preview.nvim ---------------------- {{{
+
+let g:mkdp_browser = '/Applications/Vivaldi.app'
+
+" }}}
+
 " ## fzf 設定 ---------------------- {{{
 
 command! -nargs=+ GotoOrOpen call s:GotoOrOpen(<f-args>)
