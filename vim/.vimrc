@@ -413,6 +413,7 @@ Plug 'tpope/vim-commentary',                { 'commit': '627308e30639be3e2d54028
 Plug 'easymotion/vim-easymotion',           { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
 Plug 'tpope/vim-fugitive',                  { 'commit': 'b1c3cdffc94c2cbe48777db5cf8bc9156b17d070' }
 Plug 'ruanyl/vim-gh-line',                  { 'commit': 'd2185b18883b911a21b684d4bb9d26f6a41b62f4' }
+Plug 'jparise/vim-graphql',                 { 'commit': '9a9fe186a73fce636398ee7f851466ef60c9fde5' }
 Plug 'maxmellon/vim-jsx-pretty',            { 'commit': '6989f1663cc03d7da72b5ef1c03f87e6ddb70b41', 'for': ['javascript', 'typescript'] }
 Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33b14a84336dee2a78f' }
 Plug 'mattn/vim-maketable',                 { 'commit': 'f2210dae1ca6fed07881de8e3f95a7bca1a7b4a8' }
