@@ -11,39 +11,43 @@ font:
 colors:
   # Default colors
   primary:
-    background: '#000000'
-    foreground: '#f8f8f2'
+    background: "#000000"
+    foreground: "#f8f8f2"
 
   # Normal colors
   normal:
-    black:   '#000000'
-    red:     '#ff5555'
-    green:   '#50fa7b'
-    yellow:  '#f1fa8c'
-    blue:    '#caa9fa'
-    magenta: '#ff79c6'
-    cyan:    '#8be9fd'
-    white:   '#bfbfbf'
+    black: "#000000"
+    red: "#ff5555"
+    green: "#50fa7b"
+    yellow: "#f1fa8c"
+    blue: "#caa9fa"
+    magenta: "#ff79c6"
+    cyan: "#8be9fd"
+    white: "#bfbfbf"
 
   # Bright colors
   bright:
-    black:   '#575b70'
-    red:     '#ff6e67'
-    green:   '#5af78e'
-    yellow:  '#f4f99d'
-    blue:    '#caa9fa'
-    magenta: '#ff92d0'
-    cyan:    '#9aedfe'
-    white:   '#e6e6e6'
+    black: "#575b70"
+    red: "#ff6e67"
+    green: "#5af78e"
+    yellow: "#f4f99d"
+    blue: "#caa9fa"
+    magenta: "#ff92d0"
+    cyan: "#9aedfe"
+    white: "#e6e6e6"
 key_bindings:
   - { key: A, mods: Alt, chars: "\x1ba" }
   - { key: S, mods: Alt, chars: "\x1bs" }
   - { key: C, mods: Alt, chars: "\x1bc" }
-  - { key: T, mods: Control, command: { program: "open", args: ["/Applications/iTerm.app"] } }
+  - {
+      key: T,
+      mods: Control,
+      command: { program: "open", args: ["/Applications/iTerm.app"] },
+    }
   - { key: Return, mods: Command, action: ToggleSimpleFullscreen }
 # background_opacity: 0.85
 window:
-  startup_mode: SimpleFullscreen
+  startup_mode: Maximized
   decorations: none
 shell:
   program: /usr/local/bin/fish
