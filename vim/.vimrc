@@ -2463,6 +2463,11 @@ function! RunExec() abort
   endif
   execute 'botright new'
   let cmd=''
+  if filereadable('.env')
+    let cmd=system("grep -v '^#' .env")
+    let cmd=substitute(cmd, "\n", " ", "g")
+    let cmd=cmd . ' '
+  endif
   if type == 'ruby'
     if IsRailsProject() == 1
       let cmd=cmd . 'rails runner ' . currentfile
