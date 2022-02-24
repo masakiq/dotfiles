@@ -1880,6 +1880,49 @@ command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
 
+command! RgInSpecifiedDir call RgInSpecifiedDir()
+function! RgInSpecifiedDir() abort
+  call fzf#run(fzf#wrap({
+      \ 'source': 'ls -d */',
+      \ 'sink': function('s:rg_in_specified_dir'),
+      \ 'options': [
+      \   '--prompt', 'RgInSpecifiedDir> ',
+      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ ],
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
+endfunction
+
+function! s:rg_in_specified_dir(dir) abort
+  let word = input('RgInSpecifiedDir/')
+  let args = [word, a:dir]
+  call s:rg_in_specified_dir_execution(args)
+endfunction
+
+function! s:rg_in_specified_dir_execution(args) abort
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+        \ 'source': printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' '%s' '%s'",
+        \   escape(empty(a:args[0]) ? '^(?=.)' : a:args[0], '"\'), escape(empty(a:args[1]) ? '^(?=.)' : a:args[1], '"\')),
+        \ 'sink*':    function('s:open_files_via_rg'),
+        \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+        \            '--prompt="RgInSpecifiedDir> " '.
+        \            '--delimiter : --preview-window +{2}-/2 '.
+        \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+        \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+        \ })))
+    endif
+    if has('nvim')
+      call feedkeys('i')
+    endif
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
 function! SearchByRG()
   if mode() == 'n'
     execute 'RG ' . input('RG/')

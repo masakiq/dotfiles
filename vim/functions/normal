@@ -14,6 +14,7 @@ RGFromAllFilesNormal
 RGInAnotherProject
 RGInLocalNote
 RGInCloudNote
+RgInSpecifiedDir
 CopyCurrentPath
 CopyCurrentPathWithLineNumber
 CopyAbsolutePath
