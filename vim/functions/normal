@@ -45,6 +45,7 @@ PlugStatus
 PlugGetLatestCommits
 DiffFile
 DiffFileGitBranch
+OpenDiffFilesWithMasterBranch
 Registers
 DisableLinterOnSave
 EnableLinterOnSave

@@ -1063,6 +1063,41 @@ function! OpenFiles()
         \ })))
 endfunction
 
+command! OpenFilesInSpecifiedDir call OpenFilesInSpecifiedDir()
+function! OpenFilesInSpecifiedDir()
+  call fzf#run(fzf#wrap({
+      \ 'source': 'ls -d */',
+      \ 'sink': function('s:open_files_in_specified_dir'),
+      \ 'options': [
+      \   '--prompt', 'OpenFilesInSpecifiedDir> ',
+      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \ ],
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ }))
+endfunction
+
+function! s:open_files_in_specified_dir(dir) abort
+  try
+    call fzf#run(fzf#vim#with_preview(fzf#wrap({
+        \ 'source': 'rg --files --no-ignore --sortr modified ' . a:dir,
+        \ 'sink*': function('s:open_files'),
+        \ 'options': [
+        \   '--prompt', 'Files> ',
+        \   '--multi',
+        \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
+        \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+        \   '--preview', 'bat --color=always  {}',
+        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+        \ ],
+        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+        \ })))
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
 command! -bang OpenAllFiles call OpenAllFiles()
 function! OpenAllFiles()
   try
