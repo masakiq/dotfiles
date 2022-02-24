@@ -1102,7 +1102,7 @@ command! -bang OpenAllFiles call OpenAllFiles()
 function! OpenAllFiles()
   try
     call fzf#run(fzf#wrap({
-          \ 'source': 'rg --hidden --files --no-ignore | grep -v .git',
+          \ 'source': 'rg --hidden --files --no-ignore --sortr modified | grep -v .git',
           \ 'sink*': function('s:open_files'),
           \ 'options': [
           \   '--prompt', 'AllFiles> ',
