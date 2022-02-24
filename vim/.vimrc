@@ -1187,21 +1187,21 @@ function! CopyCurrentFile()
   echo "copied current file: " . filename
 endfunction
 
-command! OpenFilesFromClipboard call OpenFilesFromClipboard()
-function! OpenFilesFromClipboard()
-  let list=@+
-  let files = split(list, "\n")
-  for file in files
-    silent! exec 'tab drop ' . file
-  endfor
-endfunction
+" command! OpenFilesFromClipboard call OpenFilesFromClipboard()
+" function! OpenFilesFromClipboard()
+"   let list=@+
+"   let files = split(list, "\n")
+"   for file in files
+"     silent! exec 'tab drop ' . file
+"   endfor
+" endfunction
 
-command! OpenFilesQuickfixFromClipboard call OpenFilesQuickfixFromClipboard()
-function! OpenFilesQuickfixFromClipboard()
-  let list=@+
-  let files = split(list, "\n")
-  call s:open_quickfix_list('edit', files)
-endfunction
+" command! OpenFilesQuickfixFromClipboard call OpenFilesQuickfixFromClipboard()
+" function! OpenFilesQuickfixFromClipboard()
+"   let list=@+
+"   let files = split(list, "\n")
+"   call s:open_quickfix_list('edit', files)
+" endfunction
 
 nnoremap <space>ot :OpenTargetFile<CR>
 command! OpenTargetFile call OpenTargetFile()

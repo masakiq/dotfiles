@@ -25,8 +25,8 @@ OpenGitHubRepo
 OpenGitHubFile
 OpenGitHubBlame
 CopyGitHubCompareUrl
-OpenFilesFromClipboard
-OpenFilesQuickfixFromClipboard
+OpenFilesWithIgnoreFiles
+OpenFilesInSpecifiedDir
 QuitAll
 QuitAllWithoutSaveSession
 LoadVIMRC
