@@ -800,13 +800,16 @@ command! -nargs=0 RunTest :TestFile<cr>
 command! -nargs=0 RunTestNearest :TestNearest<cr>
 
 function! DockerTransformer(cmd) abort
-  let services_name = system("docker-compose ps --services | grep spring")
-  if matchstr(services_name, "spring") == "spring"
-    return 'docker-compose exec ' . substitute(services_name, "\n", "", "") . ' spring ' . a:cmd
-  elseif matchstr(services_name, "api") == "api"
-    return 'docker-compose exec ' . substitute(services_name, "\n", "", "") . ' ' . a:cmd
-  elseif matchstr(services_name, "web") == "web"
-    return 'docker-compose exec ' . substitute(services_name, "\n", "", "") . ' ' . a:cmd
+  let services_spring = system("docker-compose ps --services | grep spring")
+  let services_api = system("docker-compose ps --services | grep api")
+  let services_web = system("docker-compose ps --services | grep web")
+  let envcmd = OutputEnvEnvironmentVariables('-e')
+  if matchstr(services_spring, "spring") == "spring"
+    return 'docker-compose exec ' . envcmd . substitute(services_spring, "\n", "", "") . ' spring ' . a:cmd
+  elseif matchstr(services_api, "api") == "api"
+    return 'docker-compose exec ' . envcmd . substitute(services_api, "\n", "", "") . ' ' . a:cmd
+  elseif matchstr(services_web, "web") == "web"
+    return 'docker-compose exec ' . envcmd . substitute(services_web, "\n", "", "") . ' ' . a:cmd
   else
     return a:cmd
   endif
@@ -2463,11 +2466,6 @@ function! RunExec() abort
   endif
   execute 'botright new'
   let cmd=''
-  if filereadable('.env')
-    let cmd=system("grep -v '^#' .env")
-    let cmd=substitute(cmd, "\n", " ", "g")
-    let cmd=cmd . ' '
-  endif
   if type == 'ruby'
     if IsRailsProject() == 1
       let cmd=cmd . 'rails runner ' . currentfile
@@ -2479,7 +2477,12 @@ function! RunExec() abort
   elseif type == 'typescript'
     let cmd=cmd . 'npx ts-node ' . currentfile
   endif
-  let cmd=DockerTransformer(cmd)
+  if filereadable('docker-compose.yml')
+    let cmd=DockerTransformer(cmd)
+  else
+    let envcmd = OutputEnvEnvironmentVariables('')
+    let cmd = envcmd . cmd
+  endif
   call termopen(cmd)
   startinsert
 endfunction
@@ -2492,6 +2495,19 @@ function! IsRailsProject() abort
   else
     return 0
   endif
+endfunction
+
+function! OutputEnvEnvironmentVariables(prefix) abort
+  let cmd = ''
+  if filereadable('.env')
+    for line in readfile('.env', '')
+      if matchstr(line, '^#') != '#'
+        let cmd = cmd . ' ' . a:prefix . ' ' . line . ' '
+      endif
+    endfor
+  else
+  endif
+  return cmd
 endfunction
 
 nnoremap <leader>d :RunDebug<cr>
