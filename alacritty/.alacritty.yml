@@ -39,11 +39,11 @@ key_bindings:
   - { key: A, mods: Alt, chars: "\x1ba" }
   - { key: S, mods: Alt, chars: "\x1bs" }
   - { key: C, mods: Alt, chars: "\x1bc" }
-  - {
-      key: T,
-      mods: Control,
-      command: { program: "open", args: ["/Applications/iTerm.app"] },
-    }
+  # - {
+  #     key: T,
+  #     mods: Control,
+  #     command: { program: "open", args: ["/Applications/iTerm.app"] },
+  #   }
   - { key: Return, mods: Command, action: ToggleSimpleFullscreen }
 # background_opacity: 0.85
 window:
