@@ -917,6 +917,7 @@ else
   nnoremap <space>of :OpenFiles<CR>
   " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
   vnoremap <space>of :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
+  nnoremap <space>od :OpenFilesInSpecifiedDir<CR>
 endif
 
 nnoremap <space>ob :Buffers<CR>
@@ -1066,7 +1067,7 @@ endfunction
 command! OpenFilesInSpecifiedDir call OpenFilesInSpecifiedDir()
 function! OpenFilesInSpecifiedDir()
   call fzf#run(fzf#wrap({
-      \ 'source': 'ls -d */',
+      \ 'source': 'ls -d */ .',
       \ 'sink': function('s:open_files_in_specified_dir'),
       \ 'options': [
       \   '--prompt', 'OpenFilesInSpecifiedDir> ',
@@ -1077,9 +1078,15 @@ function! OpenFilesInSpecifiedDir()
 endfunction
 
 function! s:open_files_in_specified_dir(dir) abort
+  let source = ''
+  if a:dir == '.'
+    let source = 'rg --hidden --files --sortr modified | grep -v .git'
+  else
+    let source = 'rg --hidden --files --no-ignore --sortr modified ' . a:dir
+  endif
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
-        \ 'source': 'rg --files --no-ignore --sortr modified ' . a:dir,
+        \ 'source': source,
         \ 'sink*': function('s:open_files'),
         \ 'options': [
         \   '--prompt', 'Files> ',
