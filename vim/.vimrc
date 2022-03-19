@@ -2565,7 +2565,9 @@ function! RunExec() abort
   execute 'botright new'
   let cmd=''
   if type == 'ruby'
-    if IsRailsProject() == 1
+    if currentfile =~ '^/'
+      let cmd=cmd . 'ruby ' . currentfile
+    elseif IsRailsProject() == 1
       let cmd=cmd . 'rails runner ' . currentfile
     else
       let cmd=cmd . 'ruby ' . currentfile
@@ -2575,7 +2577,8 @@ function! RunExec() abort
   elseif type == 'typescript'
     let cmd=cmd . 'npx ts-node ' . currentfile
   endif
-  if filereadable('docker-compose.yml')
+  if currentfile =~ '^/'
+  elseif filereadable('docker-compose.yml')
     let cmd=DockerTransformer(cmd)
   else
     let envcmd = OutputEnvEnvironmentVariables('')
