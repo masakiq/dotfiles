@@ -883,13 +883,7 @@ endfunction
 command! -nargs=0 RunRubocop call RunRubocop()
 function! RunRubocop() abort
   let cmd='rubocop -A'
-  if filereadable('docker-compose.yml')
-    let cmd=DockerTransformer(cmd)
-  else
-    let envcmd = OutputEnvEnvironmentVariables('')
-    let cmd = envcmd . cmd
-  endif
-  silent! exec 'FloatermNew --title=rubocop:$1/$2 --height=0.5 --width=0.5 --position=bottomright --autoclose=2 ' . cmd
+  silent! exec 'FloatermNew --title=rubocop:$1/$2 --height=0.5 --width=0.5 --position=bottomright --autoclose=0 ' . cmd
 endfunction
 
 " }}}
