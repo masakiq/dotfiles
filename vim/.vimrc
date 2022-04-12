@@ -806,13 +806,13 @@ function! DockerTransformer(cmd) abort
   let services_web = system("docker-compose ps --services | grep web")
   let envcmd = OutputEnvEnvironmentVariables('-e')
   if matchstr(services_spring, "spring") == "spring"
-    return 'docker-compose exec ' . envcmd . substitute(services_spring, "\n", "", "") . ' spring ' . a:cmd
+    return 'docker-compose exec ' . envcmd . substitute(services_spring, "\n", "", "") . ' spring ' . a:cmd . ' && tail -f /dev/null'
   elseif matchstr(services_api, "api") == "api"
-    return 'docker-compose exec ' . envcmd . substitute(services_api, "\n", "", "") . ' ' . a:cmd
+    return 'docker-compose exec ' . envcmd . substitute(services_api, "\n", "", "") . ' ' . a:cmd . ' && tail -f /dev/null'
   elseif matchstr(services_web, "web") == "web"
-    return 'docker-compose exec ' . envcmd . substitute(services_web, "\n", "", "") . ' ' . a:cmd
+    return 'docker-compose exec ' . envcmd . substitute(services_web, "\n", "", "") . ' ' . a:cmd . ' && tail -f /dev/null'
   else
-    return a:cmd
+    return a:cmd . ' && tail -f /dev/null'
   endif
 endfunction
 
