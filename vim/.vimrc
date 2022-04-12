@@ -878,6 +878,18 @@ function! RunRailsConsole() abort
   silent! exec 'FloatermNew --title=rails-console --name=rails-console --autoclose=2 ' . cmd
 endfunction
 
+command! -nargs=0 RunRubocop call RunRubocop()
+function! RunRubocop() abort
+  let cmd='rubocop -A'
+  if filereadable('docker-compose.yml')
+    let cmd=DockerTransformer(cmd)
+  else
+    let envcmd = OutputEnvEnvironmentVariables('')
+    let cmd = envcmd . cmd
+  endif
+  silent! exec 'FloatermNew --title=rubocop --name=rubocop --autoclose=2 ' . cmd
+endfunction
+
 " }}}
 
 " ## fzf 設定 ---------------------- {{{
