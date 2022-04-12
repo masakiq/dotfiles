@@ -180,7 +180,7 @@ nnoremap <Bs>    <nop>
 " tnoremap <Down>  <nop>
 " tnoremap <Left>  <nop>
 " tnoremap <Right> <nop>
-tnoremap <Bs>    <nop>
+" tnoremap <Bs>    <nop>
 
 " ビジュアルモードで単語の最後まで選択する
 vnoremap E $h
