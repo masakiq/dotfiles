@@ -818,7 +818,7 @@ endfunction
 
 let g:test#custom_transformations = {'docker': function('DockerTransformer')}
 let g:test#transformation = 'docker'
-let g:test#strategy = 'neovim'
+let g:test#strategy = 'floaterm'
 let g:test#neovim#start_normal = 1
 let test#ruby#rspec#executable = 'rspec'
 
