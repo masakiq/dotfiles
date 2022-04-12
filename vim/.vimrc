@@ -864,6 +864,7 @@ let g:floaterm_keymap_next = '<S-right>'
 let g:floaterm_keymap_new = '<F12>'
 let g:floaterm_height = 0.95
 let g:floaterm_width = 0.95
+let g:floaterm_title = 'terminal:$1/$2'
 let g:floaterm_keymap_kill = '<c-q>'
 
 nnoremap <leader>r :RunRailsConsole<cr>
@@ -876,7 +877,7 @@ function! RunRailsConsole() abort
     let envcmd = OutputEnvEnvironmentVariables('')
     let cmd = envcmd . cmd
   endif
-  silent! exec 'FloatermNew --title=rails-console --name=rails-console --autoclose=2 ' . cmd
+  silent! exec 'FloatermNew --title=rails-console:$1/$2 --autoclose=2 ' . cmd
 endfunction
 
 command! -nargs=0 RunRubocop call RunRubocop()
@@ -888,7 +889,7 @@ function! RunRubocop() abort
     let envcmd = OutputEnvEnvironmentVariables('')
     let cmd = envcmd . cmd
   endif
-  silent! exec 'FloatermNew --title=rubocop --name=rubocop --autoclose=2 ' . cmd
+  silent! exec 'FloatermNew --title=rubocop:$1/$2 --height=0.5 --width=0.5 --position=bottomright --autoclose=2 ' . cmd
 endfunction
 
 " }}}
