@@ -865,6 +865,19 @@ let g:floaterm_height = 0.95
 let g:floaterm_width = 0.95
 let g:floaterm_keymap_kill = '<c-q>'
 
+nnoremap <leader>r :RunRailsConsole<cr>
+command! -nargs=0 RunRailsConsole call RunRailsConsole()
+function! RunRailsConsole() abort
+  let cmd='rails c'
+  if filereadable('docker-compose.yml')
+    let cmd=DockerTransformer(cmd)
+  else
+    let envcmd = OutputEnvEnvironmentVariables('')
+    let cmd = envcmd . cmd
+  endif
+  silent! exec 'FloatermNew --title=rails-console --name=rails-console --autoclose=2 ' . cmd
+endfunction
+
 " }}}
 
 " ## fzf 設定 ---------------------- {{{
@@ -2577,7 +2590,7 @@ endfunction
 
 " ## 実行 ---------------------- {{{
 
-nnoremap <leader>r :RunExec<cr>
+" nnoremap <leader>r :RunExec<cr>
 command! -nargs=0 RunExec call RunExec()
 function! RunExec() abort
   let currentfile=expand('%')

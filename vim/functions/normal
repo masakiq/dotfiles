@@ -68,3 +68,4 @@ RunExec
 RunDebug
 RunTest
 RunTestNearest
+RunRailsConsole
