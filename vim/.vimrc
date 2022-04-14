@@ -685,33 +685,6 @@ let g:dart_style_guide = 2
 
 " }}}
 
-" ## dense-analysis/ale ---------------------- {{{
-
-" let g:ale_lint_on_text_changed = 0
-" let g:ale_linters = {
-"       \ 'dart': ['dartfmt'],
-"       \ 'ruby': ['rubocop'],
-"       \ }
-" let g:ale_fixers = {
-"       \ 'dart': ['dartfmt'],
-"       \ 'ruby': ['rubocop'],
-"       \}
-" let g:ale_fix_on_save = 0
-"
-" command! -nargs=0 DisableLinterOnSave call DisableLinterOnSave()
-" function! DisableLinterOnSave()
-"   let g:ale_fix_on_save = 0
-"   echo 'disable linter'
-" endfunction
-"
-" command! -nargs=0 EnableLinterOnSave call EnableLinterOnSave()
-" function! EnableLinterOnSave()
-"   let g:ale_fix_on_save = 1
-"   echo 'enable linter'
-" endfunction
-
-" }}}
-
 " ## skywind3000/asyncrun.vim ---------------------- {{{
 
 noremap <space>a :call asyncrun#quickfix_toggle(20)<cr>
