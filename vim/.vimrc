@@ -405,6 +405,7 @@ Plug 'neoclide/coc.nvim',                   { 'commit': '8f2a2dc441617f3d4943886
 Plug 'dart-lang/dart-vim-plugin',           { 'commit': '08764627ce85fc0c0bf9d8fd11b3cf5fc05d58ba', 'for': 'dart' }
 Plug 'dracula/vim',                         { 'commit': '74f63c304a0625c4ff9ce16784fce583b3a60661', 'as': 'dracula' }
 Plug 'lambdalisue/fern.vim',                { 'commit': '21fa52953d87ba259e0217a4189d9dc8e249f94f' }
+Plug 'voldikss/fzf-floaterm',               { 'commit': '66a30db85a7adf573af9b8a4f3f8c4ce0a2d665e' }
 Plug 'junegunn/fzf.vim',                    { 'commit': 'd6aa21476b2854694e6aa7b0941b8992a906c5ec' }
 Plug 'haya14busa/incsearch-easymotion.vim', { 'commit': 'fcdd3aee6f4c0eef1a515727199ece8d6c6041b5' }
 Plug 'haya14busa/incsearch-fuzzy.vim',      { 'commit': 'b08fa8fbfd633e2f756fde42bfb5251d655f5403' }
@@ -884,6 +885,45 @@ command! -nargs=0 RunRubocop call RunRubocop()
 function! RunRubocop() abort
   silent! exec 'FloatermNew --title=rubocop:$1/$2 --height=0.5 --width=0.5 --position=bottomright --autoclose=1 rubocop -A && tail -f /dev/null || tail -f /dev/null'
   call feedkeys('i', 'n')
+endfunction
+
+" command! DeleteFloaterms call DeleteFloaterms()
+" function! DeleteFloaterms()
+"   call fzf#run(fzf#vim#with_preview(fzf#wrap({
+"         \ 'source': s:fetch_term_names(),
+"         \ 'sink*': function('s:delete_floaterms'),
+"         \ 'options': [
+"         \   '--prompt', 'DeleteFloaterms> ',
+"         \   '--multi',
+"         \   '--bind=ctrl-a:select-all,ctrl-i:toggle+down',
+"         \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+"         \ ],
+"         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+"         \ })))
+" endfunction
+
+command! DeleteFloaterms call DeleteFloaterms()
+function! DeleteFloaterms()
+  let list = s:fetch_term_names()
+  call s:delete_floaterms(list)
+endfunction
+
+function! s:fetch_term_names()
+  let bufnums = ListTermBufNums()
+  let bufs = []
+  for num in bufnums
+    let opts = getbufvar(num, 'floaterm_title', {})
+    let name = opts . ' : ' . num
+    call add(bufs, name)
+  endfor
+  return bufs
+endfunction
+
+function! s:delete_floaterms(line) abort
+  for buf in a:line
+    let num = str2nr(substitute(buf, '^.*\s\:\s\(\d*\)', '\1', ''))
+    execute 'bwipeout! ' . num
+  endfor
 endfunction
 
 " }}}

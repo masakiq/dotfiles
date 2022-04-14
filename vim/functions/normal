@@ -70,3 +70,5 @@ RunTest
 RunTestNearest
 RunRailsConsole
 RunRubocop
+Floaterms
+DeleteFloaterms
