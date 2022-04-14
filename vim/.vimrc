@@ -806,13 +806,13 @@ function! DockerTransformer(cmd) abort
   let services_web = system("docker-compose ps --services | grep web")
   let envcmd = OutputEnvEnvironmentVariables('-e')
   if matchstr(services_spring, "spring") == "spring"
-    return 'docker-compose exec ' . envcmd . substitute(services_spring, "\n", "", "") . ' spring ' . a:cmd . ' && tail -f /dev/null'
+    return 'docker-compose exec ' . envcmd . substitute(services_spring, "\n", "", "") . ' spring ' . a:cmd . ' && tail -f /dev/null || tail -f /dev/null'
   elseif matchstr(services_api, "api") == "api"
-    return 'docker-compose exec ' . envcmd . substitute(services_api, "\n", "", "") . ' ' . a:cmd . ' && tail -f /dev/null'
+    return 'docker-compose exec ' . envcmd . substitute(services_api, "\n", "", "") . ' ' . a:cmd . ' && tail -f /dev/null || tail -f /dev/null'
   elseif matchstr(services_web, "web") == "web"
-    return 'docker-compose exec ' . envcmd . substitute(services_web, "\n", "", "") . ' ' . a:cmd . ' && tail -f /dev/null'
+    return 'docker-compose exec ' . envcmd . substitute(services_web, "\n", "", "") . ' ' . a:cmd . ' && tail -f /dev/null || tail -f /dev/null'
   else
-    return a:cmd . ' && tail -f /dev/null'
+    return a:cmd . ' && tail -f /dev/null || tail -f /dev/null'
   endif
 endfunction
 
@@ -882,8 +882,8 @@ endfunction
 
 command! -nargs=0 RunRubocop call RunRubocop()
 function! RunRubocop() abort
-  let cmd='rubocop -A'
-  silent! exec 'FloatermNew --title=rubocop:$1/$2 --height=0.5 --width=0.5 --position=bottomright --autoclose=0 ' . cmd
+  silent! exec 'FloatermNew --title=rubocop:$1/$2 --height=0.5 --width=0.5 --position=bottomright --autoclose=1 rubocop -A && tail -f /dev/null || tail -f /dev/null'
+  call feedkeys('i', 'n')
 endfunction
 
 " }}}
@@ -982,7 +982,8 @@ nmap <space>r <Plug>(coc-rename)
 nmap <space>f :call Format()<cr>
 command! Format :call Format()
 function! Format()
-  call CocAction('format')
+  " call CocAction('format')
+  call CocActionAsync('format')
 endfunction
 
 " 定義ジャンプするときにウィンドウの開き方を選択する
@@ -2608,7 +2609,6 @@ function! RunExec() abort
     echohl WarningMsg | echon 'Can not run!! Available filetype are only ' | echohl ErrorMsg | echon join(types, ',') | echohl None
     return
   endif
-  execute 'botright new'
   let cmd=''
   if type == 'ruby'
     if currentfile =~ '^/'
@@ -2630,8 +2630,8 @@ function! RunExec() abort
     let envcmd = OutputEnvEnvironmentVariables('')
     let cmd = envcmd . cmd
   endif
-  call termopen(cmd)
-  startinsert
+  silent! exec 'FloatermNew --autoclose=0 ' . cmd . ' && tail -f /dev/null || tail -f /dev/null'
+  call feedkeys('i', 'n')
 endfunction
 
 function! IsRailsProject() abort
@@ -2667,14 +2667,13 @@ function! RunDebug() abort
     echohl WarningMsg | echon 'Can not run with debug mode!! Available filetype are only ' | echohl ErrorMsg | echon join(types, ',') | echohl None
     return
   endif
-  execute 'botright new'
   let cmd=''
   if type == 'javascript'
     let cmd=cmd . 'node inspect ' . currentfile
   endif
   let cmd=DockerTransformer(cmd)
-  call termopen(cmd)
-  startinsert
+  silent! exec 'FloatermNew --autoclose=0 ' . cmd . ' && tail -f /dev/null || tail -f /dev/null'
+  call feedkeys('i', 'n')
 endfunction
 
 " }}}
