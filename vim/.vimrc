@@ -856,7 +856,13 @@ endfunction
 
 command! -nargs=0 RunRubocop call RunRubocop()
 function! RunRubocop() abort
-  silent! exec 'FloatermNew --title=rubocop:$1/$2 --height=0.5 --width=0.5 --position=bottomright --autoclose=1 rubocop -A && tail -f /dev/null || tail -f /dev/null'
+  let cmd='rubocop -A'
+  if filereadable('docker-compose.yml')
+    let cmd=DockerTransformer(cmd)
+  else
+    let cmd = cmd . ' && tail -f /dev/null || tail -f /dev/null'
+  endif
+  silent! exec 'FloatermNew --title=rubocop:$1/$2 --height=0.5 --width=0.5 --position=bottomright --autoclose=1 ' . cmd
   call feedkeys('i', 'n')
 endfunction
 
