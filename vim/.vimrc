@@ -1567,7 +1567,8 @@ endfunction
 
 command! SwapWindow call SwapWindow()
 function! SwapWindow()
-  silent! exec "normal \<c-w>\<c-r>"
+  " https://stackoverflow.com/questions/2228353/how-to-swap-files-between-windows-in-vim
+  silent! exec "normal \<c-w>x"
 endfunction
 
 function! s:delete_windows(lines)
