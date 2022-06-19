@@ -1306,19 +1306,19 @@ function! OpenTargetFile()
   let path=expand('%')
   if path =~ '^app/'
     if path =~ '^app/controllers/'
-      let target_path=substitute(substitute(expand('%'), '^app/controllers/', 'spec/requests/', ''), '\v(.+)_controller.rb', '\1', '')
+      let target_path=substitute(substitute(expand('%'), '^app/controllers/', 'spec/', ''), '\v(.+)_controller.rb', '\1_spec.rb', '')
     else
-      let target_path=substitute(substitute(expand('%'), '^app/', 'spec/', ''), '\v(.+).rb', '\1', '')
+      let target_path=substitute(substitute(expand('%'), '^app/', 'spec/', ''), '\v(.+).rb', '\1_spec.rb', '')
     endif
   elseif path =~ '^lib/'
-    let target_path=substitute(substitute(expand('%'), '^lib/', 'spec/lib/', ''), '\v(.+).rb', '\1', '')
+    let target_path=substitute(substitute(expand('%'), '^lib/', 'spec/lib/', ''), '\v(.+).rb', '\1_spec.rb', '')
   elseif path =~ '^spec/'
     if path =~ '^spec/requests/'
-      let target_path=substitute(substitute(expand('%'), '^spec/requests/', 'app/controllers/', ''), '\v(.+)\/.+_spec.rb', '\1', '')
+      let target_path=substitute(substitute(expand('%'), '^spec/requests/', 'app/', ''), '\v(.+)\/.+_spec.rb', '\1.rb', '')
     elseif path =~ '^spec/lib/'
-      let target_path=substitute(substitute(expand('%'), '^spec/lib/', 'lib/', ''), '\v(.+)_spec.rb', '\1', '')
+      let target_path=substitute(substitute(expand('%'), '^spec/lib/', 'lib/', ''), '\v(.+)_spec.rb', '\1.rb', '')
     else
-      let target_path=substitute(substitute(expand('%'), '^spec/', 'app/', ''), '\v(.+)_spec.rb', '\1', '')
+      let target_path=substitute(substitute(expand('%'), '^spec/', 'app/', ''), '\v(.+)_spec.rb', '\1.rb', '')
     endif
   endif
   if target_path == ''
