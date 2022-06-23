@@ -402,6 +402,7 @@ Plug 'masakiq/vim-markdown-composer' " Run `!cd ~/.vim/plugged/vim-markdown-comp
 Plug 'skywind3000/asyncrun.vim',            { 'commit': '78fc6f541f63adb208f2068ed9d1abc0a8b2e903' }
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
 Plug 'neoclide/coc.nvim',                   { 'commit': '8f2a2dc441617f3d4943886cf45a62814dae7ca9' }
+Plug 'github/copilot.vim',                  { 'commit': 'c2e75a3a7519c126c6fdb35984976df9ae13f564' }
 Plug 'dart-lang/dart-vim-plugin',           { 'commit': '08764627ce85fc0c0bf9d8fd11b3cf5fc05d58ba', 'for': 'dart' }
 Plug 'dracula/vim',                         { 'commit': '74f63c304a0625c4ff9ce16784fce583b3a60661', 'as': 'dracula' }
 Plug 'lambdalisue/fern.vim',                { 'commit': '21fa52953d87ba259e0217a4189d9dc8e249f94f' }
