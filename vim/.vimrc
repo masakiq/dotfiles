@@ -809,7 +809,7 @@ noremap <leader>c :Commentary<cr>
 
 "## euclio/vim-markdown-composer ---------------------- {{{
 
-let g:markdown_composer_browser = 'open -ga Vivaldi'
+let g:markdown_composer_browser = 'open -ga Google\ Chrome'
 let g:markdown_composer_port = 4649
 let g:markdown_composer_autostart = 0
 " https://highlightjs.org/static/demo/
