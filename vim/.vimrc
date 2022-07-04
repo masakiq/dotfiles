@@ -562,6 +562,7 @@ hi TabLineFill          ctermfg=31  ctermbg=none cterm=none
 
 " txt ファイルの highlight
 autocmd BufRead,BufNewFile *.txt set syntax=conf
+autocmd BufRead,BufNewFile *.fish set syntax=sh
 
 hi Comment  ctermfg=White
 
