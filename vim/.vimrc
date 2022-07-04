@@ -411,6 +411,7 @@ Plug 'junegunn/fzf.vim',                    { 'commit': 'd6aa21476b2854694e6aa7b
 Plug 'haya14busa/incsearch-easymotion.vim', { 'commit': 'fcdd3aee6f4c0eef1a515727199ece8d6c6041b5' }
 Plug 'haya14busa/incsearch-fuzzy.vim',      { 'commit': 'b08fa8fbfd633e2f756fde42bfb5251d655f5403' }
 Plug 'haya14busa/incsearch.vim',            { 'commit': '25e2547fb0566460f5999024f7a0de7b3775201f' }
+Plug 'iberianpig/tig-explorer.vim',         { 'commit': 'f4ec3e57ccad1b9a28b8607c4a56a0affc686583' }
 Plug 'tpope/vim-commentary',                { 'commit': '627308e30639be3e2d5402808ce18690557e8292' }
 Plug 'easymotion/vim-easymotion',           { 'commit': 'd75d9591e415652b25d9e0a3669355550325263d' }
 Plug 'voldikss/vim-floaterm',               { 'commit': '6244d1739aad6682c6c1d5db18c846c342af6e3e' }
