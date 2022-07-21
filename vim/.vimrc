@@ -2671,7 +2671,7 @@ function! OutputEnvEnvironmentVariables(prefix) abort
   let cmd = ''
   if filereadable('.env')
     for line in readfile('.env', '')
-      if matchstr(line, '^#') != '#'
+      if line !~ '^#' && line !~ '^$'
         let cmd = cmd . ' ' . a:prefix . ' ' . line . ' '
       endif
     endfor
