@@ -191,6 +191,9 @@ vnoremap a <esc>G$vgg0
 
 nnoremap V 0v$h
 
+" J で後の行を連結したときに空白を入れない
+nnoremap J gJ
+
 " インサートモードを抜けるときに IME を "英数" に切り替える
 " https://mitsuse.jp/2017/01/02/disable-input-source-on-insert-leave-in-vim/
 if executable('swim')
