@@ -16,3 +16,5 @@ bind main  G !@hub browse -- commit/%(commit)
 bind diff  G !@hub browse -- commit/%(commit)
 bind log   G !@hub browse -- commit/%(commit)
 bind blame G !@hub browse -- commit/%(commit)
+
+set blame-view = date:default author:abbreviated file-name:auto id:yes,color date:relative line-number:yes,interval=1 text
