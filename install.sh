@@ -2,6 +2,8 @@
 ln -s `pwd`/vim/.vimrc ~/.vimrc
 mkdir ~/.config/nvim
 ln -s `pwd`/vim/.vimrc ~/.config/nvim/init.vim
+mkdir ~/.config/direnv
+ln -s `pwd`/direnv/direnv.toml ~/.config/direnv/direnv.toml
 ln -s `pwd`/vim/.vimrc ~/.ideavimrc
 mkdir ~/.vim/functions
 ln -s `pwd`/vim/functions/normal ~/.vim/functions/normal
