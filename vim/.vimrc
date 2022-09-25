@@ -373,8 +373,10 @@ endif
 
 " ### quickfix ---------------------- {{{
 
-nnoremap <space>; :colder<CR>
-nnoremap <space>' :cnewer<CR>
+" previous quickfix window
+nnoremap <space>; :silent! colder<CR>
+" next quickfix window
+nnoremap <space>' :silent! cnewer<CR>
 
 " }}}
 
