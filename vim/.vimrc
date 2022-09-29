@@ -1037,11 +1037,11 @@ function! ChoseAction(actions) abort
   return len(result) ? result[0].value : ""
 endfunction
 
-        " \ {"text": "(s)plit", "value": "split"},
 function! CocJumpAction() abort
+  " \ {"text": "(s)plit", "value": "split"},
   let actions = [
         \ {"text": "(e)dit", "value": "edit"},
-        \ {"text": "(v)slit", "value": "vsplit"},
+        \ {"text": "(v)split", "value": "vsplit"},
         \ {"text": "(t)ab", "value": "tabedit"},
         \ ]
   return ChoseAction(actions)
