@@ -515,7 +515,8 @@ hi EndOfBuffer          ctermfg=16 ctermbg=none
 " set fillchars+=stlnc:_  " also fill inactive windows
 " ウィンドウ間のバーをカスタマイズ
 hi VertSplit ctermfg=16 ctermbg=16
-set fillchars+=vert:│
+" https://stackoverflow.com/questions/9001337/vim-split-bar-styling
+set fillchars+=vert:\ "White space at the end
 
 " 補完の色調整
 hi Pmenu ctermfg=4 ctermbg=0
