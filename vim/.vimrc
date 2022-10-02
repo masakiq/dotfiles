@@ -406,6 +406,7 @@ Plug 'masakiq/vim-markdown-composer' " Run `!cd ~/.vim/plugged/vim-markdown-comp
 " -------------------------------------------
 Plug 'skywind3000/asyncrun.vim',            { 'commit': '7ee75ae20c7d556f1febb6d1a5961e48766c9c0b' }
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
+Plug 'antoinemadec/coc-fzf',                { 'commit': '5127966503e070770225437205949c6d244ab8a1' }
 Plug 'neoclide/coc.nvim',                   { 'commit': '88189afa98e3779f4f844500a3cd7569547edd87' }
 Plug 'github/copilot.vim',                  { 'commit': 'af9da6457790b651871b687b8f47d130cde083fc' }
 Plug 'dart-lang/dart-vim-plugin',           { 'commit': '81e50e80329e5eac2c115f45585b1838a614d07a', 'for': 'dart' }
@@ -557,7 +558,8 @@ hi CursorLineNr         ctermfg=87  cterm=none
 hi CursorLine           ctermbg=237 cterm=none
 
 " For coc.nvim
-hi CocFloating                      ctermfg=255   ctermbg=239
+hi CocFloating                      ctermfg=255   ctermbg=235
+hi CocMenuSel                       ctermfg=255   ctermbg=240
 hi FgCocInfoFloatBgCocFloating      ctermfg=123   ctermbg=239
 hi FgCocWarningFloatBgCocFloating   ctermfg=230   ctermbg=239
 hi FgCocErrorFloatBgCocFloating     ctermfg=219   ctermbg=239
@@ -932,6 +934,7 @@ endfunction
 let g:fzf_buffers_jump = 1
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 } }
+let g:fzf_preview_window = 'down,50%'
 let g:fzf_action = {
       \ 'ctrl-v': 'vsplit',
       \ 'ctrl-e': 'edit',
@@ -939,19 +942,21 @@ let g:fzf_action = {
       \ }
 
 let g:fzf_colors =
-      \ { "fg":      ["fg", "Normal"],
+      \ {
+      \ "fg":      ["fg", "Normal"],
       \ "bg":      ["bg", "Normal"],
-      \ "hl":      ["fg", "IncSearch"],
+      \ "hl":      ["fg", "Normal"],
       \ "fg+":     ["fg", "CursorLine", "CursorColumn", "Normal"],
-      \ "bg+":     ["bg", "CursorLine", "CursorColumn"],
-      \ "hl+":     ["fg", "IncSearch"],
-      \ "info":    ["fg", "IncSearch"],
+      \ "bg+":     ["bg", "CursorLine", "CursorColumn", "Normal"],
+      \ "hl+":     ["fg", "Normal"],
+      \ "info":    ["fg", "Normal"],
       \ "border":  ["fg", "Normal"],
-      \ "prompt":  ["fg", "Comment"],
-      \ "pointer": ["fg", "IncSearch"],
-      \ "marker":  ["fg", "IncSearch"],
-      \ "spinner": ["fg", "IncSearch"],
-      \ "header":  ["fg", "WildMenu"] }
+      \ "prompt":  ["fg", "Visual"],
+      \ "pointer": ["fg", "Visual"],
+      \ "marker":  ["fg", "Visual"],
+      \ "spinner": ["fg", "Visual"],
+      \ "header":  ["fg", "Visual"]
+      \ }
 
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
@@ -963,7 +968,7 @@ command! -bang -nargs=? -complete=dir Files
       \       'options': [
       \         '--layout=reverse',
       \         '--info=inline',
-      \         '--bind=ctrl-u:toggle,ctrl-p:toggle-preview'
+      \         '--bind=ctrl-u:toggle,?:toggle-preview'
       \       ]
       \     }
       \   ),
@@ -999,14 +1004,6 @@ inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'wid
 
 " ## neoclide/coc.nvim {{{
 
-" nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gr <Plug>(coc-references)
-
-" https://github.com/neoclide/coc-tsserver/issues/282#issuecomment-819364074
-nmap <space>p <Plug>(coc-codeaction-cursor)
-
-nmap <space>r <Plug>(coc-rename)
-
 inoremap <silent><expr> <c-n>
       \ coc#pum#visible() ? coc#pum#next(1) :
       \ CheckBackspace() ? "\<Tab>" :
@@ -1024,9 +1021,17 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
 nmap <space>f :call Format()<cr>
 command! Format :call Format()
 function! Format()
-  " call CocAction('format')
   call CocActionAsync('format')
 endfunction
+
+" https://github.com/neoclide/coc-tsserver/issues/282#issuecomment-819364074
+nmap <space>p <Plug>(coc-codeaction-cursor)
+nmap <space>r <Plug>(coc-rename)
+
+" nnoremap <silent> gd <Plug>(coc-definition)
+nnoremap <silent> gy <Plug>(coc-type-definition)
+nnoremap <silent> gi <Plug>(coc-implementation)
+nnoremap <silent> gr <Plug>(coc-references)
 
 " 定義ジャンプするときにウィンドウの開き方を選択する
 " https://zenn.dev/skanehira/articles/2021-12-12-vim-coc-nvim-jump-split
@@ -1038,7 +1043,6 @@ function! ChoseAction(actions) abort
 endfunction
 
 function! CocJumpAction() abort
-  " \ {"text": "(s)plit", "value": "split"},
   let actions = [
         \ {"text": "(e)dit", "value": "edit"},
         \ {"text": "(v)split", "value": "vsplit"},
@@ -1048,6 +1052,13 @@ function! CocJumpAction() abort
 endfunction
 
 nnoremap <silent> gd :<C-u>call CocActionAsync('jumpDefinition', CocJumpAction())<CR>
+
+" }}}
+
+" ## antoinemadec/coc-fzf {{{
+
+let g:coc_fzf_preview = 'down,50%'
+let g:coc_fzf_opts = ['--layout=reverse']
 
 " }}}
 
@@ -1134,7 +1145,7 @@ function! OpenFiles()
         \   '--prompt', 'Files> ',
         \   '--multi',
         \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-        \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+        \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
         \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \ ],
         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
@@ -1169,7 +1180,7 @@ function! s:open_files_in_specified_dir(dir) abort
         \   '--prompt', 'Files> ',
         \   '--multi',
         \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-        \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+        \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
         \   '--preview', 'bat --color=always  {}',
         \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \ ],
@@ -1192,7 +1203,7 @@ function! OpenAllFiles()
           \   '--prompt', 'AllFiles> ',
           \   '--multi',
           \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+          \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
           \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
@@ -1382,7 +1393,7 @@ command! -bang OpenHistoryFileInProject call fzf#run(fzf#wrap(s:preview(<bang>0,
   \   '--prompt', 'OpenHistoryFileInProject> ',
   \   '--multi',
   \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-  \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+  \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
   \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
   \ ]}), <bang>0))
 
@@ -1923,7 +1934,7 @@ function! s:open_another_project_file(line)
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
           \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'options': '--multi --bind=ctrl-p:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
+          \ 'options': '--multi --bind=?:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
           \ 'sink*':   function('s:open_files')})))
     if has('nvim')
       call feedkeys('i', 'n')
@@ -1941,26 +1952,37 @@ endfunction
 
 " https://github.com/junegunn/fzf/wiki/Examples-(vim)#narrow-ag-results-within-vim
 " bind は selection を参考に。http://manpages.ubuntu.com/manpages/focal/man1/fzf.1.html
+" command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
+"       \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
+"       \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+"       \ 'sink*':    function('s:open_files_via_rg'),
+"       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+"       \            '--prompt="RG> " '.
+"       \            '--delimiter : --preview-window +{2}-/2 '.
+"       \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview '.
+"       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+"       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+"       \ })))
+
 command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --no-heading --color always --smart-case '%s'",
+      \ 'source':  printf("rg --column --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case '%s'",
       \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--prompt="RG> " '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview ',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
 
 command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git'  '%s'",
+      \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case -g '!.git'  '%s'",
       \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--prompt="RGFromAllFiles> " '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
@@ -1987,13 +2009,13 @@ endfunction
 function! s:rg_in_specified_dir_execution(args) abort
   try
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
-        \ 'source': printf("rg --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' '%s' '%s'",
+        \ 'source': printf("rg --column --hidden --no-ignore --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case -g '!.git' '%s' '%s'",
         \   escape(empty(a:args[0]) ? '^(?=.)' : a:args[0], '"\'), escape(empty(a:args[1]) ? '^(?=.)' : a:args[1], '"\')),
         \ 'sink*':    function('s:open_files_via_rg'),
         \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
         \            '--prompt="RgInSpecifiedDir> " '.
         \            '--delimiter : --preview-window +{2}-/2 '.
-        \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,ctrl-p:toggle-preview '.
+        \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview '.
         \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
         \ })))
@@ -2070,7 +2092,7 @@ command! -nargs=* RGInLocalNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wra
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--multi --bind=ctrl-u:toggle,?:toggle-preview '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
@@ -2089,7 +2111,7 @@ command! -nargs=* RGInCloudNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wra
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--multi --bind=ctrl-u:toggle,?:toggle-preview '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
@@ -2127,7 +2149,7 @@ command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap(
       \ 'sink*':    function('s:open_file_in_another_project'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-u:toggle,ctrl-p:toggle-preview '.
+      \            '--multi --bind=ctrl-u:toggle,?:toggle-preview '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
@@ -2572,7 +2594,7 @@ function! OpenLocalNote()
           \   '--prompt', 'Note> ',
           \   '--multi',
           \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+          \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
           \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'sink*':   function('s:open_files'),
@@ -2597,7 +2619,7 @@ function! OpenCloudNote()
           \   '--prompt', 'Note> ',
           \   '--multi',
           \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+          \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
           \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'sink*':   function('s:open_files'),
@@ -2622,7 +2644,7 @@ function! OpenTodoList()
           \   '--prompt', 'Note> ',
           \   '--multi',
           \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-i:toggle-down,ctrl-p:toggle-preview',
+          \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
           \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'sink*':   function('s:open_files'),
