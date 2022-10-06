@@ -39,6 +39,9 @@ key_bindings:
   - { key: A, mods: Alt, chars: "\x1ba" }
   - { key: S, mods: Alt, chars: "\x1bs" }
   - { key: C, mods: Alt, chars: "\x1bc" }
+  - { key: D, mods: Alt, chars: "\x1bd" }
+  - { key: Back, mods: Alt, chars: "\x1b\x7f" }
+  - { key: Back, mods: Control, chars: "\x1b\x7f" }
   # - {
   #     key: T,
   #     mods: Control,
