@@ -5,7 +5,7 @@ font:
   size: 11.5
   offset:
     x: 1
-    y: 7
+    y: 6
 # https://github.com/alacritty/alacritty/wiki/Color-schemes
 # Colors (Dracula)
 colors:
@@ -42,6 +42,7 @@ key_bindings:
   - { key: D, mods: Alt, chars: "\x1bd" }
   - { key: Back, mods: Alt, chars: "\x1b\x7f" }
   - { key: Back, mods: Control, chars: "\x1b\x7f" }
+  - { key: B, mods: Control, chars: "\x1b[D" }
   # - {
   #     key: T,
   #     mods: Control,
