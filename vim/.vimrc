@@ -1029,36 +1029,25 @@ nmap <space>p <Plug>(coc-codeaction-cursor)
 nmap <space>r <Plug>(coc-rename)
 
 " nnoremap <silent> gd <Plug>(coc-definition)
-nnoremap <silent> gy <Plug>(coc-type-definition)
-nnoremap <silent> gi <Plug>(coc-implementation)
-nnoremap <silent> gr <Plug>(coc-references)
+" nnoremap <silent> gr <Plug>(coc-references)
+" nnoremap <silent> gi <Plug>(coc-implementation)
+" nnoremap <silent> gy <Plug>(coc-type-definition)
 
-" 定義ジャンプするときにウィンドウの開き方を選択する
-" https://zenn.dev/skanehira/articles/2021-12-12-vim-coc-nvim-jump-split
-function! ChoseAction(actions) abort
-  echo join(map(copy(a:actions), { _, v -> v.text }), ", ") .. ": "
-  let result = getcharstr()
-  let result = filter(a:actions, { _, v -> v.text =~# printf(".*\(%s\).*", result)})
-  return len(result) ? result[0].value : ""
-endfunction
-
-function! CocJumpAction() abort
-  let actions = [
-        \ {"text": "(e)dit", "value": "edit"},
-        \ {"text": "(v)split", "value": "vsplit"},
-        \ {"text": "(t)ab", "value": "tabedit"},
-        \ ]
-  return ChoseAction(actions)
-endfunction
-
-nnoremap <silent> gd :<C-u>call CocActionAsync('jumpDefinition', CocJumpAction())<CR>
+nnoremap <silent> gd :<C-u>call CocActionAsync('jumpDefinition', v:false)<CR>
+nnoremap <silent> gr :<C-u>call CocActionAsync('jumpReferences', v:false)<CR>
+nnoremap <silent> gi :<C-u>call CocActionAsync('jumpImplementation', v:false)<CR>
+nnoremap <silent> gy :<C-u>call CocActionAsync('jumpTypeDefinition', v:false)<CR>
 
 " }}}
 
 " ## antoinemadec/coc-fzf {{{
 
 let g:coc_fzf_preview = 'down,50%'
-let g:coc_fzf_opts = ['--layout=reverse']
+let g:coc_fzf_opts = [
+  \ '--layout=reverse',
+  \ '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
+  \ '--bind=ctrl-i:toggle-down,?:toggle-preview',
+  \ ]
 
 " }}}
 
