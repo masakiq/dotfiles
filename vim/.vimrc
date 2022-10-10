@@ -254,8 +254,8 @@ nnoremap $ g$
 nnoremap <C-e> $a
 nnoremap <C-a> ^i
 
-nnoremap <C-u> 10k
-nnoremap <C-d> 10j
+nnoremap <C-u> 7k
+nnoremap <C-d> 7j
 
 inoremap <M-right> <right><right><right><right><right>
 inoremap <M-left> <left><left><left><left><left>
