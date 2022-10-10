@@ -673,7 +673,7 @@ let g:EasyMotion_smartcase = 1
 " Migemo (日本語用)
 " https://github.com/easymotion/vim-easymotion#migemo-feature-for-japanese-user
 " <Leader><Leader>sa で「あ」を検索する
-let g:EasyMotion_use_migemo = 1
+" let g:EasyMotion_use_migemo = 1
 
 function! s:config_easyfuzzymotion(...) abort
   return extend(copy({
