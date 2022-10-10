@@ -705,8 +705,8 @@ noremap <space>a :call asyncrun#quickfix_toggle(20)<cr>
 " ## mg979/vim-visual-multi ---------------------- {{{
 
 let g:VM_maps = {}
-"let g:VM_maps["Align"]                = '<M-a>'
-let g:VM_maps["Align"]                = 'A'
+let g:VM_maps["Align"]                = '<M-a>'
+" let g:VM_maps["Align"]                = 'A'
 let g:VM_maps["Surround"]             = 'S'
 let g:VM_maps["Case Conversion Menu"] = 'C'
 
