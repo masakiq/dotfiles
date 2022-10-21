@@ -17,4 +17,11 @@ bind diff  G !@hub browse -- commit/%(commit)
 bind log   G !@hub browse -- commit/%(commit)
 bind blame G !@hub browse -- commit/%(commit)
 
+# rebase する
+bind main R !git rebase --committer-date-is-author-date -i %(commit)
+
+# diff を開く
+bind main D !sh -c "git difftool %(commit)~ %(commit)"
+bind refs D !sh -c "git difftool %(branch)"
+
 set blame-view = date:default author:abbreviated file-name:auto id:yes,color date:relative line-number:yes,interval=1 text
