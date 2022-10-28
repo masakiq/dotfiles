@@ -21,7 +21,9 @@ bind blame G !@hub browse -- commit/%(commit)
 bind main R !git rebase --committer-date-is-author-date -i %(commit)
 
 # diff を開く
-bind main D !sh -c "git difftool %(commit)~ %(commit)"
-bind refs D !sh -c "git difftool %(branch)"
+bind main   D !sh -c "git difftool %(commit)~ %(commit)"
+bind refs   D !sh -c "git difftool %(branch)"
+bind status D !sh -c "git difftool %(file)"
+bind diff   D !sh -c "git difftool `git rev-list --parents -n 1 %(commit) | cut -d ' ' -f 2` %(commit) -- %(file)"
 
 set blame-view = date:default author:abbreviated file-name:auto id:yes,color date:relative line-number:yes,interval=1 text
