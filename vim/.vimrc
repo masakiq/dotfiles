@@ -334,8 +334,8 @@ nnoremap <space>t :tabnew<CR>
 
 if has('gui_running')
 else
-  nnoremap <right> :normal gt<CR>
-  nnoremap <left> :normal gT<CR>
+  nnoremap <space>; :normal gT<CR>
+  nnoremap <space>' :normal gt<CR>
 
   " 現タブを右に移動
   nnoremap <space><right> :+tabm<CR>
@@ -374,9 +374,9 @@ endif
 " ### quickfix ---------------------- {{{
 
 " previous quickfix window
-nnoremap <space>; :silent! colder<CR>
+nnoremap <leader>; :silent! colder<CR>
 " next quickfix window
-nnoremap <space>' :silent! cnewer<CR>
+nnoremap <leader>' :silent! cnewer<CR>
 
 " }}}
 
@@ -646,8 +646,8 @@ else
   let g:which_key_map.t = 'Tab new'
   let g:which_key_map.a = 'Toggle QuickFix'
   let g:which_key_map.m = 'Copy last messages'
-  let g:which_key_map[';'] = 'Previous QuickFix'
-  let g:which_key_map["'"] = 'Next QuickFix'
+  " let g:which_key_map[';'] = 'Previous QuickFix'
+  " let g:which_key_map["'"] = 'Next QuickFix'
   let g:which_key_map["."] = 'Spread horizontally right'
   let g:which_key_map[","] = 'Spread horizontally left'
   let g:which_key_map["="] = 'Spread vertically top'
@@ -716,9 +716,10 @@ noremap <space>a :call asyncrun#quickfix_toggle(20)<cr>
 
 let g:VM_maps = {}
 let g:VM_maps["Align"]                = '<M-a>'
-" let g:VM_maps["Align"]                = 'A'
 let g:VM_maps["Surround"]             = 'S'
 let g:VM_maps["Case Conversion Menu"] = 'C'
+let g:VM_maps["Add Cursor Down"]      = '<M-Down>'
+let g:VM_maps["Add Cursor Up"]        = '<M-Up>'
 
 " }}}
 
