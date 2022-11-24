@@ -539,10 +539,10 @@ hi Search               ctermfg=255 ctermbg=63
 hi Todo                 ctermfg=255 ctermbg=34
 hi Visual               ctermfg=255 ctermbg=38
 
-hi DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
-hi DiffDelete cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
-hi DiffChange cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
-hi DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
+hi DiffAdd    ctermfg=233 ctermbg=194 guifg=#003300 guibg=#DDFFDD gui=none cterm=none
+hi DiffChange ctermfg=233 ctermbg=194 guifg=#003300 guibg=#DDFFDD gui=none cterm=none
+hi DiffText   ctermfg=255 ctermbg=22  guifg=#003300 guibg=#DDFFDD gui=none cterm=none
+hi DiffDelete ctermfg=252 ctermbg=224 guifg=#DDCCCC guibg=#FFDDDD gui=none cterm=none
 
 hi Identifier           ctermfg=115
 hi Type                 ctermfg=45
