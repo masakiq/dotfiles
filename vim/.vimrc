@@ -1860,20 +1860,32 @@ function! s:select_diff_files(branch)
   let current_branch = s:get_current_branch()
   let g:selected_branch = a:branch
   try
-    call fzf#run(fzf#wrap({
-          \ 'source':  printf('git diff' . a:branch . '...' . current_branch . ' --name-only'),
-          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'sink*': function('s:open_selected_files_with_another_tab')}))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
+    execute 'Gvdiff ' . g:selected_branch . '...' . current_branch
   catch
     echohl WarningMsg
     echom v:exception
     echohl None
   endtry
 endfunction
+
+" function! s:select_diff_files(branch)
+"   let current_branch = s:get_current_branch()
+"   let g:selected_branch = a:branch
+"   try
+"     call fzf#run(fzf#wrap({
+"           \ 'source':  printf('git diff' . a:branch . '...' . current_branch . ' --name-only'),
+"           \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
+"           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
+"           \ 'sink*': function('s:open_selected_files_with_another_tab')}))
+"     if has('nvim')
+"       call feedkeys('i', 'n')
+"     endif
+"   catch
+"     echohl WarningMsg
+"     echom v:exception
+"     echohl None
+"   endtry
+" endfunction
 
 " }}}
 
