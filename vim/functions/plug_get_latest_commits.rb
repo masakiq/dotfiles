@@ -30,7 +30,7 @@ execute_in_vim_dir do
     puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'for': ['javascript', 'typescript'] }"
   when 'rcmdnk/vim-markdown'
     puts "Plug '#{repo_name}', { 'commit': '#{commit}', 'for': 'markdown' }"
-  when 'iamcco/markdown-preview.nvim', 'masakiq/vim-markdown-composer'
+  when 'iamcco/markdown-preview.nvim'
     # ignore
   else
     puts "Plug '#{repo_name}', { 'commit': '#{commit}' }"

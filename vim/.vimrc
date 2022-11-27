@@ -402,7 +402,7 @@ autocmd FileType markdown :iabbrev tab <table><CR><esc>i  <thead><CR><esc>i    <
 call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
-Plug 'masakiq/vim-markdown-composer' " Run `!cd ~/.vim/plugged/vim-markdown-composer && cargo build --release && cd -` after installation
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 " -------------------------------------------
 Plug 'skywind3000/asyncrun.vim',            { 'commit': '7ee75ae20c7d556f1febb6d1a5961e48766c9c0b' }
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
@@ -824,24 +824,6 @@ let test#ruby#rspec#executable = 'rspec'
 
 " noremap <space>c :Commentary<cr>
 noremap <leader>c :Commentary<cr>
-
-" }}}
-
-"## euclio/vim-markdown-composer ---------------------- {{{
-
-let g:markdown_composer_browser = 'open -ga Google\ Chrome'
-let g:markdown_composer_port = 4649
-let g:markdown_composer_autostart = 0
-" https://highlightjs.org/static/demo/
-" let g:markdown_composer_syntax_theme = 'hybrid'
-" let g:markdown_composer_syntax_theme = 'dark'
-let g:markdown_composer_syntax_theme = 'far'
-" https://github.com/sindresorhus/github-markdown-css
-let g:markdown_composer_custom_css = ['file:///' . $GHQ_ROOT . '/github.com/masakiq/dotfiles/vim/markdown_composer_custom_css/github-markdown-dark.css', 'file:///' . $GHQ_ROOT . '/github.com/masakiq/dotfiles/vim/markdown_composer_custom_css/darkdown.css']
-
-command! StartPreviewMarkdown ComposerStart
-command! StopPreviewMarkdown silent! ComposerStop
-command! RestartPreviewMarkdown silent! ComposerRestart
 
 " }}}
 

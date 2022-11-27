@@ -34,9 +34,7 @@ QuitAllWithoutSaveSession
 LoadVIMRC
 SwitchNote
 SwitchVimPlugin
-StartPreviewMarkdown
-StopPreviewMarkdown
-RestartPreviewMarkdown
+MarkdownPreview
 DeleteBuffers
 DeleteBuffersByFZF
 SwapWindow
