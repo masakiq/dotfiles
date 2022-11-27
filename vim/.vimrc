@@ -862,6 +862,7 @@ let g:floaterm_height = 0.95
 let g:floaterm_width = 0.95
 let g:floaterm_title = 'terminal:$1/$2'
 let g:floaterm_keymap_kill = '<c-q>'
+tnoremap <C-[> <C-\><C-n><C-w><C-w>
 
 tnoremap <M-down> <C-\><C-n>:FloatermUpdate --width=1 --height=0.3 --position=botright --wintype=split<cr>
 tnoremap <M-up> <C-\><C-n>:FloatermUpdate --width=0.95 --height=0.95 --position=center --wintype=float<cr>
