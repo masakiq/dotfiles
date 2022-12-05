@@ -1043,7 +1043,7 @@ let g:coc_fzf_preview = 'down,50%'
 let g:coc_fzf_opts = [
   \ '--layout=reverse',
   \ '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-  \ '--bind=ctrl-i:toggle-down,?:toggle-preview',
+  \ '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
   \ ]
 
 " }}}
@@ -1131,7 +1131,7 @@ function! OpenFiles()
         \   '--prompt', 'Files> ',
         \   '--multi',
         \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-        \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
+        \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
         \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \ ],
         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
@@ -1166,7 +1166,7 @@ function! s:open_files_in_specified_dir(dir) abort
         \   '--prompt', 'Files> ',
         \   '--multi',
         \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-        \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
+        \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
         \   '--preview', 'bat --color=always  {}',
         \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \ ],
@@ -1189,7 +1189,7 @@ function! OpenAllFiles()
           \   '--prompt', 'AllFiles> ',
           \   '--multi',
           \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
+          \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
           \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
@@ -1379,7 +1379,7 @@ command! -bang OpenHistoryFileInProject call fzf#run(fzf#wrap(s:preview(<bang>0,
   \   '--prompt', 'OpenHistoryFileInProject> ',
   \   '--multi',
   \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-  \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
+  \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
   \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
   \ ]}), <bang>0))
 
@@ -1561,7 +1561,7 @@ function! DeleteSessions()
   try
     call fzf#run(fzf#wrap({
           \ 'source': 'ls ~/.vim/sessions',
-          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
+          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up ',
           \ 'sink*':  function('s:delete_sessions'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
           \ }))
@@ -1598,7 +1598,7 @@ endfunction
 command! DeleteWindow call fzf#run(fzf#wrap({
       \ 'source': s:list_windows(),
       \ 'sink*': { lines -> s:delete_windows(lines) },
-      \ 'options': '--multi --reverse --bind ctrl-a:select-all,ctrl-d:deselect-all'
+      \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '
       \ }))
 
 " https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
@@ -1694,7 +1694,7 @@ function! DeleteBuffersByFZF()
     call fzf#run(fzf#wrap({
           \ 'source': s:list_buffers(),
           \ 'sink*': { lines -> s:delete_buffers(lines) },
-          \ 'options': '--multi --reverse --bind ctrl-a:select-all'
+          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '
           \ }))
     if has('nvim')
       call feedkeys('i', 'n')
@@ -1882,6 +1882,7 @@ function! SwitchProject()
         \ 'options': [
         \   '--prompt', 'Project> ',
         \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+        \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
         \ ],
         \ 'placeholder': '{}/README.md',
         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
@@ -1932,7 +1933,7 @@ function! s:open_another_project_file(line)
     call fzf#run(fzf#vim#with_preview(fzf#wrap({
           \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'options': '--multi --bind=?:toggle-preview --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
+          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
           \ 'sink*':   function('s:open_files')})))
     if has('nvim')
       call feedkeys('i', 'n')
@@ -1969,7 +1970,7 @@ command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--prompt="RG> " '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview ',
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up ',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
 
@@ -1980,7 +1981,7 @@ command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--prompt="RGFromAllFiles> " '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
@@ -2013,7 +2014,7 @@ function! s:rg_in_specified_dir_execution(args) abort
         \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
         \            '--prompt="RgInSpecifiedDir> " '.
         \            '--delimiter : --preview-window +{2}-/2 '.
-        \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview '.
+        \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
         \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
         \ })))
@@ -2090,7 +2091,7 @@ command! -nargs=* RGInLocalNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wra
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-u:toggle,?:toggle-preview '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
@@ -2109,7 +2110,7 @@ command! -nargs=* RGInCloudNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wra
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-u:toggle,?:toggle-preview '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
@@ -2147,7 +2148,7 @@ command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap(
       \ 'sink*':    function('s:open_file_in_another_project'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
       \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-u:toggle,?:toggle-preview '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
       \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
@@ -2592,7 +2593,7 @@ function! OpenLocalNote()
           \   '--prompt', 'Note> ',
           \   '--multi',
           \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
+          \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
           \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'sink*':   function('s:open_files'),
@@ -2617,7 +2618,7 @@ function! OpenCloudNote()
           \   '--prompt', 'Note> ',
           \   '--multi',
           \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
+          \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
           \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'sink*':   function('s:open_files'),
@@ -2642,7 +2643,7 @@ function! OpenTodoList()
           \   '--prompt', 'Note> ',
           \   '--multi',
           \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-i:toggle-down,?:toggle-preview',
+          \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
           \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'sink*':   function('s:open_files'),
