@@ -1844,6 +1844,7 @@ function! s:select_diff_files(branch)
   let g:selected_branch = a:branch
   try
     execute 'Gvdiff ' . g:selected_branch . '...' . current_branch
+    SwapWindow
   catch
     echohl WarningMsg
     echom v:exception
