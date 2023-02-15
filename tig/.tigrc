@@ -2,9 +2,9 @@
 bind status C !git commit -v
 
 # commit hash をクリップボードに保存
-bind main  C !@sh -c "printf `git rev-parse --short %(commit)` | pbcopy"
-bind log   C !@sh -c "printf `git rev-parse --short %(commit)` | pbcopy"
-bind blame C !@sh -c "printf `git rev-parse --short %(commit)` | pbcopy"
+bind main  C !@sh -c "printf `git rev-parse %(commit)` | pbcopy"
+bind log   C !@sh -c "printf `git rev-parse %(commit)` | pbcopy"
+bind blame C !@sh -c "printf `git rev-parse %(commit)` | pbcopy"
 
 # file path をクリップボードに保存
 bind tree  C !@sh -c "printf %(file) | pbcopy"
@@ -12,10 +12,10 @@ bind diff  C !@sh -c "printf %(file) | pbcopy"
 bind stage C !@sh -c "printf %(file) | pbcopy"
 
 # commit を hub で開く
-bind main  G !@sh -c "hub browse -- commit/`git rev-parse --short %(commit)`"
-bind diff  G !@sh -c "hub browse -- commit/`git rev-parse --short %(commit)`"
-bind log   G !@sh -c "hub browse -- commit/`git rev-parse --short %(commit)`"
-bind blame G !@sh -c "hub browse -- commit/`git rev-parse --short %(commit)`"
+bind main  G !@hub browse -- commit/%(commit)
+bind diff  G !@hub browse -- commit/%(commit)
+bind log   G !@hub browse -- commit/%(commit)
+bind blame G !@hub browse -- commit/%(commit)
 
 # rebase する
 bind main R !git rebase --committer-date-is-author-date -i %(commit)
