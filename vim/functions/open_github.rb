@@ -14,7 +14,7 @@ def repository_url
 end
 
 def commit
-  `git show -s --format=%h`.strip
+  `git show -s --format=%H`.strip
 end
 
 def relative_file_path(absolute_file_path)
