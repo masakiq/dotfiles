@@ -1218,7 +1218,8 @@ function! s:open_files(lines)
     call s:open_quickfix_list(cmd, a:lines[1:])
   else
     for file in a:lines[1:]
-      exec cmd . file
+      let escaped_file = substitute(file, " ", "\\\\ ", 'g')
+      exec cmd . escaped_file
     endfor
   endif
 endfunction
