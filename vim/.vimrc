@@ -1245,24 +1245,33 @@ function! s:open_files_via_rg(lines)
         \ {
         \   'ctrl-e': 'edit',
         \   'ctrl-v': 'vertical split',
-        \   'enter': 'GotoOrOpen tab'
+        \   'enter': 'tab drop '
         \ },
-        \ a:lines[0], 'GotoOrOpen tab')
+        \ a:lines[0], 'tab drop ')
   let list = map(a:lines[1:], 's:open_quickfix(v:val)')
 
-  let first = list[0]
-  execute cmd escape(first.filename, ' %#\')
-  execute first.lnum
-  execute 'normal!' first.col.'|zz'
-
-  if len(list) > 1
+  if len(list) == 1
+    let first = list[0]
+    let escaped_file = substitute(first.filename, " ", "\\\\ ", 'g')
+    execute cmd escaped_file
+    execute first.lnum
+    execute 'normal!' first.col.'|zz'
+  else
     if a:lines[0] == 'ctrl-x'
+      let first = list[0]
+      let escaped_file = substitute(first.filename, " ", "\\\\ ", 'g')
+      execute cmd escaped_file
+      execute first.lnum
+      execute 'normal!' first.col.'|zz'
       call setqflist(list)
       copen
       wincmd p
     else
-      for fi in list
-        exec 'tab drop ' . fi.filename
+      for item in list
+        let escaped_file = substitute(item.filename, " ", "\\\\ ", 'g')
+        exec 'tab drop ' . escaped_file
+        execute item.lnum
+        execute 'normal!' item.col.'|zz'
       endfor
     endif
   endif
