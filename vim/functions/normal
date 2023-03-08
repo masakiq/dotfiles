@@ -9,6 +9,7 @@ OpenHistoryFileInProject
 OpenCloudNote
 OpenLocalNote
 OpenTodoList
+OpenSession
 DeleteSessions
 SaveSession
 RGFromAllFilesNormal

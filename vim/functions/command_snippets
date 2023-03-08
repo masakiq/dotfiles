@@ -1,0 +1,4 @@
+echo 'hoge'
+silent! cnewer
+silent! colder
+cfdo %s/before/after/g | :w

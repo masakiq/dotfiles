@@ -352,12 +352,6 @@ vnoremap <space>/ :call RGBySelectedText()<cr>
 
 " }}}
 
-" ### セッション系 ---------------------- {{{
-
-nnoremap <space>os :call OpenSession()<cr>
-
-" }}}
-
 " ### ターミナルモード ---------------------- {{{
 
 " カレントウィンドウでターミナルを開く
@@ -2551,6 +2545,32 @@ function! ExecInstall()
   let command = "./install.sh"
   call asyncrun#run('', '', command)
   echom 'executed "./install.sh"'
+endfunction
+
+nnoremap <space>os :call CommandSnippet()<cr>
+command! CommandSnippet :call CommandSnippet()
+function! CommandSnippet()
+  try
+    call fzf#run(fzf#wrap({
+          \ 'source': 'cat ~/.vim/functions/command_snippets',
+          \ 'options': [
+          \   '--prompt', 'CommandSnippet> ',
+          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
+          \ ],
+          \ 'sink':   function('s:select_command_snippet'),
+          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+          \ }))
+  catch
+    echohl WarningMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! s:select_command_snippet(line)
+  call histadd(':', a:line)
+  redraw
+  call feedkeys(':'."\<up>", 'n')
 endfunction
 
 " }}}
