@@ -39,8 +39,6 @@ PlugGetLatestCommits
 DiffFile
 DiffFileGitBranch
 Registers
-DisableLinterOnSave
-EnableLinterOnSave
 Reload
 CommandHistory
 AsyncStop
