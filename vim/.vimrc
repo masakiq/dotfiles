@@ -2421,15 +2421,6 @@ endfunction
 
 " ## Git ---------------------- {{{
 
-command! LazyGit :call LazyGit()
-function! LazyGit()
-  if has('nvim')
-    exec 'tabnew | term lazygit'
-  else
-    exec 'tab term ++close lazygit'
-  endif
-endfunction
-
 command! OpenGitHubRepo :call OpenGitHubRepo()
 function! OpenGitHubRepo()
   let command = '~/.vim/functions/open_github.rb'
@@ -2445,71 +2436,6 @@ function! OpenGitHubFile()
   endif
   let command = "~/.vim/functions/open_github.rb '" . expand("%:p") . "' '" . line . "'"
   call asyncrun#run('', '', command)
-endfunction
-
-command! OpenGitHubBlame :GBInteractive
-
-command! CopyGitHubCompareUrl :call CopyGitHubCompareUrl()
-function! CopyGitHubCompareUrl()
-  let command = "~/.vim/functions/copy_github_compare_url.rb"
-  call asyncrun#run('', '', command)
-endfunction
-
-command! -nargs=0 GitAdd call GitAdd()
-function! GitAdd()
-  AsyncStop
-  sleep 50ms
-  AsyncRun -silent git add .
-  echom 'executed "git add ."'
-endfunction
-
-command! GitPush :call GitPush()
-function! GitPush()
-  AsyncStop
-  sleep 50ms
-  AsyncRun -silent git push
-  echom 'executed "git push"'
-endfunction
-
-command! GitAddCommitPush :call GitAddCommitPush()
-function! GitAddCommitPush()
-  AsyncStop
-  sleep 50ms
-  let command = "~/.vim/functions/git_add_commit_push.rb"
-  call asyncrun#run('', '', command)
-endfunction
-
-command! GitPull :call GitPull()
-function! GitPull()
-  AsyncStop
-  sleep 50ms
-  AsyncRun -silent git pull
-  echom 'executed "git pull"'
-endfunction
-
-command! GitSelectBranch :call GitSelectBranch()
-function! GitSelectBranch()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls .git/refs/heads',
-          \ 'sink':  function('s:git_checkout'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:git_checkout(branch)
-  silent! execute '!git checkout ' . a:branch
-  call s:setTitle()
-  Reload
-  echom 'select branch to ' . a:branch
 endfunction
 
 command! -bang DiffFileGitBranch call DiffFileGitBranch()

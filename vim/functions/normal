@@ -1,8 +1,3 @@
-GitAdd
-GitPush
-GitPull
-GitAddCommitPush
-GitSelectBranch
 OpenAllFiles
 OpenAnotherProjectFile
 OpenHistoryFileInProject
@@ -23,11 +18,8 @@ CopyAbsolutePath
 CopyCurrentFile
 CopyAllTabPath
 CopyAllTabAbsolutePath
-LazyGit
 OpenGitHubRepo
 OpenGitHubFile
-OpenGitHubBlame
-CopyGitHubCompareUrl
 OpenFilesWithIgnoreFiles
 OpenFilesInSpecifiedDir
 QuitAll
