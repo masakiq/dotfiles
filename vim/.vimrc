@@ -2464,15 +2464,6 @@ endfunction
 
 " ## Util ---------------------- {{{
 
-command! ExecInstall :call ExecInstall()
-function! ExecInstall()
-  AsyncStop
-  sleep 50ms
-  let command = "./install.sh"
-  call asyncrun#run('', '', command)
-  echom 'executed "./install.sh"'
-endfunction
-
 nnoremap <space>os :call CommandSnippet()<cr>
 command! CommandSnippet :call CommandSnippet()
 function! CommandSnippet()
