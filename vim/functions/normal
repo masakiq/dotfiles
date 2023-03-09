@@ -50,7 +50,6 @@ SeparateTab
 CopyStatusMessage
 StartCopyStatusMessages
 FinishCopyStatusMessages
-Format
 RunExec
 RunDebug
 RunTest
@@ -60,7 +59,3 @@ RunRubocop
 FloatermNew
 Floaterms
 DeleteFloaterms
-Tig
-TigBlame
-TigGrep
-TigOpenCurrentFile
