@@ -2469,12 +2469,12 @@ command! CommandSnippet :call CommandSnippet()
 function! CommandSnippet()
   try
     call fzf#run(fzf#wrap({
-          \ 'source': 'cat ~/.vim/functions/command_snippets',
+          \ 'source': s:get_command_snippet_list(),
           \ 'options': [
           \   '--prompt', 'CommandSnippet> ',
           \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
-          \ 'sink':   function('s:select_command_snippet'),
+          \ 'sink':   function('s:fill_in_selected_command_snippet'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
           \ }))
   catch
@@ -2484,8 +2484,54 @@ function! CommandSnippet()
   endtry
 endfunction
 
-function! s:select_command_snippet(line)
-  call histadd(':', a:line)
+" コマンドのスニペットのリストを配列で取得する
+" example return value
+"   [
+"     'Print something ----- echo "something"',
+"     'Swap panels     ----- silent! exec \"normal \<c-w>x\"',
+"   ]
+function! s:get_command_snippet_list()
+  " 'subject:' と 'command:' で定義されたコマンドスニペットファイル
+  " example
+  "   subject:print something
+  "   command:echo 'something'
+  let snippet_file = '~/.vim/functions/command_snippets'
+  let lines = readfile(glob(snippet_file))
+
+  let list = []
+  for line in lines
+    let subject_text = s:extract_string('^subject:', line)
+    if len(subject_text) > 1
+      " subject の後方にスペースを追加し、fzf で表示時に見やすくする。
+      let subject_text = subject_text . '                                        '
+      " 同じ長さで区切り長さを揃え、fzf で表示時に見やすくする。
+      let subject_text = subject_text[0:40]
+      " subject と command の間に ' ----- ' を追加し、fzf で表示時に見やすくする。
+      let subject_text = subject_text . ' ----- '
+      call add(list, subject_text)
+    endif
+    let command_text = s:extract_string('^command:', line)
+    if len(command_text) > 1
+      let list[-1] = list[-1] . command_text
+    endif
+  endfor
+  return list
+endfunction
+
+" マッチした正規表現で取り除いた文字列を抽出する
+function! s:extract_string(regex, text)
+  let index = match(a:text, a:regex)
+  if index != 0
+    return ''
+  endif
+  let matched = substitute(a:text, a:regex, '', '')
+  return matched
+endfunction
+
+" 選択されたコマンドスニペットを Vim コマンドに出力する
+function! s:fill_in_selected_command_snippet(line)
+  let command = split(a:line, ' ----- ')
+  call histadd(':', command[-1])
   redraw
   call feedkeys(':'."\<up>", 'n')
 endfunction
@@ -2738,6 +2784,7 @@ endfunction
 " }}}
 
 " ## for test lines ---------------------- {{{
+
 
 
 
