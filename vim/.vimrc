@@ -367,10 +367,17 @@ endif
 
 " ### quickfix ---------------------- {{{
 
-" previous quickfix window
-nnoremap <leader>; :silent! colder<CR>
-" next quickfix window
-nnoremap <leader>' :silent! cnewer<CR>
+nnoremap <leader>' :NextQuickfix<cr>
+command! -nargs=0 NextQuickfix call NextQuickfix()
+function! NextQuickfix()
+  execute "normal! :silent! cnewer\<CR>"
+endfunction
+
+nnoremap <leader>; :PreviousQuickfix<cr>
+command! -nargs=0 PreviousQuickfix call PreviousQuickfix()
+function! PreviousQuickfix()
+  execute "normal! :silent! colder\<CR>"
+endfunction
 
 " }}}
 
