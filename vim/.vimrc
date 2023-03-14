@@ -278,6 +278,7 @@ vnoremap < c<<C-r>"><Esc>
 vnoremap > c<<C-r>"><Esc>
 vnoremap * c*<C-r>"*<Esc>
 vnoremap ~ c~<C-r>"~<Esc>
+vnoremap \| c\|<C-r>"\|<Esc>
 vnoremap <space> c<space><C-r>" <Esc>
 " 選択した両側を一文字ずつ削除
 vnoremap <bs> c<Right><Bs><Bs><C-r>"<Esc>
