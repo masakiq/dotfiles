@@ -348,7 +348,7 @@ endif
 
 " ### 検索系 ---------------------- {{{
 
-nnoremap <space>/ :call SearchByRG()<cr>
+" nnoremap <space>/ :call SearchByRG()<cr>
 vnoremap <space>/ :call RGBySelectedText()<cr>
 
 " }}}
@@ -419,6 +419,7 @@ Plug 'junegunn/fzf.vim',                    { 'commit': '9ceac718026fd39498d95ff
 Plug 'haya14busa/incsearch-easymotion.vim', { 'commit': 'fcdd3aee6f4c0eef1a515727199ece8d6c6041b5' }
 Plug 'haya14busa/incsearch-fuzzy.vim',      { 'commit': 'b08fa8fbfd633e2f756fde42bfb5251d655f5403' }
 Plug 'haya14busa/incsearch.vim',            { 'commit': 'c83de6d1ac31d173d7c3ffee0ad61dc643ee4f08' }
+Plug 'MunifTanjim/nui.nvim',                { 'commit': '9e3916e784660f55f47daa6f26053ad044db5d6a' }
 Plug 'wellle/targets.vim',                  { 'commit': '642d3a4ce306264b05ea3219920b13ea80931767' }
 Plug 'iberianpig/tig-explorer.vim',         { 'commit': 'f4ec3e57ccad1b9a28b8607c4a56a0affc686583' }
 Plug 'tpope/vim-commentary',                { 'commit': '3654775824337f466109f00eaf6759760f65be34' }
@@ -2789,6 +2790,25 @@ function! s:open_shopify_graphql_document(path)
 endfunction
 
 " }}}
+
+" }}}
+
+" ## for lua scripts ---------------------- {{{
+
+luafile ~/.vim/lua_scripts/keymap.lua
+
+function! SearchWord(word, ...)
+  let l:path = get(a:, 1, "")
+  call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg --column --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case %s %s", shellescape(a:word), l:path),
+      \ 'sink*':    function('s:open_files_via_rg'),
+      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
+      \            '--prompt="Search> " '.
+      \            '--delimiter : --preview-window +{2}-/2 '.
+      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up ',
+      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
+      \ })))
+endfunction
 
 " }}}
 
