@@ -795,7 +795,7 @@ let g:html_indent_style1 = "inc"
 
 "## vim-test/vim-test ---------------------- {{{
 
-nnoremap <leader>t :RunTest<cr>
+" nnoremap <leader>t :RunTest<cr>
 
 command! -nargs=0 RunTest :TestFile<cr>
 command! -nargs=0 RunTestNearest :TestNearest<cr>
@@ -2787,6 +2787,16 @@ endfunction
 function! s:open_shopify_graphql_document(path)
   let url = 'https://shopify.dev/api/admin-graphql/' . a:path
   call system('open ' . url)
+endfunction
+
+" }}}
+
+" ## 翻訳 ---------------------- {{{
+
+command! OpenDeepL call OpenDeepL()
+function! OpenDeepL()
+  silent execute ':tabnew ' . '~/.vim/deepl/input.txt'
+  silent execute ':vsplit ' . '~/.vim/deepl/output.txt'
 endfunction
 
 " }}}
