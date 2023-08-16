@@ -1,18 +1,13 @@
 OpenAllFiles
 OpenAnotherProjectFile
 OpenHistoryFileInProject
-OpenCloudNote
-OpenLocalNote
+SearchOrOpenInCloudNote
 OpenTodoList
 OpenSession
 OpenDeepL
 DeleteSessions
 SaveSession
-RGFromAllFilesNormal
 RGInAnotherProject
-RGInLocalNote
-RGInCloudNote
-RgInSpecifiedDir
 CopyCurrentPath
 CopyCurrentPathWithLineNumber
 CopyAbsolutePath
@@ -22,7 +17,6 @@ CopyAllTabAbsolutePath
 OpenGitHubRepo
 OpenGitHubFile
 OpenFilesWithIgnoreFiles
-OpenFilesInSpecifiedDir
 QuitAll
 QuitAllWithoutSaveSession
 LoadVIMRC

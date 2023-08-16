@@ -228,9 +228,6 @@ vnoremap x "+x
 " ビジュアルモードで選択した箇所の末尾までカットしてクリップボードにコピー
 " vnoremap <leader>x $h"+x
 
-" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れる
-vnoremap fy :call ChangeToFileFormatAndCopy()<cr>w
-
 " message をコピーする
 nnoremap <space>m :let @+ =execute('1messages')<CR>:echo 'last messages copied!'<CR>
 
@@ -348,8 +345,7 @@ endif
 
 " ### 検索系 ---------------------- {{{
 
-" nnoremap <space>/ :call SearchByRG()<cr>
-vnoremap <space>/ :call RGBySelectedText()<cr>
+vnoremap <space>/ :call SearchWordBySelectedText()<cr>
 
 " }}}
 
@@ -980,18 +976,8 @@ command! -bang -nargs=? -complete=dir Buffers
 command! -bang -nargs=? -complete=dir Windows
       \ call fzf#vim#windows(fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
-if has('gui_running')
-else
-  nnoremap <space>of :OpenFiles<CR>
-  " HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Files を開く
-  vnoremap <space>of :call ChangeToFileFormatAndCopyAndSearchFiles()<cr>
-  nnoremap <space>od :OpenFilesInSpecifiedDir<CR>
-endif
-
+nnoremap <space>of :call OpenFiles()<CR>
 nnoremap <space>ob :Buffers<CR>
-" HogeHoge::FugaFuga の形式を hoge_hoge/fuga_fuga にしてクリップボードに入れて :Buffers を開く
-vnoremap <space>ob :call ChangeToFileFormatAndCopyAndSearchBuffers()<cr>
-
 nnoremap <space>ow :Windows<CR>
 
 " 単語補完
@@ -1126,10 +1112,10 @@ endfunction
 
 " ## ファイル操作 ---------------------- {{{
 
-command! OpenFiles call OpenFiles()
-function! OpenFiles()
+function! OpenFiles(...)
+  let l:path = get(a:, 1, "")
   call fzf#run(fzf#vim#with_preview(fzf#wrap({
-        \ 'source': 'rg --hidden --files --sortr modified | grep -v .git',
+        \ 'source': printf("rg --hidden --files --sortr modified %s | grep -v .git", l:path),
         \ 'sink*': function('s:open_files'),
         \ 'options': [
         \   '--prompt', 'Files> ',
@@ -1140,47 +1126,6 @@ function! OpenFiles()
         \ ],
         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
         \ })))
-endfunction
-
-command! OpenFilesInSpecifiedDir call OpenFilesInSpecifiedDir()
-function! OpenFilesInSpecifiedDir()
-  call fzf#run(fzf#wrap({
-      \ 'source': 'ls -d */ .',
-      \ 'sink': function('s:open_files_in_specified_dir'),
-      \ 'options': [
-      \   '--prompt', 'OpenFilesInSpecifiedDir> ',
-      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ ],
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
-endfunction
-
-function! s:open_files_in_specified_dir(dir) abort
-  let source = ''
-  if a:dir == '.'
-    let source = 'rg --hidden --files --sortr modified | grep -v .git'
-  else
-    let source = 'rg --hidden --files --no-ignore --sortr modified ' . a:dir
-  endif
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-        \ 'source': source,
-        \ 'sink*': function('s:open_files'),
-        \ 'options': [
-        \   '--prompt', 'Files> ',
-        \   '--multi',
-        \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-        \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
-        \   '--preview', 'bat --color=always  {}',
-        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-        \ ],
-        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-        \ })))
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
 endfunction
 
 command! -bang OpenAllFiles call OpenAllFiles()
@@ -1316,22 +1261,6 @@ function! CopyCurrentFile()
   let @+= filename
   echo "copied current file: " . filename
 endfunction
-
-" command! OpenFilesFromClipboard call OpenFilesFromClipboard()
-" function! OpenFilesFromClipboard()
-"   let list=@+
-"   let files = split(list, "\n")
-"   for file in files
-"     silent! exec 'tab drop ' . file
-"   endfor
-" endfunction
-
-" command! OpenFilesQuickfixFromClipboard call OpenFilesQuickfixFromClipboard()
-" function! OpenFilesQuickfixFromClipboard()
-"   let list=@+
-"   let files = split(list, "\n")
-"   call s:open_quickfix_list('edit', files)
-" endfunction
 
 nnoremap <space>ot :OpenTargetFile<CR>
 command! OpenTargetFile call OpenTargetFile()
@@ -1978,160 +1907,39 @@ endfunction
 "       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
 "       \ })))
 
-command! -nargs=* RG call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case '%s'",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+function! SearchWord(word, ...)
+  let l:path = get(a:, 1, "")
+  if a:word == ''
+    call OpenFiles(l:path)
+    return
+  endif
+  call fzf#run(fzf#vim#with_preview(fzf#wrap({
+      \ 'source':  printf("rg --column --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case %s %s", shellescape(a:word), l:path),
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-      \            '--prompt="RG> " '.
+      \            '--prompt="Search> " '.
       \            '--delimiter : --preview-window +{2}-/2 '.
       \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up ',
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ })))
-
-command! -nargs=* RGFromAllFiles call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --hidden --no-ignore --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case -g '!.git'  '%s'",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files_via_rg'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-      \            '--prompt="RGFromAllFiles> " '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
-
-command! RgInSpecifiedDir call RgInSpecifiedDir()
-function! RgInSpecifiedDir() abort
-  call fzf#run(fzf#wrap({
-      \ 'source': 'ls -d */',
-      \ 'sink': function('s:rg_in_specified_dir'),
-      \ 'options': [
-      \   '--prompt', 'RgInSpecifiedDir> ',
-      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ ],
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
 endfunction
 
-function! s:rg_in_specified_dir(dir) abort
-  let word = input('RgInSpecifiedDir/')
-  let args = [word, a:dir]
-  call s:rg_in_specified_dir_execution(args)
-endfunction
-
-function! s:rg_in_specified_dir_execution(args) abort
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-        \ 'source': printf("rg --column --hidden --no-ignore --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case -g '!.git' '%s' '%s'",
-        \   escape(empty(a:args[0]) ? '^(?=.)' : a:args[0], '"\'), escape(empty(a:args[1]) ? '^(?=.)' : a:args[1], '"\')),
-        \ 'sink*':    function('s:open_files_via_rg'),
-        \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-        \            '--prompt="RgInSpecifiedDir> " '.
-        \            '--delimiter : --preview-window +{2}-/2 '.
-        \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
-        \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-        \ })))
-    endif
-    if has('nvim')
-      call feedkeys('i')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! SearchByRG()
-  if mode() == 'n'
-    execute 'RG ' . input('RG/')
-  else
-    let selected = SelectedVisualModeText()
-    let @+=selected
-    echom 'Copyed! ' . selected
-    execute 'RG ' . selected
-    silent! exec "normal \<c-c>"
-    if has('nvim')
-      call feedkeys(' ')
-    endif
-  endif
-endfunction
-
-function! RGBySelectedText()
+function! SearchWordBySelectedText()
   let selected = SelectedVisualModeText()
   let @+=selected
   echom 'Copyed! ' . selected
-  execute 'RG ' . selected
+  call SearchWord(selected)
 endfunction
 
-command! RGFromAllFilesVisual call RGFromAllFilesVisual()
-function! RGFromAllFilesVisual()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  execute 'RGFromAllFiles ' . selected
-  silent! exec "normal \<c-c>"
+command! SearchOrOpenInCloudNote call SearchOrOpenInCloudNote()
+function! SearchOrOpenInCloudNote()
+  lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/search_word.lua').search_word(os.getenv('CLOUD_NOTE_ROOT'))
   if has('nvim')
     call feedkeys('i', 'n')
   endif
 endfunction
-
-command! RGFromAllFilesNormal call RGFromAllFilesNormal()
-function! RGFromAllFilesNormal()
-  execute 'RGFromAllFiles ' . input('RGFromAllFiles/')
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-function! VimGrepBySelectedText()
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  echom 'Copyed! ' . selected
-  execute 'vimgrep ' . input('vimgrep/') . " app/** lib/** config/** spec/** apidoc/**"
-endfunction
-
-command! RGInLocalNote call RGInLocalNote()
-function! RGInLocalNote()
-  execute 'RGInLocalNoteAndOpen ' . input('RGInLocalNote/')
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-command! -nargs=* RGInLocalNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg '%s' $LOCAL_NOTE_ROOT --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files_via_rg'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
-
-command! RGInCloudNote call RGInCloudNote()
-function! RGInCloudNote()
-  execute 'RGInCloudNoteAndOpen ' . input('RGInCloudNote/')
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-command! -nargs=* RGInCloudNoteAndOpen call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg '%s' $CLOUD_NOTE_ROOT --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' ",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_files_via_rg'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
 
 command! -nargs=0 RGInAnotherProject call s:ghq_list_rg_in_another_project()
-
 function! s:ghq_list_rg_in_another_project()
   try
     call fzf#run(fzf#wrap({
@@ -2150,23 +1958,12 @@ function! s:ghq_list_rg_in_another_project()
 endfunction
 
 function! s:rg_in_another_project(line)
-  let g:rg_in_another_project_file = a:line
-  execute 'RGOnAnotherProject ' . input('RGOnAnotherProject/')
+  let $RG_IN_ANOTHER_PROJECT_WORD = a:line
+  lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/search_word.lua').search_word(os.getenv('RG_IN_ANOTHER_PROJECT_WORD'))
   if has('nvim')
     call feedkeys('i', 'n')
   endif
 endfunction
-
-command! -nargs=* RGOnAnotherProject call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg '%s' " . g:rg_in_another_project_file . " --column --hidden --no-ignore --no-heading --color always --smart-case -g '!.git' -g '!vendor' ",
-      \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-      \ 'sink*':    function('s:open_file_in_another_project'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-e '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '.
-      \            '--color hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
 
 " }}}
 
@@ -2298,36 +2095,6 @@ function! SelectedVisualModeText()
   let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
   let lines[0] = lines[0][column_start - 1:]
   return join(lines, "\n")
-endfunction
-
-function! ChangeToFileFormat(text)
-  let snake_case = substitute(substitute(a:text, '\(\l\)\(\u\)', '\1_\L\2\e', "g"), '\(\u\)\(\u\)', '\1_\L\2\e', "g")
-  let down_case = tolower(snake_case)
-  let file_format = substitute(down_case, '::', '/', "g")
-  return file_format
-endfunction
-
-function! ChangeToFileFormatAndCopy()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-endfunction
-
-function! ChangeToFileFormatAndCopyAndSearchFiles()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-  execute 'Files'
-endfunction
-
-function! ChangeToFileFormatAndCopyAndSearchBuffers()
-  let selected_text = SelectedVisualModeText()
-  let file_format = ChangeToFileFormat(selected_text)
-  let @+=file_format
-  echom 'Copyed! ' . file_format
-  execute 'Buffers'
 endfunction
 
 function! ListBufNums()
@@ -2587,57 +2354,6 @@ function! s:switch_note(note)
   silent! execute 'cd $' . a:note
 endfunction
 
-nnoremap <space>on :call OpenLocalNote()<cr>
-command! OpenLocalNote call OpenLocalNote()
-function! OpenLocalNote()
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source': 'find $LOCAL_NOTE_ROOT -type file | sort',
-          \ 'options': [
-          \   '--prompt', 'Note> ',
-          \   '--multi',
-          \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
-          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-          \ ],
-          \ 'sink*':   function('s:open_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ })))
-    " if has('nvim')
-    "   call feedkeys('i', 'n')
-    " endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-command! OpenCloudNote call OpenCloudNote()
-function! OpenCloudNote()
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source': 'find $CLOUD_NOTE_ROOT -type file | sort',
-          \ 'options': [
-          \   '--prompt', 'Note> ',
-          \   '--multi',
-          \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
-          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-          \ ],
-          \ 'sink*':   function('s:open_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ })))
-    " if has('nvim')
-    "   call feedkeys('i', 'n')
-    " endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
 command! OpenTodoList call OpenTodoList()
 function! OpenTodoList()
   try
@@ -2806,19 +2522,6 @@ endfunction
 " ## for lua scripts ---------------------- {{{
 
 luafile ~/.vim/lua_scripts/keymap.lua
-
-function! SearchWord(word, ...)
-  let l:path = get(a:, 1, "")
-  call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case %s %s", shellescape(a:word), l:path),
-      \ 'sink*':    function('s:open_files_via_rg'),
-      \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
-      \            '--prompt="Search> " '.
-      \            '--delimiter : --preview-window +{2}-/2 '.
-      \            '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up ',
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ })))
-endfunction
 
 " }}}
 

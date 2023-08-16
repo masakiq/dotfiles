@@ -10,12 +10,12 @@ function M.search_word(path)
       col = '50%',
     },
     size = {
-      width = 50,
+      width = 60,
     },
     border = {
       style = "double",
       text = {
-        top = "[Search in " .. (path:match("/([^/]+)$") or '') .. "]",
+        top = " Search in " .. (path:match("/([^/]+)$") or 'Current Directory') .. " (or Find Files) ",
         top_align = "center",
       },
     },
