@@ -1,0 +1,199 @@
+" ## 基本設定 ---------------------- {{{
+
+" フォーマット設定
+set encoding=utf-8
+set fileformats=unix,dos,mac
+
+" }}}
+
+" ## 検索の挙動に関する設定 ---------------------- {{{
+
+" 大文字小文字の両方が含まれている場合は大文字小文字を区別
+set smartcase
+
+" インクリメンタルサーチ
+set incsearch
+
+" 検索ハイライト
+set hlsearch
+
+" ビジュアルモードで選択したときに、検索した単語をハイライトにする
+" syn match cppSTL /\(::.*\)\@<=\<find\>/
+
+" 検索時のハイライトを無効化
+set nohlsearch
+
+" }}}
+
+" ## カーソル移動に関する設定 ---------------------- {{{
+
+" スクロールオフ
+set scrolloff=15
+
+" マウススクロール
+set mouse=a
+
+" }}}
+
+" ## 編集に関する設定 ---------------------- {{{
+
+" タブの画面上での幅
+set tabstop=2
+
+" 連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
+set softtabstop=2
+
+" 自動インデントでずれる幅
+set shiftwidth=2
+
+" タブをスペースに展開する/ しない (expandtab:展開する)
+set expandtab
+
+" 自動的にインデントする (noautoindent:インデントしない)
+set autoindent
+
+" バックスペースでインデントや改行を削除できるようにする
+set backspace=indent,eol,start
+
+" 検索時にファイルの最後まで行ったら最初に戻る (nowrapscan:戻らない)
+set wrapscan
+
+" 括弧入力時に対応する括弧を表示 (noshowmatch:表示しない)
+set showmatch
+
+" コマンドライン補完するときに強化されたものを使う
+set wildmenu
+set wildmode=longest:full,full
+
+" テキスト挿入中の自動折り返しを日本語に対応させる
+set formatoptions+=mM
+
+" タイポチェック
+" set spell spelllang+=cjk
+" set nospell
+
+" バッファ切り替え時のワーニングを無視
+set hidden
+
+" 保存時に行末空白削除
+autocmd BufWritePre * if &filetype != 'markdown' | :%s/\s\+$//ge | endif
+
+" }}}
+
+" ## ファイル操作に関する設定 ---------------------- {{{
+
+" バックアップファイルを作成しない (次行の先頭の " を削除すれば有効になる)
+set nobackup
+
+" スワップファイルを作成しない (次行の先頭の " を削除すれば有効になる)
+set noswapfile
+
+" }}}
+
+" ## カスタムマッピング ---------------------- {{{
+
+" ### マップ基本設定 ---------------------- {{{
+
+inoremap <C-c> <esc>
+vnoremap <C-c> <esc>
+
+" Insert モードで Emacs のキーバインドを使えるようにする
+inoremap <C-p> <Up>
+inoremap <C-n> <Down>
+inoremap <C-b> <Left>
+inoremap <C-f> <Right>
+inoremap <C-e> <End>
+inoremap <C-d> <Del>
+inoremap <C-h> <BS>
+inoremap <C-a> <Home>
+inoremap <C-k> <esc>`^DA
+
+" 方向キーとバックスペースキーを無効にする
+vnoremap <Bs>    <nop>
+nnoremap <Bs>    <nop>
+
+" ビジュアルモードで単語の最後まで選択する
+vnoremap E $h
+" ビジュアルモードでライン選択(ただし行末の改行は除く)
+vnoremap V 0<esc>v$h
+
+vnoremap a <esc>G$vgg0
+
+nnoremap V 0v$h
+
+" J で後の行を連結したときに空白を入れない
+nnoremap J gJ
+
+" }}}
+
+" ### 表示系 ---------------------- {{{
+
+nnoremap <space>i :set hlsearch!<CR>
+
+" }}}
+
+" ### クリップボード系 ---------------------- {{{
+
+" ビジュアルモードで選択した範囲をクリップボードにコピー
+vnoremap y "+y
+" ビジュアルモードで選択した範囲にクリップボードからペースト
+vnoremap p "+p
+" ビジュアルモードで選択した範囲をカットしてクリップボードにコピー　
+vnoremap d "+d
+" ビジュアルモードで選択した範囲をカットしてクリップボードにコピー　
+vnoremap x "+x
+
+" ### 移動系 ---------------------- {{{
+
+nnoremap j gj
+vnoremap j gj
+nnoremap k gk
+vnoremap k gk
+
+nnoremap <C-e> $a
+nnoremap <C-a> ^i
+
+nnoremap <C-u> 7gk
+nnoremap <C-d> 7gj
+
+" }}}
+
+" ### 変換系 ---------------------- {{{
+
+" 選択した両側を指定した記号で囲む　
+vnoremap ' c'<C-r>"'<Esc>
+vnoremap " c"<C-r>""<Esc>
+vnoremap ` c`<C-r>"`<Esc>
+vnoremap ( c(<C-r>")<Esc>
+vnoremap ) c(<C-r>")<Esc>
+vnoremap [ c[<C-r>"]<Esc>
+vnoremap ] c[<C-r>"]<Esc>
+vnoremap { c{<C-r>"}<Esc>
+vnoremap } c{<C-r>"}<Esc>
+vnoremap < c<<C-r>"><Esc>
+vnoremap > c<<C-r>"><Esc>
+vnoremap * c*<C-r>"*<Esc>
+vnoremap ~ c~<C-r>"~<Esc>
+vnoremap \| c\|<C-r>"\|<Esc>
+vnoremap <space> c<space><C-r>" <Esc>
+" 選択した両側を一文字ずつ削除
+vnoremap <bs> c<Right><Bs><Bs><C-r>"<Esc>
+
+" }}}
+
+" ### ファイル操作系 ---------------------- {{{
+
+nnoremap <space>w :w!<cr>
+nnoremap <space>q :q!<cr>
+
+" }}}
+
+" ### ウィンドウ操作系 ---------------------- {{{
+
+" ウインドウ間移動
+nnoremap <space>h <c-w>h
+nnoremap <space>j <c-w>j
+nnoremap <space>k <c-w>k
+nnoremap <space>l <c-w>l
+
+" }}}
