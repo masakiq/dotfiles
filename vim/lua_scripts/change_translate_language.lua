@@ -60,6 +60,14 @@ function M.change_translate_language()
   menu:map("i", "<Esc>", function()
     menu:unmount()
   end, { noremap = true })
+
+  menu:map("n", "<C-c>", function()
+    menu:unmount()
+  end, { noremap = true })
+
+  menu:map("i", "<C-c>", function()
+    menu:unmount()
+  end, { noremap = true })
 end
 
 return M

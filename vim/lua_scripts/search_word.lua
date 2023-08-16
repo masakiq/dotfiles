@@ -44,6 +44,14 @@ function M.search_word(path)
   input:map("i", "<Esc>", function()
     input:unmount()
   end, { noremap = true })
+
+  input:map("n", "<C-c>", function()
+    input:unmount()
+  end, { noremap = true })
+
+  input:map("i", "<C-c>", function()
+    input:unmount()
+  end, { noremap = true })
 end
 
 return M
