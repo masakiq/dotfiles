@@ -195,9 +195,9 @@ nnoremap V 0v$h
 nnoremap J gJ
 
 " インサートモードを抜けるときに IME を "英数" に切り替える
-" https://mitsuse.jp/2017/01/02/disable-input-source-on-insert-leave-in-vim/
-if executable('swim')
-  autocmd InsertLeave * :call system('swim use com.apple.keylayout.ABC')
+" https://github.com/daipeihust/im-select
+if executable('im-select')
+  autocmd InsertLeave * :call system('im-select ABC')
 endif
 
 " }}}
