@@ -205,7 +205,7 @@ endif
 " ### 表示系 ---------------------- {{{
 
 nnoremap <space>i :set hlsearch!<CR>
-nnoremap <space>n :call ToggleDisplayNumber()<cr>
+nnoremap <space>n :set invnumber<CR>
 
 " }}}
 
@@ -432,7 +432,6 @@ Plug 'matze/vim-move',                      { 'commit': 'a4bbedda7ef516b4a1b74d1
 Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b', 'for': 'ruby' }
 Plug 'tpope/vim-surround',                  { 'commit': 'bf3480dc9ae7bea34c78fbba4c65b4548b5b1fea' }
 Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
-Plug 'vim-test/vim-test',                   { 'commit': '8e2d3f55fdf315903a59cfa9ee60bac283a5f7fa' }
 Plug 'mg979/vim-visual-multi',              { 'commit': '724bd53adfbaf32e129b001658b45d4c5c29ca1a' }
 Plug 'liuchengxu/vim-which-key',            { 'commit': '4d64b2261aff3b9dc1863ebc1ea9ec410965a5de' }
 call plug#end()
@@ -648,6 +647,7 @@ else
   let g:which_key_map.m = 'Copy last messages'
   " let g:which_key_map[';'] = 'Previous QuickFix'
   " let g:which_key_map["'"] = 'Next QuickFix'
+  let g:which_key_map["/"] = 'Search Word or Open File'
   let g:which_key_map["."] = 'Spread horizontally right'
   let g:which_key_map[","] = 'Spread horizontally left'
   let g:which_key_map["="] = 'Spread vertically top'
@@ -789,37 +789,6 @@ let g:html_indent_style1 = "inc"
 
 " }}}
 
-"## vim-test/vim-test ---------------------- {{{
-
-" nnoremap <leader>t :RunTest<cr>
-
-command! -nargs=0 RunTest :TestFile<cr>
-command! -nargs=0 RunTestNearest :TestNearest<cr>
-
-function! DockerTransformer(cmd) abort
-  let services_spring = system("docker-compose ps --services | grep spring")
-  let services_api = system("docker-compose ps --services | grep api")
-  let services_web = system("docker-compose ps --services | grep web")
-  let envcmd = OutputEnvEnvironmentVariables('-e')
-  if matchstr(services_spring, "spring") == "spring"
-    return 'docker-compose exec ' . envcmd . substitute(services_spring, "\n", "", "") . ' spring ' . a:cmd . ' && tail -f /dev/null || tail -f /dev/null'
-  elseif matchstr(services_api, "api") == "api"
-    return 'docker-compose exec ' . envcmd . substitute(services_api, "\n", "", "") . ' ' . a:cmd . ' && tail -f /dev/null || tail -f /dev/null'
-  elseif matchstr(services_web, "web") == "web"
-    return 'docker-compose exec ' . envcmd . substitute(services_web, "\n", "", "") . ' ' . a:cmd . ' && tail -f /dev/null || tail -f /dev/null'
-  else
-    return a:cmd . ' && tail -f /dev/null || tail -f /dev/null'
-  endif
-endfunction
-
-let g:test#custom_transformations = {'docker': function('DockerTransformer')}
-let g:test#transformation = 'docker'
-let g:test#strategy = 'floaterm'
-let g:test#neovim#start_normal = 1
-let test#ruby#rspec#executable = 'rspec'
-
-" }}}
-
 "## tpope/vim-commentary ---------------------- {{{
 
 " noremap <space>c :Commentary<cr>
@@ -848,31 +817,6 @@ tnoremap <C-[> <C-\><C-n><C-w><C-w>
 
 tnoremap <M-down> <C-\><C-n>:FloatermUpdate --width=1 --height=0.3 --position=botright --wintype=split<cr>
 tnoremap <M-up> <C-\><C-n>:FloatermUpdate --width=0.95 --height=0.95 --position=center --wintype=float<cr>
-
-nnoremap <leader>r :RunRailsConsole<cr>
-command! -nargs=0 RunRailsConsole call RunRailsConsole()
-function! RunRailsConsole() abort
-  let cmd='rails c'
-  if filereadable('docker-compose.yml')
-    let cmd=DockerTransformer(cmd)
-  else
-    let envcmd = OutputEnvEnvironmentVariables('')
-    let cmd = envcmd . cmd
-  endif
-  silent! exec 'FloatermNew --title=rails-console:$1/$2 --autoclose=2 ' . cmd
-endfunction
-
-command! -nargs=0 RunRubocop call RunRubocop()
-function! RunRubocop() abort
-  let cmd='rubocop -A'
-  if filereadable('docker-compose.yml')
-    let cmd=DockerTransformer(cmd)
-  else
-    let cmd = cmd . ' && tail -f /dev/null || tail -f /dev/null'
-  endif
-  silent! exec 'FloatermNew --title=rubocop:$1/$2 --height=0.5 --width=0.5 --position=bottomright --autoclose=1 ' . cmd
-  call feedkeys('i', 'n')
-endfunction
 
 " command! DeleteFloaterms call DeleteFloaterms()
 " function! DeleteFloaterms()
@@ -1102,20 +1046,12 @@ endfunction
 
 " }}}
 
-" ## 表示系 ---------------------- {{{
-
-function! ToggleDisplayNumber()
-  silent! execute 'set invnumber'
-endfunction
-
-" }}}
-
 " ## ファイル操作 ---------------------- {{{
 
 function! OpenFiles(...)
   let l:path = get(a:, 1, "")
   call fzf#run(fzf#vim#with_preview(fzf#wrap({
-        \ 'source': printf("rg --hidden --files --sortr modified %s | grep -v .git", l:path),
+        \ 'source': printf("rg --hidden --files --glob '!**/.git/**' --sortr modified %s", l:path),
         \ 'sink*': function('s:open_files'),
         \ 'options': [
         \   '--prompt', 'Files> ',
@@ -1187,55 +1123,6 @@ function! s:open_quickfix_list(cmd, list)
   endif
 endfunction
 
-function! s:open_files_via_rg(lines)
-  if len(a:lines) < 2 | return | endif
-
-  let cmd = get(
-        \ {
-        \   'ctrl-e': 'edit',
-        \   'ctrl-v': 'vertical split',
-        \   'enter': 'tab drop '
-        \ },
-        \ a:lines[0], 'tab drop ')
-  let list = map(a:lines[1:], 's:open_quickfix(v:val)')
-
-  if len(list) == 1
-    let first = list[0]
-    let escaped_file = substitute(first.filename, " ", "\\\\ ", 'g')
-    execute cmd escaped_file
-    execute first.lnum
-    execute 'normal!' first.col.'|zz'
-  else
-    if a:lines[0] == 'ctrl-x'
-      let first = list[0]
-      let escaped_file = substitute(first.filename, " ", "\\\\ ", 'g')
-      execute cmd escaped_file
-      execute first.lnum
-      execute 'normal!' first.col.'|zz'
-      call setqflist(list)
-      copen
-      wincmd p
-    else
-      for item in list
-        let escaped_file = substitute(item.filename, " ", "\\\\ ", 'g')
-        exec 'tab drop ' . escaped_file
-        execute item.lnum
-        execute 'normal!' item.col.'|zz'
-      endfor
-    endif
-  endif
-endfunction
-
-function! s:open_selected_files_with_another_tab(files)
-  let current_branch = s:get_current_branch()
-  for file in a:files
-    silent execute '$tabnew ' . file
-    execute 'Gvdiff ' . g:selected_branch . '...' . current_branch
-    SwapWindow
-  endfor
-  unlet g:selected_branch
-endfunction
-
 command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
 function! CopyCurrentPath()
   let @+=expand('%')
@@ -1295,7 +1182,6 @@ endfunction
 command! Reload call Reload()
 function! Reload()
   silent! exec 'checktime'
-  "call s:setTitle()
 endfunction
 
 command! QuitAll call QuitAll()
@@ -1313,34 +1199,6 @@ function! QuitAllWithoutSaveSession()
 endfunction
 
 nnoremap <space>oh :History<CR>
-
-" https://github.com/jesseleite/dotfiles/blob/c75ae5ebd0589361e1fe84a912f1580a9b1f9a15/vim/plugin-config/fzf.vim#L44-L86
-command! -bang OpenHistoryFileInProject call fzf#run(fzf#wrap(s:preview(<bang>0, {
-  \ 'source': s:file_history_from_directory(getcwd()),
-  \ 'sink*': function('s:open_files'),
-  \ 'options': [
-  \   '--prompt', 'OpenHistoryFileInProject> ',
-  \   '--multi',
-  \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-  \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
-  \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-  \ ]}), <bang>0))
-
-function! s:file_history_from_directory(directory)
-  return fzf#vim#_uniq(filter(fzf#vim#_recent_files(), "s:file_is_in_directory(fnamemodify(v:val, ':p'), a:directory)"))
-endfunction
-
-function! s:file_is_in_directory(file, directory)
-  return filereadable(a:file) && match(a:file, a:directory . '/') == 0
-endfunction
-
-function! s:preview(bang, ...)
-  let preview_window = get(g:, 'fzf_preview_window', a:bang && &columns >= 80 || &columns >= 120 ? 'right': '')
-  if len(preview_window)
-    return call('fzf#vim#with_preview', add(copy(a:000), preview_window))
-  endif
-  return {}
-endfunction
 
 " }}}
 
@@ -1567,37 +1425,6 @@ endfunction
 
 " }}}
 
-" ## タブ操作 ---------------------- {{{
-
-command! CloseDupTabs :call CloseDuplicateTabs()
-function! CloseDuplicateTabs()
-  let cnt = 0
-  let i = 1
-
-  let tpbufflst = []
-  let dups = []
-  let tabpgbufflst = tabpagebuflist(i)
-  while type(tabpagebuflist(i)) == 3
-    if index(tpbufflst, tabpagebuflist(i)) >= 0
-      call add(dups,i)
-    else
-      call add(tpbufflst, tabpagebuflist(i))
-    endif
-
-    let i += 1
-    let cnt += 1
-  endwhile
-
-  call reverse(dups)
-
-  for tb in dups
-    exec "tabclose ".tb
-  endfor
-
-endfunction
-
-" }}}
-
 " ## バッファ操作 ---------------------- {{{
 
 function! DeleteBufsWithoutExistingWindows()
@@ -1795,25 +1622,6 @@ function! s:select_diff_files(branch)
   endtry
 endfunction
 
-" function! s:select_diff_files(branch)
-"   let current_branch = s:get_current_branch()
-"   let g:selected_branch = a:branch
-"   try
-"     call fzf#run(fzf#wrap({
-"           \ 'source':  printf('git diff' . a:branch . '...' . current_branch . ' --name-only'),
-"           \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-i:toggle+down ',
-"           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-"           \ 'sink*': function('s:open_selected_files_with_another_tab')}))
-"     if has('nvim')
-"       call feedkeys('i', 'n')
-"     endif
-"   catch
-"     echohl WarningMsg
-"     echom v:exception
-"     echohl None
-"   endtry
-" endfunction
-
 " }}}
 
 " ## プロジェクト横断 ---------------------- {{{
@@ -1839,54 +1647,6 @@ function! s:open_project(project)
   call DeleteBuffers()
   silent! execute 'cd ' . a:project
   call s:setTitle()
-endfunction
-
-function! s:open_file_in_another_project(lines)
-  unlet g:rg_in_another_project_file
-  if len(a:lines) < 2 | return | endif
-
-  let cmd = get({'ctrl-e': 'edit ',
-        \ 'ctrl-v': 'vertical split ',
-        \ 'enter': 'tab drop '}, a:lines[0], 'e ')
-  for file in a:lines[1:]
-    exec cmd . split(file, ':')[0]
-  endfor
-endfunction
-
-command! -nargs=0 OpenAnotherProjectFile call s:ghq_list_and_open_another_project_file()
-
-function! s:ghq_list_and_open_another_project_file()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:open_another_project_file'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:open_another_project_file(line)
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source':  printf('find ' . a:line . ' -not -path "' . a:line . '/.git/*" -not -path "' . a:line . '/vendor/*" -type f'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x ',
-          \ 'sink*':   function('s:open_files')})))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
 endfunction
 
 " }}}
@@ -1939,7 +1699,7 @@ function! SearchOrOpenInCloudNote()
   endif
 endfunction
 
-command! -nargs=0 RGInAnotherProject call s:ghq_list_rg_in_another_project()
+command! -nargs=0 SearchOrOpenInAnotherProject call s:ghq_list_rg_in_another_project()
 function! s:ghq_list_rg_in_another_project()
   try
     call fzf#run(fzf#wrap({
@@ -1962,6 +1722,45 @@ function! s:rg_in_another_project(line)
   lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/search_word.lua').search_word(os.getenv('RG_IN_ANOTHER_PROJECT_WORD'))
   if has('nvim')
     call feedkeys('i', 'n')
+  endif
+endfunction
+
+function! s:open_files_via_rg(lines)
+  if len(a:lines) < 2 | return | endif
+
+  let cmd = get(
+        \ {
+        \   'ctrl-e': 'edit',
+        \   'ctrl-v': 'vertical split',
+        \   'enter': 'tab drop '
+        \ },
+        \ a:lines[0], 'tab drop ')
+  let list = map(a:lines[1:], 's:open_quickfix(v:val)')
+
+  if len(list) == 1
+    let first = list[0]
+    let escaped_file = substitute(first.filename, " ", "\\\\ ", 'g')
+    execute cmd escaped_file
+    execute first.lnum
+    execute 'normal!' first.col.'|zz'
+  else
+    if a:lines[0] == 'ctrl-x'
+      let first = list[0]
+      let escaped_file = substitute(first.filename, " ", "\\\\ ", 'g')
+      execute cmd escaped_file
+      execute first.lnum
+      execute 'normal!' first.col.'|zz'
+      call setqflist(list)
+      copen
+      wincmd p
+    else
+      for item in list
+        let escaped_file = substitute(item.filename, " ", "\\\\ ", 'g')
+        exec 'tab drop ' . escaped_file
+        execute item.lnum
+        execute 'normal!' item.col.'|zz'
+      endfor
+    endif
   endif
 endfunction
 
@@ -2377,87 +2176,6 @@ function! OpenTodoList()
     echom v:exception
     echohl None
   endtry
-endfunction
-
-" }}}
-
-" ## 実行 ---------------------- {{{
-
-" nnoremap <leader>r :RunExec<cr>
-command! -nargs=0 RunExec call RunExec()
-function! RunExec() abort
-  let currentfile=expand('%')
-  let type=&filetype
-  let types = [ 'ruby', 'javascript', 'typescript' ]
-  if (index(types, type) < 0)
-    echohl WarningMsg | echon 'Can not run!! Available filetype are only ' | echohl ErrorMsg | echon join(types, ',') | echohl None
-    return
-  endif
-  let cmd=''
-  if type == 'ruby'
-    if currentfile =~ '^/'
-      let cmd=cmd . 'ruby ' . currentfile
-    elseif IsRailsProject() == 1
-      let cmd=cmd . 'rails runner ' . currentfile
-    else
-      let cmd=cmd . 'ruby ' . currentfile
-    endif
-  elseif type == 'javascript'
-    let cmd=cmd . 'node ' . currentfile
-  elseif type == 'typescript'
-    let cmd=cmd . 'npx ts-node ' . currentfile
-  endif
-  if currentfile =~ '^/'
-  elseif filereadable('docker-compose.yml')
-    let cmd=DockerTransformer(cmd)
-  else
-    let envcmd = OutputEnvEnvironmentVariables('')
-    let cmd = envcmd . cmd
-  endif
-  silent! exec 'FloatermNew --autoclose=0 ' . cmd . ' && tail -f /dev/null || tail -f /dev/null'
-  call feedkeys('i', 'n')
-endfunction
-
-function! IsRailsProject() abort
-  let is_rails = system("grep 'rails' 'Gemfile' >/dev/null && echo $status")
-  let is_rails = substitute(is_rails, "\n", "", "")
-  if is_rails == '0'
-    return 1
-  else
-    return 0
-  endif
-endfunction
-
-function! OutputEnvEnvironmentVariables(prefix) abort
-  let cmd = ''
-  if filereadable('.env')
-    for line in readfile('.env', '')
-      if line !~ '^#' && line !~ '^$'
-        let cmd = cmd . ' ' . a:prefix . ' ' . line . ' '
-      endif
-    endfor
-  else
-  endif
-  return cmd
-endfunction
-
-nnoremap <leader>d :RunDebug<cr>
-command! -nargs=0 RunDebug call RunDebug()
-function! RunDebug() abort
-  let currentfile=expand('%')
-  let type=&filetype
-  let types = [ 'javascript' ]
-  if (index(types, type) < 0)
-    echohl WarningMsg | echon 'Can not run with debug mode!! Available filetype are only ' | echohl ErrorMsg | echon join(types, ',') | echohl None
-    return
-  endif
-  let cmd=''
-  if type == 'javascript'
-    let cmd=cmd . 'node inspect ' . currentfile
-  endif
-  let cmd=DockerTransformer(cmd)
-  silent! exec 'FloatermNew --autoclose=0 ' . cmd . ' && tail -f /dev/null || tail -f /dev/null'
-  call feedkeys('i', 'n')
 endfunction
 
 " }}}

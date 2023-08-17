@@ -1,13 +1,11 @@
 OpenAllFiles
-OpenAnotherProjectFile
-OpenHistoryFileInProject
 SearchOrOpenInCloudNote
+SearchOrOpenInAnotherProject
 OpenTodoList
 OpenSession
 OpenDeepL
 DeleteSessions
 SaveSession
-RGInAnotherProject
 CopyCurrentPath
 CopyCurrentPathWithLineNumber
 CopyAbsolutePath
@@ -16,7 +14,6 @@ CopyAllTabPath
 CopyAllTabAbsolutePath
 OpenGitHubRepo
 OpenGitHubFile
-OpenFilesWithIgnoreFiles
 QuitAll
 QuitAllWithoutSaveSession
 LoadVIMRC
@@ -45,12 +42,6 @@ SeparateTab
 CopyStatusMessage
 StartCopyStatusMessages
 FinishCopyStatusMessages
-RunExec
-RunDebug
-RunTest
-RunTestNearest
-RunRailsConsole
-RunRubocop
 FloatermNew
 Floaterms
 DeleteFloaterms
