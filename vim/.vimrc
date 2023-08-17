@@ -1999,19 +1999,16 @@ endfunction
 
 command! OpenGitHubRepo :call OpenGitHubRepo()
 function! OpenGitHubRepo()
-  let command = '~/.vim/functions/open_github.rb'
-  call asyncrun#run('', '', command)
+  lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/open_github.lua').open_github('repo')
 endfunction
 
 command! OpenGitHubFile :call OpenGitHubFile()
 function! OpenGitHubFile()
   if g:mode == 'n'
-    let line = a:firstline == a:lastline ? "#L" . line(".") : "#L" . a:firstline . "-L" . a:lastline
+    lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/open_github.lua').open_github('normal')
   else
-    let line = g:firstline == g:lastline ? "#L" . line(".") : "#L" . g:firstline . "-L" . g:lastline
+    lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/open_github.lua').open_github('visual')
   endif
-  let command = "~/.vim/functions/open_github.rb '" . expand("%:p") . "' '" . line . "'"
-  call asyncrun#run('', '', command)
 endfunction
 
 command! -bang DiffFileGitBranch call DiffFileGitBranch()
