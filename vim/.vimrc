@@ -402,7 +402,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 " -------------------------------------------
-Plug 'skywind3000/asyncrun.vim',            { 'commit': '7ee75ae20c7d556f1febb6d1a5961e48766c9c0b' }
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
 Plug 'antoinemadec/coc-fzf',                { 'commit': '5127966503e070770225437205949c6d244ab8a1' }
 Plug 'neoclide/coc.nvim',                   { 'commit': '88189afa98e3779f4f844500a3cd7569547edd87' }
@@ -703,12 +702,6 @@ noremap <silent><expr> <space>f incsearch#go(<SID>config_easyfuzzymotion())
 let dart_html_in_string = v:true
 let g:dart_style_guide = 2
 " let g:dart_format_on_save = 1
-
-" }}}
-
-" ## skywind3000/asyncrun.vim ---------------------- {{{
-
-noremap <space>a :call asyncrun#quickfix_toggle(20)<cr>
 
 " }}}
 
