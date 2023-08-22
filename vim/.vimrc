@@ -1043,8 +1043,12 @@ endfunction
 
 function! OpenFiles(...)
   let l:path = get(a:, 1, "")
+  let l:sort = get(a:, 2, "")
+  if l:path == ""
+    let l:path = "--sortr modified"
+  endif
   call fzf#run(fzf#vim#with_preview(fzf#wrap({
-        \ 'source': printf("rg --hidden --files --glob '!**/.git/**' --sortr modified %s", l:path),
+        \ 'source': printf("rg --hidden --files --glob '!**/.git/**' %s %s", l:sort, l:path),
         \ 'sink*': function('s:open_files'),
         \ 'options': [
         \   '--prompt', 'Files> ',
@@ -1662,8 +1666,9 @@ endfunction
 
 function! SearchWord(word, ...)
   let l:path = get(a:, 1, "")
+  let l:sort = get(a:, 2, "")
   if a:word == ''
-    call OpenFiles(l:path)
+    call OpenFiles(l:path, l:sort)
     return
   endif
   call fzf#run(fzf#vim#with_preview(fzf#wrap({

@@ -1,8 +1,11 @@
 local M = {}
 
-function M.search_word(path)
+-- sort : Specify sort options to use with `ripgrep`
+--   e.g. "--sortr modified"(default), "--sort path"
+function M.search_word(path, sort)
   local Input = require("nui.input")
   path = path or ""
+  sort = sort or ""
 
   local input = Input({
     position = {
@@ -29,7 +32,7 @@ function M.search_word(path)
       print("Input Closed!")
     end,
     on_submit = function(value)
-      vim.cmd('call SearchWord("' .. value .. '", "' .. path .. '")')
+      vim.cmd('call SearchWord("' .. value .. '", "' .. path .. '", "' .. sort .. '")')
     end,
   })
 

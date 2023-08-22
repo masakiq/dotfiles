@@ -16,7 +16,8 @@ vim.api.nvim_set_keymap(
 vim.api.nvim_set_keymap(
   "n",
   "<space>on",
-  "<cmd>lua dofile('" .. lua_script_path .. "search_word.lua').search_word('" .. local_note_root .. "')<CR>",
+  "<cmd>lua dofile('" ..
+  lua_script_path .. "search_word.lua').search_word('" .. local_note_root .. "', '--sort path')<CR>",
   { noremap = true, silent = false }
 )
 
