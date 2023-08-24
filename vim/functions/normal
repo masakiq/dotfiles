@@ -35,8 +35,8 @@ Reload
 CommandHistory
 AsyncStop
 CloseTabs
-CloseRightTab
-CloseLeftTab
+CloseTabsRight
+CloseTabsLeft
 MergeTab
 SeparateTab
 CopyStatusMessage

@@ -1259,16 +1259,16 @@ function! s:actuality_tab_count()
   return tab_count
 endfunction
 
-command! -bang CloseRightTab call CloseRightTab('<bang>')
-function! CloseRightTab(bang)
+command! -bang CloseTabsRight call CloseTabsRight('<bang>')
+function! CloseTabsRight(bang)
   let cur=tabpagenr()
   while cur < tabpagenr('$')
     exe 'tabclose' . a:bang . ' ' . (cur + 1)
   endwhile
 endfunction
 
-command! -bang CloseLeftTab call CloseLeftTab('<bang>')
-function! CloseLeftTab(bang)
+command! -bang CloseTabsLeft call CloseTabsLeft('<bang>')
+function! CloseTabsLeft(bang)
   while tabpagenr() > 1
     exe 'tabclose' . a:bang . ' 1'
   endwhile
@@ -1276,8 +1276,8 @@ endfunction
 
 command! -bang CloseTabs call CloseTabs('<bang>')
 function! CloseTabs(bang)
-  call CloseRightTab(a:bang)
-  call CloseLeftTab(a:bang)
+  call CloseTabsRight(a:bang)
+  call CloseTabsLeft(a:bang)
 endfunction
 
 command! MergeTab call MergeTab()
