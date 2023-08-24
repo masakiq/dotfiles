@@ -197,7 +197,7 @@ nnoremap J gJ
 " インサートモードを抜けるときに IME を "英数" に切り替える
 " https://github.com/daipeihust/im-select
 if executable('im-select')
-  autocmd InsertLeave * :call system('im-select ABC')
+  autocmd InsertLeave * :lua os.execute('im-select ABC')
 endif
 
 " }}}
