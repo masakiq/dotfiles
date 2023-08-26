@@ -195,9 +195,9 @@ nnoremap V 0v$h
 nnoremap J gJ
 
 " インサートモードを抜けるときに IME を "英数" に切り替える
-" https://github.com/daipeihust/im-select
-if executable('im-select')
-  autocmd InsertLeave * :lua os.execute('im-select ABC')
+" https://github.com/mitsuse/swim
+if executable('swim')
+  autocmd InsertLeave * :lua os.execute('swim use com.apple.keylayout.ABC')
 endif
 
 " }}}
