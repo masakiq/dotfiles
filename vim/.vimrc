@@ -2222,10 +2222,28 @@ endfunction
 
 " ## 翻訳 ---------------------- {{{
 
+nnoremap <space>od :call OpenDeepL()<CR>
 command! OpenDeepL call OpenDeepL()
 function! OpenDeepL()
-  silent execute ':tabnew ' . '~/.vim/deepl/input.txt'
-  silent execute ':vsplit ' . '~/.vim/deepl/output.txt'
+  let input_file_path = '~/.vim/deepl/input.txt'
+  let output_file_path = '~/.vim/deepl/output.txt'
+  let dir_path = fnamemodify(input_file_path, ':h')
+
+  if !isdirectory(expand(dir_path))
+    call mkdir(expand(dir_path), "p")
+  endif
+  if !filereadable(expand(input_file_path))
+    call writefile([], expand(input_file_path))
+  endif
+  if !filereadable(expand(output_file_path))
+    call writefile([], expand(output_file_path))
+  endif
+
+  silent execute ':tab drop ~/.vim/deepl/input.txt'
+  if winnr('$') == 1
+    silent execute ':vsplit ~/.vim/deepl/output.txt'
+    silent execute "normal \<c-w>h"
+  endif
 endfunction
 
 " }}}

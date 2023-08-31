@@ -7,22 +7,18 @@ local M = {}
 function M.request_deepl(text, target_lang)
   local json = require "json"
   local read_file = dofile(lua_script_path .. "read_file.lua")
-  local auth_key = read_file.read_file(deepl_auth_key_file)
+  local auth_key = read_file.read_file(deepl_auth_key_file):gsub("\n", "")
 
-  local data = Translate(auth_key, text, target_lang)
-  local json_data = json:decode(data)
-  if not json_data then
-    error "data is empty"
-  end
-  if not json_data.translations then
-    error "DeepL returns error"
-  end
-  return json_data.translations[1].text
+  local data = RequestDeepL(auth_key, text, target_lang)
+  return data
 end
 
-function Translate(auth_key, text, target_lang)
+function RequestDeepL(auth_key, text, target_lang)
+  local json = require "json"
+  local inspect = require "inspect"
+
   local curl_template = [[
-  curl --silent -X POST 'https://api-free.deepl.com/v2/translate' \
+  curl -s -w "\n%s\n" -X POST 'https://api-free.deepl.com/v2/translate' \
   --header 'Authorization: DeepL-Auth-Key %s' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -30,23 +26,43 @@ function Translate(auth_key, text, target_lang)
     "target_lang": "%s"
   }'
   ]]
+
+  text = text:gsub("\n", "\\n")
+  text = text:gsub("\"", "\\\"")
+  text = text:gsub("'", "\\\"")
+
   local curl_command = string.format(
     curl_template,
-    auth_key:gsub("\n", ""),
-    text:gsub("\n", "\\n"),
+    "%{http_code}",
+    auth_key,
+    text,
     target_lang
   )
   local file = io.popen(curl_command, "r")
 
   if not file then
-    print("file not found")
-    return
+    error "DeepL returns empty!"
   end
 
   local data = file:read("*all")
   file:close()
+  local body, code = string.match(data, "^(.-)\n(.*)$")
+  code = code:gsub("\n", "")
 
-  return data;
+  if code ~= "200" then
+    error("DeepL returns error! code:" .. code .. ", body:" .. inspect(body))
+  end
+
+  local json_body = json:decode(body)
+  if not json_body then
+    error "DeepL returns empty body!"
+  end
+
+  if not json_body.translations then
+    error("DeepL did not return any translation results! body:" .. inspect(json_body))
+  end
+
+  return json_body.translations[1].text;
 end
 
 return M

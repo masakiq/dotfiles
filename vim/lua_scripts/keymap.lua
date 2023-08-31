@@ -34,10 +34,3 @@ vim.api.nvim_set_keymap(
   "<cmd>lua dofile('" .. lua_script_path .. "translate.lua').translate()<CR>",
   { noremap = true, silent = false }
 )
-
-vim.api.nvim_set_keymap(
-  "n",
-  "<Leader>s",
-  "<cmd>lua dofile('" .. lua_script_path .. "change_translate_language.lua').change_translate_language()<CR>",
-  { noremap = true, silent = false }
-)
