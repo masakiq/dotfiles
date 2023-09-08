@@ -1236,6 +1236,15 @@ function! CopyAllTabPath()
   let @+=join(files, "\n")
 endfunction
 
+command! OpenFilesFromClipboard call OpenFilesFromClipboard()
+function! OpenFilesFromClipboard()
+  let clipboard_contents = getreg('+')
+  let files = split(clipboard_contents, '\n')
+  for file in files
+    exec "tab drop " . file
+  endfor
+endfunction
+
 command! CopyAllTabAbsolutePath call CopyAllTabAbsolutePath()
 function! CopyAllTabAbsolutePath()
   let files = [expand('%:p')]
