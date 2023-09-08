@@ -376,6 +376,15 @@ function! PreviousQuickfix()
   execute "normal! :silent! colder\<CR>"
 endfunction
 
+nnoremap <space>a :call ToggleQuickFix()<cr>
+function! ToggleQuickFix()
+    if empty(filter(getwininfo(), 'v:val.quickfix'))
+        copen
+    else
+        cclose
+    endif
+endfunction
+
 " }}}
 
 " }}}
