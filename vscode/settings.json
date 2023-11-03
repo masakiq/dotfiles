@@ -3,7 +3,6 @@
   "vim.vimrc.path": "~/.vimrc",
   "vim.autoindent": true,
   "vim.hlsearch": true,
-  // "vim.foldfix": true,
   "vim.easymotion": true,
   "vim.easymotionKeys": "hklasdgjf",
   "vim.normalModeKeyBindingsNonRecursive": [
@@ -239,7 +238,6 @@
     }
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
-    // カーソル位置の単語をマルチカーソルで選択
     {
       "before": [
         "<C-n>"
@@ -271,62 +269,62 @@
       "before": [
         "<space>",
         "o",
-        "s",
+        "s"
       ],
       "commands": [
         "search.action.openNewEditor",
         "workbench.action.search.toggleQueryDetails",
         "toggleSearchEditorCaseSensitive",
         "toggleSearchEditorRegex",
-        "toggleSearchEditorWholeWord",
-      ],
+        "toggleSearchEditorWholeWord"
+      ]
     },
     {
       "before": [
         "<space>",
         "o",
-        "r",
+        "r"
       ],
       "commands": [
         "workbench.action.replaceInFiles",
-        "workbench.action.search.toggleQueryDetails",
+        "workbench.action.search.toggleQueryDetails"
       ]
     },
     {
       "before": [
-        "=",
+        "="
       ],
       "commands": [
-        "editor.action.formatDocument",
+        "editor.action.formatDocument"
       ]
     },
     {
       "before": [
         "<space>",
-        "=",
+        "="
       ],
       "commands": [
-        "editor.action.formatSelection",
+        "editor.action.formatSelection"
       ]
     },
     {
       "before": [
         "m",
-        "n",
+        "n"
       ],
       "commands": [
-        "editor.action.rename",
+        "editor.action.rename"
       ]
     },
     {
       "before": [
         "m",
-        "-",
+        "-"
       ],
       "commands": [
-        "extension.changeCase.no",
+        "extension.changeCase.no"
       ]
-    },
+    }
   ],
   "vim.leader": "<space>",
   "vim.incsearch": true,
@@ -351,7 +349,8 @@
     "statusBar.background": "#8FBCBB",
     "statusBar.noFolderBackground": "#8FBCBB",
     "statusBar.debuggingBackground": "#8FBCBB",
-    "statusBar.foreground": "#434C5E"
+    "statusBar.foreground": "#434C5E",
+    "statusBar.debuggingForeground": "#434C5E"
   },
   "terminal.integrated.shell.osx": "/usr/local/bin/fish",
   "vim.camelCaseMotion.enable": true,
@@ -364,7 +363,6 @@
   "editor.cursorBlinking": "solid",
   "editor.multiCursorModifier": "alt",
   "workbench.statusBar.visible": true,
-  "workbench.activityBar.visible": false,
   "editor.columnSelection": false,
   "terminal.integrated.fontFamily": "Source Code Pro for Powerline",
   "editor.minimap.enabled": false,
@@ -379,9 +377,6 @@
   "editor.formatOnSaveTimeout": 3000,
   "editor.folding": false,
   "editor.glyphMargin": false,
-  "timeline.excludeSources": [
-    "git-history"
-  ],
   "window.zoomLevel": 1,
   "search.searchEditor.defaultNumberOfContextLines": 2,
   "editor.cursorSurroundingLines": 15,
@@ -390,14 +385,6 @@
   "workbench.editor.highlightModifiedTabs": true,
   "editor.wordWrap": "on",
   "editor.formatOnSave": true,
-  // "CodeActionOnParticipant": false,
-  // "ExtHostSaveParticipant": false,
-  // "editor.scrollbar.verticalScrollbarSize": 15,
-  // "ruby.intellisense": "rubyLocate",
-  // "ruby.useLanguageServer": true,
-  // "solargraph.definitions": true,
-  // "solargraph.diagnostics": true
-  // Dart settings https://dartcode.org/docs/recommended-settings/
   "debug.openDebug": "openOnDebugBreak",
   "[dart]": {
     "editor.formatOnSave": true,
@@ -409,14 +396,15 @@
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "editor.suggestSelection": "first",
     "editor.tabCompletion": "onlySnippets",
-    "editor.wordBasedSuggestions": false,
+    "editor.wordBasedSuggestions": false
   },
   "whichkey.bindingOverrides": [
     {
       "keys": "f",
       "name": "Open file",
       "type": "command",
-      "command": "workbench.action.quickOpen",
+      "command": "workbench.action.quickOpen"
     }
-  ]
+  ],
+  "security.workspace.trust.untrustedFiles": "open"
 }
