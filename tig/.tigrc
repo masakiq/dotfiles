@@ -15,8 +15,7 @@ bind stage C !@sh -c "printf %(file) | pbcopy"
 bind main  G !@hub browse -- commit/%(commit)
 bind diff  G !@hub browse -- commit/%(commit)
 bind log   G !@hub browse -- commit/%(commit)
-bind blame G !@hub browse -- blame/%(commit)/%(file)#L%(lineno)
-# bind blame G !bash -c "hub browse -- blame/%(commit)/%(file)#L%(lineno)"
+bind blame G !@hub browse -- commit/%(commit)/%(file)
 
 # rebase する
 bind main R !git rebase --committer-date-is-author-date -i %(commit)
