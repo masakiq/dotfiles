@@ -414,7 +414,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
 Plug 'antoinemadec/coc-fzf',                { 'commit': '5fae5a15497750483e21fc207aa6005f340f02f2' }
 Plug 'neoclide/coc.nvim',                   { 'commit': 'fab97c7db68f24e5cc3c1cf753d3bd1819beef8f' }
-Plug 'github/copilot.vim',                  { 'commit': 'f2a4acd62587c62910bda0b79405c585af43c002' }
+Plug 'github/copilot.vim',                  { 'commit': '3b39e786d865df9ba77fe61624d6ee646528a809' }
 Plug 'dart-lang/dart-vim-plugin',           { 'commit': '928302ec931caf0dcf21835cca284ccd2b192f7b', 'for': 'dart' }
 Plug 'dracula/vim',                         { 'commit': '3e52a0682a53dd7c2c53133d45948f5a49c5fd9a', 'as': 'dracula' }
 Plug 'lambdalisue/fern.vim',                { 'commit': 'cdec1327ec99f0155d0a53aee1beae4c58071558' }
