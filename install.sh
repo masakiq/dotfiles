@@ -20,8 +20,6 @@ done
 
 ln -s `pwd`/vim/.vimrc ~/.ideavimrc
 
-ln -s `pwd`/vim/.zprofile ~/.zprofile
-
 mkdir ~/.config/direnv
 ln -s `pwd`/direnv/direnv.toml ~/.config/direnv/direnv.toml
 
