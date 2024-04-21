@@ -880,6 +880,7 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'y
 let g:fzf_preview_window = 'down,50%'
 let g:fzf_action = {
       \ 'ctrl-v': 'vsplit',
+      \ 'ctrl-s': 'split',
       \ 'ctrl-e': 'edit',
       \ 'enter': 'GotoOrOpen tab',
       \ }
@@ -1062,7 +1063,7 @@ function! OpenFiles(...)
         \ 'options': [
         \   '--prompt', 'Files> ',
         \   '--multi',
-        \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
+        \   '--expect=ctrl-v,ctrl-s,enter,ctrl-a,ctrl-e,ctrl-x',
         \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
         \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \ ],
@@ -1102,6 +1103,7 @@ function! s:open_files(lines)
         \ {
         \   'ctrl-e': 'edit ',
         \   'ctrl-v': 'vertical split ',
+        \   'ctrl-s': 'split ',
         \   'enter': 'tab drop '
         \ },
         \ a:lines[0], 'tab drop ')
