@@ -1878,6 +1878,8 @@ function! HashToRocket() range
   silent! execute g:firstline . ',' . g:lastline . "s/\'/\"/g"
 endfunction
 
+command! DeleteAnsi silent! %s/\e\[[0-9;]*m//g
+
 " }}}
 
 " ## ヘルパー ---------------------- {{{
