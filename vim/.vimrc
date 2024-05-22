@@ -952,11 +952,7 @@ endfunction
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-nmap <space>f :call Format()<cr>
-command! Format :call Format()
-function! Format()
-  call CocActionAsync('format')
-endfunction
+nmap <space>f :call CocActionAsync('format')<cr>
 
 " https://github.com/neoclide/coc-tsserver/issues/282#issuecomment-819364074
 nmap <space>p <Plug>(coc-codeaction-cursor)
