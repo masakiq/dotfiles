@@ -31,8 +31,3 @@ ln -s `pwd`/alacritty/.alacritty.yml ~/.alacritty.yml
 
 mkdir ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch
 ln -s `pwd`/iTerm2/Scripts/AutoLaunch/launch_alacritty.py ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/launch_alacritty.py
-
-ln -s `pwd`/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
-ln -s `pwd`/vscode/settings.json ~/Library/Application\ Support/Code\ -\ Insiders/User/settings.json
-ln -s `pwd`/vscode/keybindings.json ~/Library/Application\ Support/Code/User/keybindings.json
-ln -s `pwd`/vscode/keybindings.json ~/Library/Application\ Support/Code\ -\ Insiders/User/keybindings.json
