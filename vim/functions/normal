@@ -23,6 +23,7 @@ SwitchVimPlugin
 MarkdownPreview
 DeleteBuffers
 DeleteBuffersByFZF
+ClearAllBuffers
 SwapWindow
 PlugInstall
 PlugUpdate

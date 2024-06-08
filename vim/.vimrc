@@ -1489,6 +1489,24 @@ function! DeleteBuffersByFZF()
   endtry
 endfunction
 
+command! ClearAllBuffers call ClearAllBuffers()
+function! ClearAllBuffers()
+  if !&modifiable
+    echo "Buffer is not modifiable"
+    return
+  endif
+
+  let current_win = winnr()
+
+  for win in range(1, winnr('$'))
+    exec win . 'wincmd w'
+    %delete _
+    write
+  endfor
+
+  exec current_win . 'wincmd w'
+endfunction
+
 " }}}
 
 " ## レジスタ操作 ---------------------- {{{
@@ -2275,7 +2293,6 @@ luafile ~/.vim/lua_scripts/keymap.lua
 " }}}
 
 " ## for test lines ---------------------- {{{
-
 
 
 
