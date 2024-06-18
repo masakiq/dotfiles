@@ -1135,8 +1135,16 @@ endfunction
 
 command! -nargs=0 CopyCurrentPathWithLineNumber call CopyCurrentPathWithLineNumber()
 function! CopyCurrentPathWithLineNumber()
-  let @+=expand('%') . ':' . line('.')
-  echo 'copied current path: ' . expand('%') . ':' . line('.')
+  if g:mode == 'n'
+    let l:path = expand('%') . ':' . line('.')
+    let @+ = l:path
+    echo 'copied current path: ' . l:path
+  elseif  g:mode == 'v'
+    let l:lines = range(g:firstline, g:lastline)
+    let l:path = expand('%') . ':' . join(map(l:lines, 'string(v:val)'), ':')
+    let @+ = l:path
+    echo 'copied current path: ' . l:path
+  endif
 endfunction
 
 command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
