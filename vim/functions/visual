@@ -6,6 +6,7 @@ AddUnderBar
 ModuleToColon
 ColonToModule
 CommaToBreakline
+CopyCurrentPathWithLineNumber
 JsonToHash
 HashToJson
 RocketToHash
