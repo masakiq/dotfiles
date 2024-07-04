@@ -442,6 +442,11 @@ Plug 'tpope/vim-surround',                  { 'commit': '3d188ed2113431cf8dac77b
 Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
 Plug 'mg979/vim-visual-multi',              { 'commit': '724bd53adfbaf32e129b001658b45d4c5c29ca1a' }
 Plug 'liuchengxu/vim-which-key',            { 'commit': 'a98626b2bf88d6fc97a8276d02c75961ce2b35fa' }
+
+" For CopilotChat
+Plug 'zbirenbaum/copilot.lua',              { 'commit': '86537b286f18783f8b67bccd78a4ef4345679625' }
+Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
+Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '82923efe22b604cf9c0cad0bb2a74aa9247755ab' }
 call plug#end()
 
 " }}}
@@ -2297,6 +2302,13 @@ endfunction
 " ## for lua scripts ---------------------- {{{
 
 luafile ~/.vim/lua_scripts/keymap.lua
+
+lua << EOF
+require("CopilotChat").setup {
+  debug = true, -- Enable debugging
+  -- See Configuration section for rest
+}
+EOF
 
 " }}}
 
