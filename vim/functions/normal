@@ -48,3 +48,6 @@ FloatermNew
 Floaterms
 DeleteFloaterms
 DeleteAnsi
+CopilotChatToggle
+CopilotChatCommit
+CopilotChatCommitStaged

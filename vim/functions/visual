@@ -18,3 +18,10 @@ TransEnToJaReplace
 TransJaToEnReplace
 OpenGitHubFile
 OpenShopifyGraphQLDocument
+CopilotChatOpen
+CopilotChatOptimize
+CopilotChatFix
+CopilotChatTests
+CopilotChatDocs
+CopilotChatExplain
+CopilotChatReview
