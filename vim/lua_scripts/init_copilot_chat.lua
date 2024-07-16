@@ -1,5 +1,6 @@
 require("CopilotChat").setup {
   debug = true, -- Enable debugging
+  model = 'gpt-4-0125-preview',
 
   -- The default prompt to use when no prompt is specified
   -- prompts = {
