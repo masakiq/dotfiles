@@ -446,7 +446,7 @@ Plug 'liuchengxu/vim-which-key',            { 'commit': 'a98626b2bf88d6fc97a8276
 " For CopilotChat
 Plug 'zbirenbaum/copilot.lua',              { 'commit': '86537b286f18783f8b67bccd78a4ef4345679625' }
 Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
-Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '82923efe22b604cf9c0cad0bb2a74aa9247755ab' }
+Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '6f143f210efd1f16d97c077b945c76b7d5fd0f8b' }
 call plug#end()
 
 " }}}
@@ -2302,13 +2302,7 @@ endfunction
 " ## for lua scripts ---------------------- {{{
 
 luafile ~/.vim/lua_scripts/keymap.lua
-
-lua << EOF
-require("CopilotChat").setup {
-  debug = true, -- Enable debugging
-  -- See Configuration section for rest
-}
-EOF
+luafile ~/.vim/lua_scripts/init_copilot_chat.lua
 
 " }}}
 
