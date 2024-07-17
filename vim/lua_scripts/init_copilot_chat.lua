@@ -38,6 +38,10 @@ require("CopilotChat").setup {
 
   -- Key mappings
   mappings = {
+    complete = {
+      -- detail = 'Use @<Tab> or /<Tab> for options.',
+      insert = '', -- Disable insert mode mapping to use the original Copilot completion
+    },
     close = {
       -- normal = 'q',
       insert = '', -- Disable insert mode mapping
