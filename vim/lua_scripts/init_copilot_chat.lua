@@ -1,4 +1,13 @@
-require("CopilotChat").setup {
+local custom_system_prompt_for_translate = [[
+You are a proficient bilingual translator specializing in English and Japanese.
+When given input in English, you will translate it accurately into Japanese.
+When given input in Japanese, you will translate it accurately into English.
+Ensure that your translations are clear, contextually appropriate, and maintain the original meaning.
+Pay close attention to cultural nuances, idiomatic expressions, and the overall tone of the text.
+Your goal is to provide seamless and natural translations that are easily understood by native speakers of both languages.
+]]
+
+require('CopilotChat').setup {
   debug = true, -- Enable debugging
   model = 'gpt-4-0125-preview',
 
@@ -23,15 +32,13 @@ require("CopilotChat").setup {
   --     prompt = '/COPILOT_REFACTOR 選択したコードのドキュメントを作成してください。プログラミング言語に最適なドキュメントスタイルを採用してください。',
   --   },
   -- },
+
   prompts = {
-    TranslateJa = {
-      prompt = 'Translate the selected sentence to Japanese, without line number',
-      description = 'Translate the selected code to Japanese',
-      selection = require('CopilotChat.select').visual,
-    },
-    TranslateEn = {
-      prompt = 'Translate the selected sentence to English, without line number',
-      description = 'Translate the selected code to English',
+    Translate = {
+      system_prompt = custom_system_prompt_for_translate,
+      prompt =
+      'Translate the selected text accurately. Output only the translated results. Line numbers are also not required.',
+      description = 'Translate the selected sentence',
       selection = require('CopilotChat.select').visual,
     },
   },
