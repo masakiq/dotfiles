@@ -50,5 +50,6 @@ DeleteFloaterms
 DeleteAnsi
 CopilotChatToggle
 CopilotChatModels
+CopilotChatReviewClear
 CopilotChatCommit
 CopilotChatCommitStaged

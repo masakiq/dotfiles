@@ -59,3 +59,14 @@ require('CopilotChat').setup {
     },
   }
 }
+
+local function copilot_chat_review_clear()
+  local ns = vim.api.nvim_create_namespace('copilot_review')
+  vim.diagnostic.reset(ns)
+end
+
+vim.api.nvim_create_user_command(
+  'CopilotChatReviewClear',
+  copilot_chat_review_clear,
+  {}
+)
