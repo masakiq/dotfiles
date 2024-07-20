@@ -49,5 +49,6 @@ Floaterms
 DeleteFloaterms
 DeleteAnsi
 CopilotChatToggle
+CopilotChatModels
 CopilotChatCommit
 CopilotChatCommitStaged
