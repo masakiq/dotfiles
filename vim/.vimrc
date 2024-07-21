@@ -1855,56 +1855,6 @@ function! RemoveBeginningOfLineSpace() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
 endfunction
 
-command! ModuleToColon call ModuleToColon()
-function! ModuleToColon() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass (.+)\n/::\1/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V \< .*//g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V\s//g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^:://g'
-  silent! execute a:firstline . ',' . a:lastline . 's/^/class /g'
-endfunction
-
-command! ColonToModule call ColonToModule()
-function! ColonToModule() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass /module /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V::/ module /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V module /\rmodule /g'
-endfunction
-
-command! CommaToBreakline call CommaToBreakline()
-function! CommaToBreakline() range
-  silent! execute g:firstline . ',' . g:lastline . 's/,/,\r/g'
-endfunction
-
-command! JsonToHash call JsonToHash()
-function! JsonToHash() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\"\(\w*\)\"\(:.*\)/\1\2/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\'/\\\\'/g"
-  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
-endfunction
-
-command! HashToJson call HashToJson()
-function! HashToJson() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\(\w*\)\:/\"\1\":/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/'" . '/"/g'
-endfunction
-
-command! RocketToHash call RocketToHash()
-function! RocketToHash() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)"(\w+)".*\=\>/\1\2:/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)(\w+):\s*/\1\2: /g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\\v'/\\\\'/g"
-  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
-endfunction
-
-command! HashToRocket call HashToRocket()
-function! HashToRocket() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):\s*/\1\2: /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):/\1"\2" =>/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\'/\"/g"
-endfunction
-
 command! DeleteAnsi silent! %s/\e\[[0-9;]*m//g
 
 " }}}

@@ -2,14 +2,7 @@ SnakeCase
 PascalCase
 RemoveUnderBar
 AddUnderBar
-ModuleToColon
-ColonToModule
-CommaToBreakline
 CopyCurrentPathWithLineNumber
-JsonToHash
-HashToJson
-RocketToHash
-HashToRocket
 RGFromAllFilesVisual
 OpenGitHubFile
 OpenShopifyGraphQLDocument
