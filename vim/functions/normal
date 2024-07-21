@@ -17,7 +17,6 @@ QuitAllWithoutSaveSession
 LoadVIMRC
 MarkdownPreview
 DeleteBuffers
-DeleteBuffersByFZF
 ClearAllBuffers
 SwapWindow
 PlugInstall
