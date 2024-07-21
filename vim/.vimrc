@@ -1020,28 +1020,6 @@ function! OpenVIMRC()
   :noh
 endfunction
 
-command! -nargs=0 SwitchVimPlugin call SwitchVimPlugin()
-function! SwitchVimPlugin()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/plugged',
-          \ 'sink':  function('s:switch_vim_plugin'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:switch_vim_plugin(dir)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'cd ~/.vim/plugged/' . a:dir
-endfunction
-
 command! PlugGetLatestCommits :call PlugGetLatestCommits()
 function! PlugGetLatestCommits()
   let command = '~/.vim/functions/plug_get_latest_commits.rb'
