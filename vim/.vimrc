@@ -1708,32 +1708,6 @@ function! SearchWordBySelectedText()
   call SearchWord(selected)
 endfunction
 
-command! -nargs=0 SearchOrOpenInAnotherProject call s:ghq_list_rg_in_another_project()
-function! s:ghq_list_rg_in_another_project()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:rg_in_another_project'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:rg_in_another_project(line)
-  let $RG_IN_ANOTHER_PROJECT_WORD = a:line
-  lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/search_word.lua').search_word(os.getenv('RG_IN_ANOTHER_PROJECT_WORD'))
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
 function! s:open_files_via_rg(lines)
   if len(a:lines) < 2 | return | endif
 
