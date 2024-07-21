@@ -32,7 +32,6 @@ DiffFileGitBranch
 Registers
 Reload
 CommandHistory
-AsyncStop
 CloseTabs
 CloseTabsRight
 CloseTabsLeft
