@@ -2125,35 +2125,6 @@ endfunction
 
 " }}}
 
-" ## ノート ---------------------- {{{
-"
-command! OpenTodoList call OpenTodoList()
-function! OpenTodoList()
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source': 'find $TODO_LIST_ROOT -type file | sort',
-          \ 'options': [
-          \   '--prompt', 'Note> ',
-          \   '--multi',
-          \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
-          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-          \ ],
-          \ 'sink*':   function('s:open_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ })))
-    " if has('nvim')
-    "   call feedkeys('i', 'n')
-    " endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-" }}}
-
 " ## ドキュメント ---------------------- {{{
 
 command! OpenShopifyGraphQLDocument :call OpenShopifyGraphQLDocument()
