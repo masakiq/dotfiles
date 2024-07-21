@@ -12,10 +12,6 @@ HashToJson
 RocketToHash
 HashToRocket
 RGFromAllFilesVisual
-TransEnToJaPopup
-TransJaToEnPopup
-TransEnToJaReplace
-TransJaToEnReplace
 OpenGitHubFile
 OpenShopifyGraphQLDocument
 CopilotChatOpen
