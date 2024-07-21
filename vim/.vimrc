@@ -446,7 +446,7 @@ Plug 'liuchengxu/vim-which-key',            { 'commit': 'a98626b2bf88d6fc97a8276
 " For CopilotChat
 Plug 'zbirenbaum/copilot.lua',              { 'commit': '86537b286f18783f8b67bccd78a4ef4345679625' }
 Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
-Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '6f143f210efd1f16d97c077b945c76b7d5fd0f8b' }
+Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '92bc7b5e564c23b12b2ed41dd7657fdafe39d95f' }
 call plug#end()
 
 " }}}
