@@ -2127,26 +2127,6 @@ endfunction
 
 " ## ノート ---------------------- {{{
 "
-command! -bang SwitchNote call SwitchNote()
-function! SwitchNote()
-  call fzf#run(fzf#wrap({
-        \ 'source': 'cat ~/.vim/functions/notes',
-        \ 'sink':  function('s:switch_note'),
-        \ 'options': [
-        \   '--prompt', 'Note> ',
-        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-        \ ],
-        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-        \ }))
-endfunction
-
-function! s:switch_note(note)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'cd $' . a:note
-endfunction
-
 command! OpenTodoList call OpenTodoList()
 function! OpenTodoList()
   try

@@ -18,7 +18,6 @@ OpenGitHubFile
 QuitAll
 QuitAllWithoutSaveSession
 LoadVIMRC
-SwitchNote
 SwitchVimPlugin
 MarkdownPreview
 DeleteBuffers
