@@ -2016,23 +2016,6 @@ endfunction
 
 " }}}
 
-" ## 履歴 ---------------------- {{{
-
-nnoremap <space>or :History:<cr>
-command! -bang CommandHistory call CommandHistory()
-function! CommandHistory()
-  try
-    execute 'History:'
-    call feedkeys('i', 'n')
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-" }}}
-
 " ## ドキュメント ---------------------- {{{
 
 command! OpenShopifyGraphQLDocument :call OpenShopifyGraphQLDocument()

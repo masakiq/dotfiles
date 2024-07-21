@@ -28,7 +28,6 @@ DiffFile
 DiffFileGitBranch
 Registers
 Reload
-CommandHistory
 CloseTabs
 CloseTabsRight
 CloseTabsLeft
