@@ -1,8 +1,5 @@
 OpenAllFiles
 OpenFilesFromClipboard
-SearchOrOpenInCloudNote
-SearchOrOpenInAnotherProject
-OpenTodoList
 OpenSession
 OpenDeepL
 DeleteSessions
@@ -18,11 +15,8 @@ OpenGitHubFile
 QuitAll
 QuitAllWithoutSaveSession
 LoadVIMRC
-SwitchNote
-SwitchVimPlugin
 MarkdownPreview
 DeleteBuffers
-DeleteBuffersByFZF
 ClearAllBuffers
 SwapWindow
 PlugInstall
@@ -34,8 +28,6 @@ DiffFile
 DiffFileGitBranch
 Registers
 Reload
-CommandHistory
-AsyncStop
 CloseTabs
 CloseTabsRight
 CloseTabsLeft

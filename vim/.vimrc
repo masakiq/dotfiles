@@ -1014,34 +1014,6 @@ else
   endfunction
 endif
 
-command! OpenVIMRC call OpenVIMRC()
-function! OpenVIMRC()
-  vsplit $MYVIMRC
-  :noh
-endfunction
-
-command! -nargs=0 SwitchVimPlugin call SwitchVimPlugin()
-function! SwitchVimPlugin()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/plugged',
-          \ 'sink':  function('s:switch_vim_plugin'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:switch_vim_plugin(dir)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'cd ~/.vim/plugged/' . a:dir
-endfunction
-
 command! PlugGetLatestCommits :call PlugGetLatestCommits()
 function! PlugGetLatestCommits()
   let command = '~/.vim/functions/plug_get_latest_commits.rb'
@@ -1472,36 +1444,6 @@ function! DeleteBuffers()
   endfor
 endfunction
 
-" https://github.com/junegunn/fzf.vim/pull/733#issuecomment-559720813
-function! s:list_buffers()
-  redir => list
-  silent ls
-  redir END
-  return split(list, "\n")
-endfunction
-
-function! s:delete_buffers(lines)
-  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[0]}))
-endfunction
-
-command! -bang DeleteBuffersByFZF call DeleteBuffersByFZF()
-function! DeleteBuffersByFZF()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': s:list_buffers(),
-          \ 'sink*': { lines -> s:delete_buffers(lines) },
-          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
 command! ClearAllBuffers call ClearAllBuffers()
 function! ClearAllBuffers()
   if !&modifiable
@@ -1736,40 +1678,6 @@ function! SearchWordBySelectedText()
   call SearchWord(selected)
 endfunction
 
-command! SearchOrOpenInCloudNote call SearchOrOpenInCloudNote()
-function! SearchOrOpenInCloudNote()
-  lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/search_word.lua').search_word(os.getenv('CLOUD_NOTE_ROOT'))
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
-command! -nargs=0 SearchOrOpenInAnotherProject call s:ghq_list_rg_in_another_project()
-function! s:ghq_list_rg_in_another_project()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ghq list --full-path',
-          \ 'sink':  function('s:rg_in_another_project'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:rg_in_another_project(line)
-  let $RG_IN_ANOTHER_PROJECT_WORD = a:line
-  lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/search_word.lua').search_word(os.getenv('RG_IN_ANOTHER_PROJECT_WORD'))
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
 function! s:open_files_via_rg(lines)
   if len(a:lines) < 2 | return | endif
 
@@ -1853,56 +1761,6 @@ endfunction
 
 function! RemoveBeginningOfLineSpace() range
   silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
-endfunction
-
-command! ModuleToColon call ModuleToColon()
-function! ModuleToColon() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vmodule (.+)\n/::\1/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass (.+)\n/::\1/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V \< .*//g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V\s//g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^:://g'
-  silent! execute a:firstline . ',' . a:lastline . 's/^/class /g'
-endfunction
-
-command! ColonToModule call ColonToModule()
-function! ColonToModule() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%Vclass /module /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V::/ module /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V module /\rmodule /g'
-endfunction
-
-command! CommaToBreakline call CommaToBreakline()
-function! CommaToBreakline() range
-  silent! execute g:firstline . ',' . g:lastline . 's/,/,\r/g'
-endfunction
-
-command! JsonToHash call JsonToHash()
-function! JsonToHash() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\"\(\w*\)\"\(:.*\)/\1\2/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\'/\\\\'/g"
-  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
-endfunction
-
-command! HashToJson call HashToJson()
-function! HashToJson() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\(\w*\)\:/\"\1\":/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/'" . '/"/g'
-endfunction
-
-command! RocketToHash call RocketToHash()
-function! RocketToHash() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)"(\w+)".*\=\>/\1\2:/g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v%V^(\s*)(\w+):\s*/\1\2: /g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\\v'/\\\\'/g"
-  silent! execute g:firstline . ',' . g:lastline . 's/"' . "/'/g"
-endfunction
-
-command! HashToRocket call HashToRocket()
-function! HashToRocket() range
-  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):\s*/\1\2: /g'
-  silent! execute g:firstline . ',' . g:lastline . 's/\v^(\s+)(\w+):/\1"\2" =>/g'
-  silent! execute g:firstline . ',' . g:lastline . "s/\'/\"/g"
 endfunction
 
 command! DeleteAnsi silent! %s/\e\[[0-9;]*m//g
@@ -2154,72 +2012,6 @@ function! s:fill_in_selected_command_snippet(line)
   call histadd(':', command[-1])
   redraw
   call feedkeys(':'."\<up>", 'n')
-endfunction
-
-" }}}
-
-" ## 履歴 ---------------------- {{{
-
-nnoremap <space>or :History:<cr>
-command! -bang CommandHistory call CommandHistory()
-function! CommandHistory()
-  try
-    execute 'History:'
-    call feedkeys('i', 'n')
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-" }}}
-
-" ## ノート ---------------------- {{{
-"
-command! -bang SwitchNote call SwitchNote()
-function! SwitchNote()
-  call fzf#run(fzf#wrap({
-        \ 'source': 'cat ~/.vim/functions/notes',
-        \ 'sink':  function('s:switch_note'),
-        \ 'options': [
-        \   '--prompt', 'Note> ',
-        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-        \ ],
-        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-        \ }))
-endfunction
-
-function! s:switch_note(note)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'cd $' . a:note
-endfunction
-
-command! OpenTodoList call OpenTodoList()
-function! OpenTodoList()
-  try
-    call fzf#run(fzf#vim#with_preview(fzf#wrap({
-          \ 'source': 'find $TODO_LIST_ROOT -type file | sort',
-          \ 'options': [
-          \   '--prompt', 'Note> ',
-          \   '--multi',
-          \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-          \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
-          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-          \ ],
-          \ 'sink*':   function('s:open_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ })))
-    " if has('nvim')
-    "   call feedkeys('i', 'n')
-    " endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
 endfunction
 
 " }}}
