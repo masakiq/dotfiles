@@ -1708,14 +1708,6 @@ function! SearchWordBySelectedText()
   call SearchWord(selected)
 endfunction
 
-command! SearchOrOpenInCloudNote call SearchOrOpenInCloudNote()
-function! SearchOrOpenInCloudNote()
-  lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/search_word.lua').search_word(os.getenv('CLOUD_NOTE_ROOT'))
-  if has('nvim')
-    call feedkeys('i', 'n')
-  endif
-endfunction
-
 command! -nargs=0 SearchOrOpenInAnotherProject call s:ghq_list_rg_in_another_project()
 function! s:ghq_list_rg_in_another_project()
   try
