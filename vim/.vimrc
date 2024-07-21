@@ -1014,12 +1014,6 @@ else
   endfunction
 endif
 
-command! OpenVIMRC call OpenVIMRC()
-function! OpenVIMRC()
-  vsplit $MYVIMRC
-  :noh
-endfunction
-
 command! PlugGetLatestCommits :call PlugGetLatestCommits()
 function! PlugGetLatestCommits()
   let command = '~/.vim/functions/plug_get_latest_commits.rb'
