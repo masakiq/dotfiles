@@ -84,3 +84,15 @@ vim.api.nvim_set_keymap(
   { noremap = true, silent = false }
 )
 
+-- Configure diagnostic display settings: disable virtual text, enable signs, disable updates in insert mode, enable underline. Set up an autocmd for CursorHold to open diagnostic float without focus. Set 'updatetime' to 500ms.
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = true,
+  update_in_insert = false,
+  underline = false,
+})
+vim.cmd([[
+  autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})
+]])
+vim.o.updatetime = 500
+
