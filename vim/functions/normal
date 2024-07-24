@@ -40,6 +40,7 @@ FloatermNew
 Floaterms
 DeleteFloaterms
 DeleteAnsi
+CopilotChatReset
 CopilotChatModels
 CopilotChatReviewClear
 CopilotChatGitBranch
