@@ -75,3 +75,12 @@ vim.api.nvim_create_user_command(
   copilot_chat_review_clear,
   {}
 )
+
+-- Map <space>og to toggle Copilot Chat in normal mode, without remapping and not silently
+vim.api.nvim_set_keymap(
+  "n",
+  "<space>og",
+  "<cmd>CopilotChatToggle<CR>",
+  { noremap = true, silent = false }
+)
+
