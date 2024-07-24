@@ -41,6 +41,11 @@ require('CopilotChat').setup {
       description = 'Translate the selected sentence',
       selection = require('CopilotChat.select').visual,
     },
+    GitBranch = {
+      prompt =
+      'Please come up with 5 git branch names by the selected difference.',
+      selection = require('CopilotChat.select').gitdiff,
+    }
   },
 
   -- Key mappings

@@ -43,5 +43,6 @@ DeleteAnsi
 CopilotChatToggle
 CopilotChatModels
 CopilotChatReviewClear
+CopilotChatGitBranch
 CopilotChatCommit
 CopilotChatCommitStaged
