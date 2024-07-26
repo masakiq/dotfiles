@@ -9,7 +9,7 @@ Your goal is to provide seamless and natural translations that are easily unders
 
 require('CopilotChat').setup {
   debug = true, -- Enable debugging
-  model = 'gpt-4-0125-preview',
+  model = 'gpt-4o-2024-05-13',
 
   -- The default prompt to use when no prompt is specified
   -- prompts = {
@@ -41,6 +41,11 @@ require('CopilotChat').setup {
       description = 'Translate the selected sentence',
       selection = require('CopilotChat.select').visual,
     },
+    GitBranch = {
+      prompt =
+      'Please come up with 5 git branch names by the selected difference.',
+      selection = require('CopilotChat.select').gitdiff,
+    }
   },
 
   -- Key mappings
@@ -60,13 +65,34 @@ require('CopilotChat').setup {
   }
 }
 
+-- Define a command 'CopilotChatReviewClear' that clears diagnostics for the 'copilot_review' namespace
 local function copilot_chat_review_clear()
   local ns = vim.api.nvim_create_namespace('copilot_review')
   vim.diagnostic.reset(ns)
 end
-
 vim.api.nvim_create_user_command(
   'CopilotChatReviewClear',
   copilot_chat_review_clear,
   {}
 )
+
+-- Map <space>og to toggle Copilot Chat in normal mode, without remapping and not silently
+vim.api.nvim_set_keymap(
+  "n",
+  "<space>og",
+  "<cmd>CopilotChatToggle<CR>",
+  { noremap = true, silent = false }
+)
+
+-- Configure diagnostic display settings: disable virtual text, enable signs, disable updates in insert mode, enable underline. Set up an autocmd for CursorHold to open diagnostic float without focus. Set 'updatetime' to 500ms.
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = true,
+  update_in_insert = false,
+  underline = false,
+})
+vim.cmd([[
+  autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})
+]])
+vim.o.updatetime = 500
+
