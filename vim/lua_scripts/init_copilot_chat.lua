@@ -9,7 +9,7 @@ Your goal is to provide seamless and natural translations that are easily unders
 
 require('CopilotChat').setup {
   debug = true, -- Enable debugging
-  model = 'gpt-4-0125-preview',
+  model = 'gpt-4o-2024-05-13',
 
   -- The default prompt to use when no prompt is specified
   -- prompts = {
