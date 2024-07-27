@@ -1287,19 +1287,6 @@ function! SaveSession()
   echom 'saved current session : ' .current_dir
 endfunction
 
-command! -bang OpenSession call OpenSession()
-function! OpenSession()
-  call fzf#run(fzf#wrap({
-        \ 'source': 'ls ~/.vim/sessions',
-        \ 'options': [
-        \   '--prompt', 'Session> ',
-        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-        \ ],
-        \ 'sink':  function('s:load_session'),
-        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-        \ }))
-endfunction
-
 command! -bang SwitchSession call SwitchSession()
 function! SwitchSession()
   try
