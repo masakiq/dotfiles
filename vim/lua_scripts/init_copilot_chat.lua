@@ -10,6 +10,7 @@ Your goal is to provide seamless and natural translations that are easily unders
 require('CopilotChat').setup {
   debug = true, -- Enable debugging
   model = 'gpt-4o-2024-05-13',
+  highlight_selection = false,
 
   -- The default prompt to use when no prompt is specified
   -- prompts = {
@@ -95,4 +96,3 @@ vim.cmd([[
   autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})
 ]])
 vim.o.updatetime = 500
-
