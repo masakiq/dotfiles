@@ -1148,7 +1148,6 @@ endfunction
 command! QuitAll call QuitAll()
 function! QuitAll()
   call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
   call DeleteBuffers()
   normal ZQ
 endfunction
@@ -1268,17 +1267,6 @@ function! SeparateTab()
   exec 'close'
   exec 'tab drop ' . file
   normal gT
-endfunction
-
-" }}}
-
-" ## セッション操作 ---------------------- {{{
-
-command! SaveSession call SaveSession()
-function! SaveSession()
-  let current_dir = s:getCurrentDirectory()
-  silent! execute 'mks! ~/.vim/sessions/' . current_dir
-  echom 'saved current session : ' .current_dir
 endfunction
 
 " }}}
@@ -1530,7 +1518,6 @@ endfunction
 
 function! s:open_project(project)
   call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
   call DeleteBuffers()
   silent! execute 'cd ' . a:project
   call s:setTitle()
