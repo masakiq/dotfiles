@@ -1153,12 +1153,6 @@ function! QuitAll()
   normal ZQ
 endfunction
 
-command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
-function! QuitAllWithoutSaveSession()
-  call DeleteBuffers()
-  normal ZQ
-endfunction
-
 nnoremap <space>oh :History<CR>
 
 " }}}

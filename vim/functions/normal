@@ -12,7 +12,6 @@ CopyAllTabAbsolutePath
 OpenGitHubRepo
 OpenGitHubFile
 QuitAll
-QuitAllWithoutSaveSession
 LoadVIMRC
 MarkdownPreview
 DeleteBuffers
