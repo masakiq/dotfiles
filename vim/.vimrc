@@ -424,13 +424,13 @@ Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ec
 
 " User Interface
 Plug 'dracula/vim',                         { 'commit': '3e52a0682a53dd7c2c53133d45948f5a49c5fd9a', 'as': 'dracula' }
-Plug 'lambdalisue/fern.vim',                { 'commit': 'cdec1327ec99f0155d0a53aee1beae4c58071558' }
-Plug 'junegunn/fzf.vim',                    { 'commit': '811f34b70b60b4df2997e3ba8cd109e7d06d683b' }
-Plug 'voldikss/vim-floaterm',               { 'commit': 'bcaeabf89a92a924031d471395054d84bd88ce2f' }
-Plug 'voldikss/fzf-floaterm',               { 'commit': '66a30db85a7adf573af9b8a4f3f8c4ce0a2d665e' }
-Plug 'MunifTanjim/nui.nvim',                { 'commit': '9e3916e784660f55f47daa6f26053ad044db5d6a' }
+Plug 'lambdalisue/fern.vim',                { 'commit': 'a675dff495a0a0fd15663ebbae585c19825a64c5' }
+Plug 'junegunn/fzf.vim',                    { 'commit': 'f7c7b44764a601e621432b98c85709c9a53a7be8' }
+Plug 'voldikss/vim-floaterm',               { 'commit': '4e28c8dd0271e10a5f55142fb6fe9b1599ee6160' }
+Plug 'voldikss/fzf-floaterm',               { 'commit': 'c023f97e49e894ac5649894b7e05505b6df9b055' }
+Plug 'MunifTanjim/nui.nvim',                { 'commit': '61574ce6e60c815b0a0c4b5655b8486ba58089a1' }
 Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
-Plug 'liuchengxu/vim-which-key',            { 'commit': 'a98626b2bf88d6fc97a8276d02c75961ce2b35fa' }
+Plug 'liuchengxu/vim-which-key',            { 'commit': '470cd19ce11b616e0640f2b38fb845c42b31a106' }
 
 " Navigation
 Plug 'easymotion/vim-easymotion',           { 'commit': 'b3cfab2a6302b3b39f53d9fd2cd997e1127d7878' }
