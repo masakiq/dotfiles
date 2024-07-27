@@ -1,9 +1,6 @@
 OpenAllFiles
 OpenFilesFromClipboard
-OpenSession
 OpenDeepL
-DeleteSessions
-SaveSession
 CopyCurrentPath
 CopyCurrentPathWithLineNumber
 CopyAbsolutePath
@@ -13,7 +10,6 @@ CopyAllTabAbsolutePath
 OpenGitHubRepo
 OpenGitHubFile
 QuitAll
-QuitAllWithoutSaveSession
 LoadVIMRC
 MarkdownPreview
 DeleteBuffers

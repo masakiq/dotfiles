@@ -1148,13 +1148,6 @@ endfunction
 command! QuitAll call QuitAll()
 function! QuitAll()
   call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  normal ZQ
-endfunction
-
-command! QuitAllWithoutSaveSession call QuitAllWithoutSaveSession()
-function! QuitAllWithoutSaveSession()
   call DeleteBuffers()
   normal ZQ
 endfunction
@@ -1274,82 +1267,6 @@ function! SeparateTab()
   exec 'close'
   exec 'tab drop ' . file
   normal gT
-endfunction
-
-" }}}
-
-" ## セッション操作 ---------------------- {{{
-
-command! SaveSession call SaveSession()
-function! SaveSession()
-  let current_dir = s:getCurrentDirectory()
-  silent! execute 'mks! ~/.vim/sessions/' . current_dir
-  echom 'saved current session : ' .current_dir
-endfunction
-
-command! -bang OpenSession call OpenSession()
-function! OpenSession()
-  call fzf#run(fzf#wrap({
-        \ 'source': 'ls ~/.vim/sessions',
-        \ 'options': [
-        \   '--prompt', 'Session> ',
-        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-        \ ],
-        \ 'sink':  function('s:load_session'),
-        \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-        \ }))
-endfunction
-
-command! -bang SwitchSession call SwitchSession()
-function! SwitchSession()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/sessions',
-          \ 'sink':  function('s:load_session'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:load_session(...)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'source ~/.vim/sessions/' . a:1
-  silent! execute 'source $MYVIMRC'
-  "call s:setTitle()
-endfunction
-
-command! -bang DeleteSessions call DeleteSessions()
-function! DeleteSessions()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/sessions',
-          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up ',
-          \ 'sink*':  function('s:delete_sessions'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:delete_sessions(sessions)
-  for session in a:sessions
-    call delete(expand('~/.vim/sessions/' . session))
-  endfor
 endfunction
 
 " }}}
@@ -1601,7 +1518,6 @@ endfunction
 
 function! s:open_project(project)
   call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
   call DeleteBuffers()
   silent! execute 'cd ' . a:project
   call s:setTitle()
