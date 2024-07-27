@@ -36,9 +36,6 @@ SeparateTab
 CopyStatusMessage
 StartCopyStatusMessages
 FinishCopyStatusMessages
-FloatermNew
-Floaterms
-DeleteFloaterms
 DeleteAnsi
 CopilotChatReset
 CopilotChatModels

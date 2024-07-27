@@ -836,45 +836,6 @@ tnoremap <C-[> <C-\><C-n><C-w><C-w>
 tnoremap <M-down> <C-\><C-n>:FloatermUpdate --width=0.95 --height=0.35 --position=bottom --wintype=float<cr>
 tnoremap <M-up> <C-\><C-n>:FloatermUpdate --width=0.95 --height=0.95 --position=center --wintype=float<cr>
 
-" command! DeleteFloaterms call DeleteFloaterms()
-" function! DeleteFloaterms()
-"   call fzf#run(fzf#vim#with_preview(fzf#wrap({
-"         \ 'source': s:fetch_term_names(),
-"         \ 'sink*': function('s:delete_floaterms'),
-"         \ 'options': [
-"         \   '--prompt', 'DeleteFloaterms> ',
-"         \   '--multi',
-"         \   '--bind=ctrl-a:select-all,ctrl-i:toggle+down',
-"         \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
-"         \ ],
-"         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-"         \ })))
-" endfunction
-
-command! DeleteFloaterms call DeleteFloaterms()
-function! DeleteFloaterms()
-  let list = s:fetch_term_names()
-  call s:delete_floaterms(list)
-endfunction
-
-function! s:fetch_term_names()
-  let bufnums = ListTermBufNums()
-  let bufs = []
-  for num in bufnums
-    let opts = getbufvar(num, 'floaterm_title', {})
-    let name = opts . ' : ' . num
-    call add(bufs, name)
-  endfor
-  return bufs
-endfunction
-
-function! s:delete_floaterms(line) abort
-  for buf in a:line
-    let num = str2nr(substitute(buf, '^.*\s\:\s\(\d*\)', '\1', ''))
-    execute 'bwipeout! ' . num
-  endfor
-endfunction
-
 " }}}
 
 " ## fzf 設定 ---------------------- {{{
