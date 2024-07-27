@@ -1308,31 +1308,6 @@ function! s:load_session(...)
   "call s:setTitle()
 endfunction
 
-command! -bang DeleteSessions call DeleteSessions()
-function! DeleteSessions()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/sessions',
-          \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up ',
-          \ 'sink*':  function('s:delete_sessions'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:delete_sessions(sessions)
-  for session in a:sessions
-    call delete(expand('~/.vim/sessions/' . session))
-  endfor
-endfunction
-
 " }}}
 
 " ## ウィンドウ操作 ---------------------- {{{
