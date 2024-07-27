@@ -440,11 +440,6 @@ Plug 'haya14busa/incsearch.vim',            { 'commit': 'c83de6d1ac31d173d7c3ffe
 Plug 'matze/vim-move',                      { 'commit': '244a2908ffbca3d09529b3ec24c2c090f489f401' }
 Plug 'mg979/vim-visual-multi',              { 'commit': '724bd53adfbaf32e129b001658b45d4c5c29ca1a' }
 
-" Git
-Plug 'iberianpig/tig-explorer.vim',         { 'commit': 'a75ee59636bc0a1659d372e3a4e8b35d167e3df5' }
-Plug 'tpope/vim-fugitive',                  { 'commit': 'b3b838d690f315a503ec4af8c634bdff3b200aaf' }
-Plug 'ruanyl/vim-gh-line',                  { 'commit': 'fbf368bdfad7e5478009a6dc62559e6b2c72d603' }
-
 " Editing Assistance
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
 Plug 'wellle/targets.vim',                  { 'commit': '642d3a4ce306264b05ea3219920b13ea80931767' }
@@ -680,18 +675,6 @@ else
   let g:which_key_map['<Left>'] = 'Expand left'
   let g:which_key_map['<Up>'] = 'Expand up'
   let g:which_key_map['<Down>'] = 'Expand down'
-endif
-
-" }}}
-
-" ### plugin ruanyl/vim-gh-line ---------------------- {{{
-
-if has('gui_running')
-else
-  let g:gh_line_map_default = 0
-  let g:gh_line_blame_map_default = 1
-  " let g:gh_line_map = '<space>gf'
-  " let g:gh_line_blame_map = '<space>gb'
 endif
 
 " }}}
