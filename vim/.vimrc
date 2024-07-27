@@ -1628,11 +1628,6 @@ function! PascalCase() range
   silent! exec 'normal ' . start_col . '|'
 endfunction
 
-function! CapitalCaseToSnakeCase() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V([a-zA-Z])\s([a-zA-Z])/\1_\2/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
-endfunction
-
 command! RemoveUnderBar call RemoveUnderBar()
 function! RemoveUnderBar() range
   let start_col = col('.')
@@ -1645,10 +1640,6 @@ function! AddUnderBar() range
   let start_col = col('.')
   silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
   silent! exec 'normal ' . start_col . '|'
-endfunction
-
-function! RemoveBeginningOfLineSpace() range
-  silent! execute a:firstline . ',' . a:lastline . 's/\v^ *//g'
 endfunction
 
 command! DeleteAnsi silent! %s/\e\[[0-9;]*m//g
