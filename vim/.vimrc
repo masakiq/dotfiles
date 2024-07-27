@@ -1281,33 +1281,6 @@ function! SaveSession()
   echom 'saved current session : ' .current_dir
 endfunction
 
-command! -bang SwitchSession call SwitchSession()
-function! SwitchSession()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'ls ~/.vim/sessions',
-          \ 'sink':  function('s:load_session'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:load_session(...)
-  call DeleteBufsWithoutExistingWindows()
-  call SaveSession()
-  call DeleteBuffers()
-  silent! execute 'source ~/.vim/sessions/' . a:1
-  silent! execute 'source $MYVIMRC'
-  "call s:setTitle()
-endfunction
-
 " }}}
 
 " ## ウィンドウ操作 ---------------------- {{{
