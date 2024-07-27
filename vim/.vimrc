@@ -411,39 +411,50 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 " -------------------------------------------
-Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
-Plug 'antoinemadec/coc-fzf',                { 'commit': '5fae5a15497750483e21fc207aa6005f340f02f2' }
+" Code Completion and Linting
 Plug 'neoclide/coc.nvim',                   { 'commit': '79ccfeaa1db4a3b56767ee7b6b5fc577a5733fef', 'do': 'npm ci' }
-Plug 'github/copilot.vim',                  { 'commit': '3b39e786d865df9ba77fe61624d6ee646528a809' }
+Plug 'antoinemadec/coc-fzf',                { 'commit': '5fae5a15497750483e21fc207aa6005f340f02f2' }
+
+" Language Support
 Plug 'dart-lang/dart-vim-plugin',           { 'commit': '928302ec931caf0dcf21835cca284ccd2b192f7b', 'for': 'dart' }
+Plug 'jparise/vim-graphql',                 { 'commit': '996749a7d69a3709768fa8c4d259f79b5fd9bdb1' }
+Plug 'maxmellon/vim-jsx-pretty',            { 'commit': '6989f1663cc03d7da72b5ef1c03f87e6ddb70b41', 'for': ['javascript', 'typescript'] }
+Plug 'rcmdnk/vim-markdown',                 { 'commit': '9a5572a18b2d0bbe96b2ed625f5fbe0462dbd801', 'for': 'markdown' }
+Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b', 'for': 'ruby' }
+
+" User Interface
 Plug 'dracula/vim',                         { 'commit': '3e52a0682a53dd7c2c53133d45948f5a49c5fd9a', 'as': 'dracula' }
 Plug 'lambdalisue/fern.vim',                { 'commit': 'cdec1327ec99f0155d0a53aee1beae4c58071558' }
-Plug 'voldikss/fzf-floaterm',               { 'commit': '66a30db85a7adf573af9b8a4f3f8c4ce0a2d665e' }
 Plug 'junegunn/fzf.vim',                    { 'commit': '811f34b70b60b4df2997e3ba8cd109e7d06d683b' }
+Plug 'voldikss/vim-floaterm',               { 'commit': 'bcaeabf89a92a924031d471395054d84bd88ce2f' }
+Plug 'voldikss/fzf-floaterm',               { 'commit': '66a30db85a7adf573af9b8a4f3f8c4ce0a2d665e' }
+Plug 'MunifTanjim/nui.nvim',                { 'commit': '9e3916e784660f55f47daa6f26053ad044db5d6a' }
+Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
+Plug 'liuchengxu/vim-which-key',            { 'commit': 'a98626b2bf88d6fc97a8276d02c75961ce2b35fa' }
+
+" Navigation
+Plug 'easymotion/vim-easymotion',           { 'commit': 'b3cfab2a6302b3b39f53d9fd2cd997e1127d7878' }
 Plug 'haya14busa/incsearch-easymotion.vim', { 'commit': 'fcdd3aee6f4c0eef1a515727199ece8d6c6041b5' }
 Plug 'haya14busa/incsearch-fuzzy.vim',      { 'commit': 'b08fa8fbfd633e2f756fde42bfb5251d655f5403' }
 Plug 'haya14busa/incsearch.vim',            { 'commit': 'c83de6d1ac31d173d7c3ffee0ad61dc643ee4f08' }
-Plug 'MunifTanjim/nui.nvim',                { 'commit': '9e3916e784660f55f47daa6f26053ad044db5d6a' }
-Plug 'wellle/targets.vim',                  { 'commit': '642d3a4ce306264b05ea3219920b13ea80931767' }
+Plug 'matze/vim-move',                      { 'commit': '244a2908ffbca3d09529b3ec24c2c090f489f401' }
+Plug 'mg979/vim-visual-multi',              { 'commit': '724bd53adfbaf32e129b001658b45d4c5c29ca1a' }
+
+" Git
 Plug 'iberianpig/tig-explorer.vim',         { 'commit': 'a75ee59636bc0a1659d372e3a4e8b35d167e3df5' }
-Plug 'tpope/vim-commentary',                { 'commit': 'e87cd90dc09c2a203e13af9704bd0ef79303d755' }
-Plug 'easymotion/vim-easymotion',           { 'commit': 'b3cfab2a6302b3b39f53d9fd2cd997e1127d7878' }
-Plug 'voldikss/vim-floaterm',               { 'commit': 'bcaeabf89a92a924031d471395054d84bd88ce2f' }
 Plug 'tpope/vim-fugitive',                  { 'commit': 'b3b838d690f315a503ec4af8c634bdff3b200aaf' }
 Plug 'ruanyl/vim-gh-line',                  { 'commit': 'fbf368bdfad7e5478009a6dc62559e6b2c72d603' }
-Plug 'jparise/vim-graphql',                 { 'commit': '996749a7d69a3709768fa8c4d259f79b5fd9bdb1' }
-Plug 'maxmellon/vim-jsx-pretty',            { 'commit': '6989f1663cc03d7da72b5ef1c03f87e6ddb70b41', 'for': ['javascript', 'typescript'] }
-Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33b14a84336dee2a78f' }
-Plug 'mattn/vim-maketable',                 { 'commit': 'd72e73f333c64110524197ec637897bd1464830f' }
-Plug 'rcmdnk/vim-markdown',                 { 'commit': '9a5572a18b2d0bbe96b2ed625f5fbe0462dbd801', 'for': 'markdown' }
-Plug 'matze/vim-move',                      { 'commit': '244a2908ffbca3d09529b3ec24c2c090f489f401' }
-Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b', 'for': 'ruby' }
-Plug 'tpope/vim-surround',                  { 'commit': '3d188ed2113431cf8dac77be61b842acb64433d9' }
-Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
-Plug 'mg979/vim-visual-multi',              { 'commit': '724bd53adfbaf32e129b001658b45d4c5c29ca1a' }
-Plug 'liuchengxu/vim-which-key',            { 'commit': 'a98626b2bf88d6fc97a8276d02c75961ce2b35fa' }
 
-" For CopilotChat
+" Editing Assistance
+Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
+Plug 'wellle/targets.vim',                  { 'commit': '642d3a4ce306264b05ea3219920b13ea80931767' }
+Plug 'tpope/vim-commentary',                { 'commit': 'e87cd90dc09c2a203e13af9704bd0ef79303d755' }
+Plug 'tpope/vim-surround',                  { 'commit': '3d188ed2113431cf8dac77be61b842acb64433d9' }
+Plug 'mattn/vim-maketable',                 { 'commit': 'd72e73f333c64110524197ec637897bd1464830f' }
+Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33b14a84336dee2a78f' }
+
+" Copilot
+Plug 'github/copilot.vim',                  { 'commit': '3b39e786d865df9ba77fe61624d6ee646528a809' }
 Plug 'zbirenbaum/copilot.lua',              { 'commit': '86537b286f18783f8b67bccd78a4ef4345679625' }
 Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
 Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '92bc7b5e564c23b12b2ed41dd7657fdafe39d95f' }
