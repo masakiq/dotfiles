@@ -1016,7 +1016,7 @@ endif
 
 command! PlugGetLatestCommits :call PlugGetLatestCommits()
 function! PlugGetLatestCommits()
-  let command = '~/.vim/functions/plug_get_latest_commits.rb'
+  let command = '~/.vim/lua_scripts/plug_get_latest_commits.lua'
   silent! execute 'r!' . command
 endfunction
 
