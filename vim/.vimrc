@@ -1974,6 +1974,7 @@ endfunction
 
 luafile ~/.vim/lua_scripts/keymap.lua
 luafile ~/.vim/lua_scripts/init_copilot_chat.lua
+luafile ~/.vim/lua_scripts/swagger_preview.lua
 
 " }}}
 
