@@ -2,7 +2,7 @@ local host = "localhost"
 local base_port = 8765
 local previewed_files = {}
 
-local function command_exists()
+local function is_swagger_command_available()
   local handle = io.popen("command -v swagger-ui-watcher >/dev/null 2>&1 && echo 'yes' || echo 'no'")
   local result = handle:read("*a")
   handle:close()
@@ -11,8 +11,15 @@ local function command_exists()
   end
 
   vim.api.nvim_echo(
-    { { "Command `swagger-ui-watcher` not found. Please execute `npm install -g swagger-ui-watcher`", "WarningMsg" } },
-    true, {})
+    {
+      {
+        "Command `swagger-ui-watcher` not found. Please execute `npm install -g swagger-ui-watcher`",
+        "WarningMsg"
+      }
+    },
+    true,
+    {}
+  )
   return false
 end
 
@@ -29,7 +36,7 @@ local function extract_max_port()
 end
 
 local function stop_server()
-  if not command_exists() then return end
+  if not is_swagger_command_available() then return end
 
   local swagger_path = vim.fn.expand("%:p")
 
@@ -41,7 +48,7 @@ local function stop_server()
 end
 
 local function start_server()
-  if not command_exists() then return end
+  if not is_swagger_command_available() then return end
 
   local swagger_path = vim.fn.expand("%:p")
 
