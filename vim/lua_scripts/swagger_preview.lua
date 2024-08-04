@@ -1,9 +1,8 @@
-local port = 8765
 local host = "localhost"
-local file_being_previewed = nil
-local server_pid = nil
+local base_port = 8765
+local previewed_files = {}
 
-local function command_exists(cmd)
+local function command_exists()
   local handle = io.popen("command -v swagger-ui-watcher >/dev/null 2>&1 && echo 'yes' || echo 'no'")
   local result = handle:read("*a")
   handle:close()
@@ -17,12 +16,28 @@ local function command_exists(cmd)
   return false
 end
 
+local function extract_max_port()
+  local max_port = base_port
+  for _, v in pairs(previewed_files) do
+    if v['port'] then
+      if not max_port or v['port'] > max_port then
+        max_port = v['port']
+      end
+    end
+  end
+  return max_port
+end
+
 local function stop_server()
   if not command_exists() then return end
 
-  vim.fn.jobstop(server_pid)
-  file_being_previewed = nil
-  server_pid = nil
+  local swagger_path = vim.fn.expand("%:p")
+
+  if not previewed_files[swagger_path] then
+    return
+  end
+  vim.fn.jobstop(previewed_files[swagger_path]['job_pid'])
+  previewed_files[swagger_path] = nil
 end
 
 local function start_server()
@@ -30,18 +45,17 @@ local function start_server()
 
   local swagger_path = vim.fn.expand("%:p")
 
-  if swagger_path == file_being_previewed then
-    os.execute("open http://" .. host .. ":" .. port)
+  if previewed_files[swagger_path] then
+    os.execute("open http://" .. host .. ":" .. previewed_files[swagger_path]['port'])
     return
   end
+  previewed_files[swagger_path] = {}
 
-  if file_being_previewed ~= nil then
-    stop_server()
-  end
-
+  local port = extract_max_port() + 1
+  previewed_files[swagger_path]['port'] = port
   local cmd = "swagger-ui-watcher -p " .. port .. " -h " .. host .. " " .. swagger_path
 
-  server_pid = vim.fn.jobstart(cmd, {
+  previewed_files[swagger_path]['job_pid'] = vim.fn.jobstart(cmd, {
     on_stdout = function(_, data, _)
       print(vim.inspect(data))
     end,
@@ -52,9 +66,7 @@ local function start_server()
       print("swagger-ui-watcher exited with code " .. code)
     end,
   })
-  file_being_previewed = swagger_path
 end
-
 
 vim.api.nvim_create_user_command("SwaggerPreview", start_server, {})
 vim.api.nvim_create_user_command("SwaggerPreviewStop", stop_server, {})
