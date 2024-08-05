@@ -23,6 +23,14 @@ local function is_swagger_command_available()
   return false
 end
 
+
+local function is_port_available(port)
+  local handle = io.popen("lsof -iTCP:" .. port .. " -sTCP:LISTEN -t")
+  local result = handle:read("*a")
+  handle:close()
+  return result == ""
+end
+
 local function extract_max_port()
   local max_port = base_port
   for _, v in pairs(previewed_files) do
@@ -59,6 +67,10 @@ local function start_server()
   previewed_files[swagger_path] = {}
 
   local port = extract_max_port() + 1
+  while not is_port_available(port) do
+    port = port + 1
+  end
+
   previewed_files[swagger_path]['port'] = port
   local cmd = "swagger-ui-watcher -p " .. port .. " -h " .. host .. " " .. swagger_path
 
