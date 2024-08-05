@@ -96,3 +96,26 @@ vim.cmd([[
   autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})
 ]])
 vim.o.updatetime = 500
+
+-- https://github.com/CopilotC-Nvim/CopilotChat.nvim/issues/379
+vim.api.nvim_create_autocmd('FileType', {
+  group = augroup,
+  -- pattern = 'copilot-*',
+  pattern = 'copilot-chat',
+  callback = function(info)
+    vim.api.nvim_create_autocmd('InsertEnter', {
+      group = augroup,
+      buffer = info.buf,
+      desc = 'Move to last line',
+      -- nested = true,
+      callback = function()
+        vim.cmd 'normal! 0'
+
+        if vim.fn.search([[\m^##\s\+\S]], 'cnW') > 0 then
+          vim.cmd 'normal! G$'
+          vim.v.char = 'x'
+        end
+      end,
+    })
+  end,
+})
