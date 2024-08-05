@@ -14,8 +14,17 @@ done
 
 mkdir ~/.vim/lua_scripts
 for file in `pwd`/vim/lua_scripts/*; do
+  if [ -d "$file" ]; then
+    continue
+  fi
   file_name=`basename $file`
   ln -s $file ~/.vim/lua_scripts/$file_name
+done
+
+mkdir ~/.vim/lua_scripts/init
+for file in `pwd`/vim/lua_scripts/init/*; do
+  file_name=`basename $file`
+  ln -s $file ~/.vim/lua_scripts/init/$file_name
 done
 
 ln -s `pwd`/vim/.vimrc ~/.ideavimrc

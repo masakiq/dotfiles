@@ -1972,9 +1972,11 @@ endfunction
 
 " ## for lua scripts ---------------------- {{{
 
-luafile ~/.vim/lua_scripts/keymap.lua
-luafile ~/.vim/lua_scripts/init_copilot_chat.lua
-luafile ~/.vim/lua_scripts/swagger_preview.lua
+let lua_scripts_dir = expand('~/.vim/lua_scripts/init')
+let lua_files = split(glob(lua_scripts_dir . '/*.lua'), '\n')
+for lua_file in lua_files
+  execute 'luafile' lua_file
+endfor
 
 " }}}
 
