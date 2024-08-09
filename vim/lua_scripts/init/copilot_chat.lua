@@ -9,7 +9,6 @@ Your goal is to provide seamless and natural translations that are easily unders
 
 require('CopilotChat').setup {
   debug = true, -- Enable debugging
-  model = 'gpt-4o-2024-05-13',
   highlight_selection = false,
 
   -- The default prompt to use when no prompt is specified
@@ -118,4 +117,12 @@ vim.api.nvim_create_autocmd('FileType', {
       end,
     })
   end,
+})
+
+-- Trigger CopilotChatCommitStaged during git commit
+local gitcommit_group = vim.api.nvim_create_augroup("gitcommit", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "gitcommit",
+  group = gitcommit_group,
+  command = "CopilotChatCommitStaged"
 })
