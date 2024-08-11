@@ -442,8 +442,8 @@ Plug 'mg979/vim-visual-multi',              { 'commit': '724bd53adfbaf32e129b001
 
 " Editing Assistance
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
-Plug 'wellle/targets.vim',                  { 'commit': '642d3a4ce306264b05ea3219920b13ea80931767' }
-Plug 'tpope/vim-commentary',                { 'commit': 'e87cd90dc09c2a203e13af9704bd0ef79303d755' }
+Plug 'wellle/targets.vim',                  { 'commit': '6325416da8f89992b005db3e4517aaef0242602e' }
+Plug 'tpope/vim-commentary',                { 'commit': 'c4b8f52cbb7142ec239494e5a2c4a512f92c4d07' }
 Plug 'tpope/vim-surround',                  { 'commit': '3d188ed2113431cf8dac77be61b842acb64433d9' }
 Plug 'mattn/vim-maketable',                 { 'commit': 'd72e73f333c64110524197ec637897bd1464830f' }
 Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33b14a84336dee2a78f' }
