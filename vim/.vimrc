@@ -424,13 +424,13 @@ Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ec
 
 " User Interface
 Plug 'dracula/vim',                         { 'commit': '3e52a0682a53dd7c2c53133d45948f5a49c5fd9a', 'as': 'dracula' }
-Plug 'lambdalisue/fern.vim',                { 'commit': 'cdec1327ec99f0155d0a53aee1beae4c58071558' }
-Plug 'junegunn/fzf.vim',                    { 'commit': '811f34b70b60b4df2997e3ba8cd109e7d06d683b' }
-Plug 'voldikss/vim-floaterm',               { 'commit': 'bcaeabf89a92a924031d471395054d84bd88ce2f' }
-Plug 'voldikss/fzf-floaterm',               { 'commit': '66a30db85a7adf573af9b8a4f3f8c4ce0a2d665e' }
-Plug 'MunifTanjim/nui.nvim',                { 'commit': '9e3916e784660f55f47daa6f26053ad044db5d6a' }
+Plug 'lambdalisue/fern.vim',                { 'commit': 'a675dff495a0a0fd15663ebbae585c19825a64c5' }
+Plug 'junegunn/fzf.vim',                    { 'commit': 'f7c7b44764a601e621432b98c85709c9a53a7be8' }
+Plug 'voldikss/vim-floaterm',               { 'commit': '4e28c8dd0271e10a5f55142fb6fe9b1599ee6160' }
+Plug 'voldikss/fzf-floaterm',               { 'commit': 'c023f97e49e894ac5649894b7e05505b6df9b055' }
+Plug 'MunifTanjim/nui.nvim',                { 'commit': '61574ce6e60c815b0a0c4b5655b8486ba58089a1' }
 Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
-Plug 'liuchengxu/vim-which-key',            { 'commit': 'a98626b2bf88d6fc97a8276d02c75961ce2b35fa' }
+Plug 'liuchengxu/vim-which-key',            { 'commit': '470cd19ce11b616e0640f2b38fb845c42b31a106' }
 
 " Navigation
 Plug 'easymotion/vim-easymotion',           { 'commit': 'b3cfab2a6302b3b39f53d9fd2cd997e1127d7878' }
@@ -440,24 +440,18 @@ Plug 'haya14busa/incsearch.vim',            { 'commit': 'c83de6d1ac31d173d7c3ffe
 Plug 'matze/vim-move',                      { 'commit': '244a2908ffbca3d09529b3ec24c2c090f489f401' }
 Plug 'mg979/vim-visual-multi',              { 'commit': '724bd53adfbaf32e129b001658b45d4c5c29ca1a' }
 
-" Git
-Plug 'iberianpig/tig-explorer.vim',         { 'commit': 'a75ee59636bc0a1659d372e3a4e8b35d167e3df5' }
-Plug 'tpope/vim-fugitive',                  { 'commit': 'b3b838d690f315a503ec4af8c634bdff3b200aaf' }
-Plug 'ruanyl/vim-gh-line',                  { 'commit': 'fbf368bdfad7e5478009a6dc62559e6b2c72d603' }
-
 " Editing Assistance
 Plug 'jiangmiao/auto-pairs',                { 'commit': '39f06b873a8449af8ff6a3eee716d3da14d63a76' }
-Plug 'wellle/targets.vim',                  { 'commit': '642d3a4ce306264b05ea3219920b13ea80931767' }
-Plug 'tpope/vim-commentary',                { 'commit': 'e87cd90dc09c2a203e13af9704bd0ef79303d755' }
+Plug 'wellle/targets.vim',                  { 'commit': '6325416da8f89992b005db3e4517aaef0242602e' }
+Plug 'tpope/vim-commentary',                { 'commit': 'c4b8f52cbb7142ec239494e5a2c4a512f92c4d07' }
 Plug 'tpope/vim-surround',                  { 'commit': '3d188ed2113431cf8dac77be61b842acb64433d9' }
 Plug 'mattn/vim-maketable',                 { 'commit': 'd72e73f333c64110524197ec637897bd1464830f' }
 Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33b14a84336dee2a78f' }
 
 " Copilot
-Plug 'github/copilot.vim',                  { 'commit': '3b39e786d865df9ba77fe61624d6ee646528a809' }
-Plug 'zbirenbaum/copilot.lua',              { 'commit': '86537b286f18783f8b67bccd78a4ef4345679625' }
+Plug 'github/copilot.vim',                  { 'commit': '25f73977033c597d530c7ab0e211d99b60927d2d' }
 Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
-Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '92bc7b5e564c23b12b2ed41dd7657fdafe39d95f' }
+Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': 'cfdf371cec954fccf5410315884e110d214d38fa' }
 call plug#end()
 
 " }}}
@@ -680,18 +674,6 @@ else
   let g:which_key_map['<Left>'] = 'Expand left'
   let g:which_key_map['<Up>'] = 'Expand up'
   let g:which_key_map['<Down>'] = 'Expand down'
-endif
-
-" }}}
-
-" ### plugin ruanyl/vim-gh-line ---------------------- {{{
-
-if has('gui_running')
-else
-  let g:gh_line_map_default = 0
-  let g:gh_line_blame_map_default = 1
-  " let g:gh_line_map = '<space>gf'
-  " let g:gh_line_blame_map = '<space>gb'
 endif
 
 " }}}
