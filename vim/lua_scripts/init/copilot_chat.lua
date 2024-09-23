@@ -9,6 +9,7 @@ Your goal is to provide seamless and natural translations that are easily unders
 
 require('CopilotChat').setup {
   debug = true, -- Enable debugging
+  model = 'gpt-4o-mini-2024-07-18',
   highlight_selection = false,
 
   -- The default prompt to use when no prompt is specified
