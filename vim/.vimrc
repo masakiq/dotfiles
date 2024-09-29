@@ -424,6 +424,7 @@ Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ec
 
 " User Interface
 Plug 'dracula/vim',                         { 'commit': '3e52a0682a53dd7c2c53133d45948f5a49c5fd9a', 'as': 'dracula' }
+Plug 'stevearc/oil.nvim',                   { 'commit': '1360be5fda9c67338331abfcd80de2afbb395bcd' }
 Plug 'junegunn/fzf.vim',                    { 'commit': 'f7c7b44764a601e621432b98c85709c9a53a7be8' }
 Plug 'voldikss/vim-floaterm',               { 'commit': '4e28c8dd0271e10a5f55142fb6fe9b1599ee6160' }
 Plug 'voldikss/fzf-floaterm',               { 'commit': 'c023f97e49e894ac5649894b7e05505b6df9b055' }
