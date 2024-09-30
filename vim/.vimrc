@@ -424,7 +424,7 @@ Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ec
 
 " User Interface
 Plug 'dracula/vim',                         { 'commit': '3e52a0682a53dd7c2c53133d45948f5a49c5fd9a', 'as': 'dracula' }
-Plug 'lambdalisue/fern.vim',                { 'commit': 'a675dff495a0a0fd15663ebbae585c19825a64c5' }
+Plug 'stevearc/oil.nvim',                   { 'commit': '1360be5fda9c67338331abfcd80de2afbb395bcd' }
 Plug 'junegunn/fzf.vim',                    { 'commit': 'f7c7b44764a601e621432b98c85709c9a53a7be8' }
 Plug 'voldikss/vim-floaterm',               { 'commit': '4e28c8dd0271e10a5f55142fb6fe9b1599ee6160' }
 Plug 'voldikss/fzf-floaterm',               { 'commit': 'c023f97e49e894ac5649894b7e05505b6df9b055' }
@@ -726,39 +726,6 @@ let g:VM_maps["Add Cursor Up"]        = '<M-Up>'
 " ## masakiq/vim-tabline ---------------------- {{{
 
 let g:tabline_charmax = 40
-
-" }}}
-
-" ## lambdalisue/fern.vim ---------------------- {{{
-
-noremap <space>oe :Fern . -drawer -width=50 -toggle -keep -reveal=%<CR>
-let g:fern#mark_symbol                       = '●'
-let g:fern#renderer#default#collapsed_symbol = '▷ '
-let g:fern#renderer#default#expanded_symbol  = '▼ '
-let g:fern#renderer#default#leading          = ' '
-let g:fern#renderer#default#leaf_symbol      = ' '
-let g:fern#renderer#default#root_symbol      = '~ '
-
-function! FernInit() abort
-  nmap <buffer><expr>
-        \ <Plug>(fern-my-open-expand-collapse)
-        \ fern#smart#leaf(
-        \   "\<Plug>(fern-action-open:select)",
-        \   "\<Plug>(fern-action-expand)",
-        \   "\<Plug>(fern-action-collapse)",
-        \ )
-  nmap <buffer> n <Plug>(fern-action-new-path)
-  nmap <buffer> d <Plug>(fern-action-remove)
-  nmap <buffer> s <Plug>(fern-action-open:split)
-  nmap <buffer> v <Plug>(fern-action-open:vsplit)
-  nmap <buffer><nowait> < <Plug>(fern-action-leave)
-  nmap <buffer><nowait> > <Plug>(fern-action-enter)
-endfunction
-
-augroup FernGroup
-  autocmd!
-  autocmd FileType fern call FernInit()
-augroup END
 
 " }}}
 
