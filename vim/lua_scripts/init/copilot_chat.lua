@@ -14,7 +14,6 @@ require('CopilotChat').setup {
   model = 'gpt-4o-mini-2024-07-18',
   highlight_selection = false,
 
-  system_prompt = require('CopilotChat.prompts').COPILOT_INSTRUCTIONS .. custom_additional_prompt,
   prompts = {
     Explain = {
       prompt = '/COPILOT_EXPLAIN Write an explanation for the active selection as paragraphs of text.' ..
