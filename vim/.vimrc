@@ -586,6 +586,9 @@ hi TabLineSel           ctermfg=87  cterm=none
 hi TabLine              ctermfg=31  ctermbg=none cterm=none
 hi TabLineFill          ctermfg=31  ctermbg=none cterm=none
 
+" Floating window
+hi NormalFloat          ctermfg=31  ctermbg=none
+
 " txt ファイルの highlight
 autocmd BufRead,BufNewFile *.txt set syntax=conf
 autocmd BufRead,BufNewFile *.fish set syntax=sh
