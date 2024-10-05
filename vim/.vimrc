@@ -1065,6 +1065,7 @@ endfunction
 nnoremap <space>ot :OpenTargetFile<CR>
 command! OpenTargetFile call OpenTargetFile()
 function! OpenTargetFile()
+  cd .
   let target_path=''
   let path=expand('%')
   if path =~ '^app/'
