@@ -7,34 +7,22 @@ Pay close attention to cultural nuances, idiomatic expressions, and the overall 
 Your goal is to provide seamless and natural translations that are easily understood by native speakers of both languages.
 ]]
 
+local custom_additional_prompt = 'And, please translate it into Japanese as well.'
+
 require('CopilotChat').setup {
   debug = true, -- Enable debugging
   model = 'gpt-4o-mini-2024-07-18',
   highlight_selection = false,
 
-  -- The default prompt to use when no prompt is specified
-  -- prompts = {
-  --   Explain = {
-  --     prompt = '/COPILOT_EXPLAIN 選択箇所のコードについて、段落形式で説明文を作成してください。',
-  --   },
-  --   Review = {
-  --     prompt = '/COPILOT_REVIEW 選択箇所のコードについて、レビューしてください。',
-  --   },
-  --   Tests = {
-  --     prompt = '/COPILOT_TESTS 選択箇所のコードについて、単体テストを生成してください。',
-  --   },
-  --   Fix = {
-  --     prompt = '/COPILOT_FIX 選択箇所のコードに問題があります。コードを修正して、バグが修正された状態で表示してください。',
-  --   },
-  --   Optimize = {
-  --     prompt = '/COPILOT_REFACTOR 選択したコードを改善して、効率性と読みやすさを向上させてください。',
-  --   },
-  --   Docs = {
-  --     prompt = '/COPILOT_REFACTOR 選択したコードのドキュメントを作成してください。プログラミング言語に最適なドキュメントスタイルを採用してください。',
-  --   },
-  -- },
-
+  system_prompt = require('CopilotChat.prompts').COPILOT_INSTRUCTIONS .. custom_additional_prompt,
   prompts = {
+    Explain = {
+      prompt = '/COPILOT_EXPLAIN Write an explanation for the active selection as paragraphs of text.' ..
+          custom_additional_prompt,
+    },
+    Review = {
+      prompt = '/COPILOT_REVIEW Review the selected code.' .. custom_additional_prompt,
+    },
     Translate = {
       system_prompt = custom_system_prompt_for_translate,
       prompt =
@@ -46,7 +34,12 @@ require('CopilotChat').setup {
       prompt =
       'Please come up with 5 git branch names by the selected difference.',
       selection = require('CopilotChat.select').gitdiff,
-    }
+    },
+    CommitStaged = {
+      prompt =
+          'Write commit message for the change with commitizen convention. Make sure the title has maximum 50 characters and message is wrapped at 72 characters. Wrap the whole message in code block with language gitcommit.' ..
+          custom_additional_prompt,
+    },
   },
 
   -- Key mappings
