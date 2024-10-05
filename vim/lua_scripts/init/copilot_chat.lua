@@ -20,7 +20,7 @@ require('CopilotChat').setup {
           custom_additional_prompt,
     },
     Review = {
-      prompt = '/COPILOT_REVIEW Review the selected code.' .. custom_additional_prompt,
+      prompt = '/COPILOT_REVIEW Review the selected code.' .. custom_additional_prompt .. 'But do not translate `line={number}`.',
     },
     Translate = {
       system_prompt = custom_system_prompt_for_translate,
