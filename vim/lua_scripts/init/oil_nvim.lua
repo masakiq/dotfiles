@@ -3,6 +3,7 @@ require("oil").setup({
   win_options = {
     winbar = "%!v:lua.get_oil_winbar()",
   },
+  cleanup_delay_ms = 100,
   float = {
     padding = 3,
   },
@@ -21,7 +22,7 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "OilEnter",
   callback = vim.schedule_wrap(function(args)
     local oil = require("oil")
-    oil.set_columns({ "size", "mtime" })
+    oil.set_columns({ "size", "mtime", "icon" })
     if vim.api.nvim_get_current_buf() == args.data.buf and oil.get_cursor_entry() then
       oil.open_preview()
       vim.cmd("set nonumber")
