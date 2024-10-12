@@ -492,9 +492,6 @@ set showcmd
 " モードを表示する
 set showmode
 
-" 画面のカラースキーマCygwinでみやすい色使い
-" colorscheme  tortetorte
-
 " アンダーライン
 set cursorline
 
@@ -738,23 +735,6 @@ let g:fzf_action = {
       \ 'enter': 'GotoOrOpen tab',
       \ }
 
-let g:fzf_colors =
-      \ {
-      \ "fg":      ["fg", "Normal"],
-      \ "bg":      ["bg", "Normal"],
-      \ "hl":      ["fg", "Normal"],
-      \ "fg+":     ["fg", "CursorLine", "CursorColumn", "Normal"],
-      \ "bg+":     ["bg", "CursorLine", "CursorColumn", "Normal"],
-      \ "hl+":     ["fg", "Normal"],
-      \ "info":    ["fg", "Normal"],
-      \ "border":  ["fg", "Normal"],
-      \ "prompt":  ["fg", "Visual"],
-      \ "pointer": ["fg", "Visual"],
-      \ "marker":  ["fg", "Visual"],
-      \ "spinner": ["fg", "Visual"],
-      \ "header":  ["fg", "Visual"]
-      \ }
-
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 command! -bang -nargs=? -complete=dir Files
@@ -886,7 +866,6 @@ function! OpenFiles(...)
         \   '--multi',
         \   '--expect=ctrl-v,ctrl-s,enter,ctrl-a,ctrl-e,ctrl-x',
         \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
-        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \ ],
         \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
         \ })))
@@ -903,7 +882,6 @@ function! OpenAllFiles()
           \   '--multi',
           \   '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
           \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
-          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
           \ }))
@@ -1386,7 +1364,6 @@ function! SwitchProject()
         \ 'sink':  function('s:open_project'),
         \ 'options': [
         \   '--prompt', 'Project> ',
-        \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
         \   '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
         \ ],
         \ 'placeholder': '{}/README.md',
@@ -1427,7 +1404,7 @@ function! SearchWord(word, ...)
     return
   endif
   call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --no-heading --color always --colors=line:none --colors=match:fg:cyan --colors=path:fg:blue --smart-case %s %s", shellescape(a:word), l:path),
+      \ 'source':  printf("rg --column --no-heading --color always --smart-case %s %s", shellescape(a:word), l:path),
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--prompt="Search> " '.
@@ -1610,7 +1587,6 @@ command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
       \ 'sink':  function('s:select_function_handler'),
       \ 'options': [
       \   '--prompt', 'Function> ',
-      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ ],
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ }))
@@ -1638,7 +1614,6 @@ command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
       \ 'sink':  function('s:select_visual_function_handler'),
       \ 'options': [
       \   '--prompt', 'Function> ',
-      \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
       \ ],
       \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
       \ }))
@@ -1707,7 +1682,6 @@ function! CommandSnippet()
           \ 'source': s:get_command_snippet_list(),
           \ 'options': [
           \   '--prompt', 'CommandSnippet> ',
-          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'sink':   function('s:fill_in_selected_command_snippet'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
@@ -1796,7 +1770,6 @@ function! OpenShopifyGraphQLDocument() abort
           \ 'source': paths,
           \ 'options': [
           \   '--prompt', 'Shopify GraphQL Refs> ',
-          \   '--color', 'hl:68,hl+:110,info:110,spinner:110,marker:110,pointer:110',
           \ ],
           \ 'sink':  function('s:open_shopify_graphql_document'),
           \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
