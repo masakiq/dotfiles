@@ -20,7 +20,8 @@ require('CopilotChat').setup {
           custom_additional_prompt,
     },
     Review = {
-      prompt = '/COPILOT_REVIEW Review the selected code.' .. custom_additional_prompt .. 'But do not translate `line={number}`.',
+      prompt = '/COPILOT_REVIEW Review the selected code.' ..
+          custom_additional_prompt .. 'But do not translate `line={number}`.',
     },
     Translate = {
       system_prompt = custom_system_prompt_for_translate,
@@ -113,9 +114,21 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Trigger CopilotChatCommitStaged during git commit
-local gitcommit_group = vim.api.nvim_create_augroup("gitcommit", { clear = true })
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "gitcommit",
-  group = gitcommit_group,
-  command = "CopilotChatCommitStaged"
+-- local gitcommit_group = vim.api.nvim_create_augroup("gitcommit", { clear = true })
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = "gitcommit",
+--   group = gitcommit_group,
+--   command = "CopilotChatCommitStaged"
+-- })
+-- This is a workaround.
+-- Ideally, it should execute `CopilotChatCommitStaged` when specifying `gitcommit` with `FileType`, but for some reason, the prompt is executed multiple times.
+-- So I am specifying `COMMIT_EDITMSG` with `BufRead`.
+-- It is likely a bug in Neovim 10.
+local function commit_edit_msg()
+  if vim.fn.expand("%:p") == vim.fn.getcwd() .. "/.git/COMMIT_EDITMSG" then
+    vim.cmd.CopilotChatCommitStaged()
+  end
+end
+vim.api.nvim_create_autocmd("BufRead", {
+  callback = commit_edit_msg,
 })
