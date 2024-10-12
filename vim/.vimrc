@@ -453,6 +453,11 @@ Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33
 Plug 'github/copilot.vim',                  { 'commit': '25f73977033c597d530c7ab0e211d99b60927d2d' }
 Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
 Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '9333944fde3c65868818e245c73aa29eef826e9b' }
+
+" GitHub
+Plug 'pwntester/octo.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 call plug#end()
 
 " }}}
