@@ -954,6 +954,7 @@ endfunction
 
 command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
 function! CopyCurrentPath()
+  cd .
   let @+=expand('%')
   echo "copied current path: " . expand('%')
 endfunction
