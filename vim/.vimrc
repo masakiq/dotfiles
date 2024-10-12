@@ -422,8 +422,8 @@ Plug 'maxmellon/vim-jsx-pretty',            { 'commit': '6989f1663cc03d7da72b5ef
 Plug 'rcmdnk/vim-markdown',                 { 'commit': '9a5572a18b2d0bbe96b2ed625f5fbe0462dbd801', 'for': 'markdown' }
 Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b', 'for': 'ruby' }
 
-" User Interface
-Plug 'dracula/vim',                         { 'commit': '3e52a0682a53dd7c2c53133d45948f5a49c5fd9a', 'as': 'dracula' }
+" Interface
+Plug 'folke/tokyonight.nvim',               { 'commit': '2c85fad417170d4572ead7bf9fdd706057bd73d7', 'as': 'tokyonight' }
 Plug 'stevearc/oil.nvim',                   { 'commit': '1360be5fda9c67338331abfcd80de2afbb395bcd' }
 Plug 'junegunn/fzf.vim',                    { 'commit': 'f7c7b44764a601e621432b98c85709c9a53a7be8' }
 Plug 'voldikss/vim-floaterm',               { 'commit': '4e28c8dd0271e10a5f55142fb6fe9b1599ee6160' }
@@ -506,13 +506,7 @@ set autoread
 au BufRead * normal zR
 
 " カラースキーマ設定
-colorscheme dracula
-
-"augroup BgHighlight
-"  autocmd!
-"  autocmd WinEnter * set cul
-"  autocmd WinLeave * set nocul
-"augroup END
+colorscheme tokyonight
 
 " シンタックスエラーを下線にする
 hi clear SpellBad
@@ -522,10 +516,9 @@ hi SpellRare cterm=underline
 hi SpellLocal cterm=underline
 
 " Background color
-hi Normal               ctermfg=none ctermbg=none
+hi Normal               ctermfg=none ctermbg=none guifg=none guibg=#000000
 " hide the `~` at the start of an empty line
-hi EndOfBuffer          ctermfg=16 ctermbg=none
-" hi NonText ctermbg=238
+hi EndOfBuffer          ctermfg=16 ctermbg=none guifg=#000000 guibg=#000000
 
 " fold した行に `-` を付与しないための設定
 " https://vi.stackexchange.com/questions/14217/how-to-hide-horizontal-line-between-windows#answer-14222
@@ -536,104 +529,34 @@ hi VertSplit ctermfg=16 ctermbg=16
 " https://stackoverflow.com/questions/9001337/vim-split-bar-styling
 set fillchars+=vert:\ "White space at the end
 
-" 補完の色調整
-hi Pmenu ctermfg=4 ctermbg=0
-hi PmenuSel ctermfg=243 ctermbg=45
-hi PmenuSbar ctermbg=238 ctermfg=238
-hi PmenuThumb ctermbg=248 ctermfg=248
 
-hi Folded               ctermfg=44  ctermbg=241
-hi WildMenu             ctermfg=238 ctermbg=87
+hi SignColumn           ctermfg=none  cterm=none guifg=none guibg=#000000
 
-hi StatusLine           ctermfg=87  ctermbg=238
-hi StatusLineNC         ctermfg=31  ctermbg=238
-
-hi SpellCap             ctermfg=87  ctermbg=31
-hi SpellRare            ctermfg=87  ctermbg=63
-hi SpellLocal           ctermfg=87  ctermbg=71
-hi Error                ctermfg=255 ctermbg=199
-hi Search               ctermfg=255 ctermbg=63
-hi Todo                 ctermfg=255 ctermbg=34
-hi Visual               ctermfg=255 ctermbg=38
-
-hi DiffAdd    ctermfg=233 ctermbg=194 guifg=#003300 guibg=#DDFFDD gui=none cterm=none
-hi DiffChange ctermfg=233 ctermbg=194 guifg=#003300 guibg=#DDFFDD gui=none cterm=none
-hi DiffText   ctermfg=255 ctermbg=22  guifg=#003300 guibg=#DDFFDD gui=none cterm=none
-hi DiffDelete ctermfg=252 ctermbg=224 guifg=#DDCCCC guibg=#FFDDDD gui=none cterm=none
-
-hi Identifier           ctermfg=115
-hi Type                 ctermfg=45
-hi PreProc              ctermfg=219
-hi Constant             ctermfg=147
-hi Statement            ctermfg=199
-hi CursorColumn         ctermbg=19
-hi lscCurrentParameter  ctermbg=19
-hi SignColumn           ctermbg=0
-
-hi LineNr               ctermfg=31  ctermbg=none
-hi CursorLineNr         ctermfg=87  cterm=none
-hi CursorLine           ctermbg=237 cterm=none
-
-" For coc.nvim
-hi CocFloating                      ctermfg=255   ctermbg=235
-hi CocMenuSel                       ctermfg=255   ctermbg=240
-hi FgCocInfoFloatBgCocFloating      ctermfg=123   ctermbg=239
-hi FgCocWarningFloatBgCocFloating   ctermfg=230   ctermbg=239
-hi FgCocErrorFloatBgCocFloating     ctermfg=219   ctermbg=239
+hi LineNr               ctermfg=31  cterm=none guifg=#777777 guibg=none
+hi CursorLineNr         ctermfg=87  cterm=none guifg=#eeeeee guibg=#222222
+hi CursorLine           ctermbg=237 cterm=none guifg=none    guibg=#222222
+hi CursorColumn         ctermbg=19  cterm=none guifg=none    guibg=#222222
 
 " タブ
 hi TabLineSel           ctermfg=87  cterm=none
-hi TabLine              ctermfg=31  ctermbg=none cterm=none
-hi TabLineFill          ctermfg=31  ctermbg=none cterm=none
+hi TabLine              ctermfg=31  ctermbg=none cterm=none guifg=#777777 guibg=none
+hi TabLineFill          ctermfg=31  ctermbg=none cterm=none guibg=none
 
 " Floating window
-hi NormalFloat          ctermfg=31  ctermbg=none
+hi NormalFloat          ctermfg=31  ctermbg=none guifg=none guibg=#000000
 
 " txt ファイルの highlight
 autocmd BufRead,BufNewFile *.txt set syntax=conf
 autocmd BufRead,BufNewFile *.fish set syntax=sh
 
-hi Comment  ctermfg=White
-
 " *.log のシンタックスをカスタマイズ
-hi keywordWhen        ctermfg=green
-hi matchBehavesLikeTo ctermfg=magenta
+hi keywordWhen        ctermfg=green   guifg=green
+hi matchBehavesLikeTo ctermfg=magenta guifg=magenta
 augroup vimrcsyntax
   autocmd!
   au FileType log syntax keyword keywordWhen when containedin=ALL
   au FileType log syntax match matchBehavesLikeTo /behaves like/ containedin=ALL
 augroup END
-
-" 非アクティブのときに白くする
-"hi ColorColumn ctermbg=237
-"if exists('+colorcolumn')
-"  function! s:DimInactiveWindows()
-"    for i in range(1, tabpagewinnr(tabpagenr(), '$'))
-"      let l:range = ""
-"      if i != winnr()
-"        if &wrap
-"         " HACK: when wrapping lines is enabled, we use the maximum number
-"         " of columns getting highlighted. This might get calculated by
-"         " looking for the longest visible line and using a multiple of
-"         " winwidth().
-"         let l:width=256 " max
-"        else
-"         let l:width=winwidth(i)
-"        endif
-"        let l:range = join(range(1, l:width), ',')
-"      endif
-"      call setwinvar(i, '&colorcolumn', l:range)
-"    endfor
-"  endfunction
-"  augroup DimInactiveWindows
-"    au!
-"    au WinEnter * call s:DimInactiveWindows()
-"    au WinEnter * set cursorline
-"    "au WinEnter * highlight LineNr ctermfg=31  ctermbg=0
-"    au WinLeave * set nocursorline
-"    "au WinLeave * highlight LineNr ctermfg=31  ctermbg=238
-"  augroup END
-"endif
 
 " }}}
 
