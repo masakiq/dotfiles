@@ -424,7 +424,7 @@ Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ec
 
 " Interface
 Plug 'folke/tokyonight.nvim',               { 'commit': '2c85fad417170d4572ead7bf9fdd706057bd73d7', 'as': 'tokyonight' }
-Plug 'stevearc/oil.nvim',                   { 'commit': '1360be5fda9c67338331abfcd80de2afbb395bcd' }
+Plug 'stevearc/oil.nvim',                   { 'commit': 'cca1631d5ea450c09ba72f3951a9e28105a3632c' }
 Plug 'nvim-tree/nvim-web-devicons',         { 'commit': '56f17def81478e406e3a8ec4aa727558e79786f3' }
 Plug 'junegunn/fzf.vim',                    { 'commit': 'f7c7b44764a601e621432b98c85709c9a53a7be8' }
 Plug 'voldikss/vim-floaterm',               { 'commit': '4e28c8dd0271e10a5f55142fb6fe9b1599ee6160' }

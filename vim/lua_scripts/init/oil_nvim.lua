@@ -1,11 +1,11 @@
 require("oil").setup({
   delete_to_trash = true,
-  win_options = {
-    winbar = "%!v:lua.get_oil_winbar()",
-  },
   cleanup_delay_ms = 100,
   float = {
     padding = 3,
+    get_win_title = function()
+      return get_oil_winbar()
+    end,
   },
 })
 
