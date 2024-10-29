@@ -11,7 +11,7 @@ local custom_additional_prompt = 'And, please translate it into Japanese as well
 
 require('CopilotChat').setup {
   debug = true, -- Enable debugging
-  model = 'gpt-4o-mini-2024-07-18',
+  model = 'gpt-4o-2024-08-06',
   highlight_selection = false,
 
   prompts = {
