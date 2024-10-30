@@ -2,12 +2,24 @@ local api = vim.api
 
 -- Function to handle Markdown file preview
 local function preview_markdown()
+  if vim.bo.filetype ~= 'markdown' then
+    return
+  end
+
   -- Get the current buffer's file path
   local filepath = api.nvim_buf_get_name(0)
 
   -- exit if the current tab has 2 or more windows
   if vim.fn.winnr('$') > 1 then
-    return
+    for i = 1, vim.fn.winnr('$') do
+      local bufnr = vim.fn.winbufnr(i)
+      if vim.fn.getbufvar(bufnr, '&buftype') == 'terminal' then
+        print("Terminal buffer found in window " .. i)
+        vim.api.nvim_buf_delete(bufnr, { force = true })
+        preview_markdown()
+        return
+      end
+    end
   end
 
   -- Open a vertical split
