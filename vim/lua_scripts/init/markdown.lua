@@ -9,7 +9,7 @@ local function preview_markdown()
   -- Get the current buffer's file path
   local filepath = api.nvim_buf_get_name(0)
 
-  -- exit if the current tab has 2 or more windows
+  -- Exit if the current tab has 2 or more windows
   if vim.fn.winnr('$') > 1 then
     for i = 1, vim.fn.winnr('$') do
       local bufnr = vim.fn.winbufnr(i)
@@ -35,9 +35,26 @@ local function preview_markdown()
 
   -- Run glow command in the terminal buffer
   vim.fn.termopen("glow " .. vim.fn.shellescape(filepath))
+  local terminal_id = vim.api.nvim_get_current_win()
 
   -- Return cursor to the original buffer
   vim.cmd('wincmd p')
+
+  -- Wait briefly before applying the cursor position to the terminal buffer
+  vim.defer_fn(function()
+    local original_id = vim.api.nvim_get_current_win()
+    local original_pos = vim.api.nvim_win_get_cursor(original_id)
+    vim.api.nvim_set_current_win(terminal_id)
+
+    -- Get the number of lines in the terminal buffer
+    local line_count = vim.api.nvim_buf_line_count(0)
+
+    -- Ensure the cursor position is within the buffer range
+    local cursor_pos = { math.min(original_pos[1], line_count), original_pos[2] }
+
+    vim.api.nvim_win_set_cursor(terminal_id, cursor_pos)
+    vim.api.nvim_set_current_win(original_id)
+  end, 100)
 end
 
 -- Auto command to trigger when opening a Markdown file
