@@ -1551,14 +1551,10 @@ function! ListBufNums()
 endfunction
 
 function! ListAllBufNums()
-  redir => bufs
-  silent ls
-  redir END
-  let buflist = split(bufs, "\n")
+  let buflist = getbufinfo()
   let listbufnums = []
   for buf in buflist
-    let num = str2nr(substitute(buf, '^\s*\(\d*\)\s*.*', '\1', ''))
-    call add(listbufnums, num)
+    call add(listbufnums, buf.bufnr)
   endfor
   return listbufnums
 endfunction
