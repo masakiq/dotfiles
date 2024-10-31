@@ -34,7 +34,7 @@ local function preview_markdown()
   vim.api.nvim_buf_set_option(term_buf, 'relativenumber', false)
 
   -- Run glow command in the terminal buffer
-  vim.fn.termopen("glow " .. vim.fn.shellescape(filepath))
+  vim.fn.termopen("glow -w 0 " .. vim.fn.shellescape(filepath))
   local terminal_id = vim.api.nvim_get_current_win()
 
   -- Return cursor to the original buffer
