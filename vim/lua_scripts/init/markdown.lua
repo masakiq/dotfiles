@@ -63,5 +63,9 @@ api.nvim_create_autocmd("BufReadPost", {
   callback = preview_markdown,
 })
 
+vim.api.nvim_exec([[
+  autocmd BufWritePost *.md silent! lua vim.cmd('PreviewMarkdown')
+]], false)
+
 -- Create Vim command to run the preview_markdown function
 api.nvim_create_user_command('PreviewMarkdown', preview_markdown, {})
