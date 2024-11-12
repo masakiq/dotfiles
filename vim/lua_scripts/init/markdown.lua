@@ -7,8 +7,8 @@ local function preview_markdown()
   end
 
   -- Get the current buffer's file path
-  local filepath = api.nvim_buf_get_name(0)
 
+  local filepath = api.nvim_buf_get_name(0)
   -- Exit if the current tab has 2 or more windows
   if vim.fn.winnr('$') > 1 then
     for i = 1, vim.fn.winnr('$') do
@@ -42,18 +42,20 @@ local function preview_markdown()
 
   -- Wait briefly before applying the cursor position to the terminal buffer
   vim.defer_fn(function()
-    local original_id = vim.api.nvim_get_current_win()
-    local original_pos = vim.api.nvim_win_get_cursor(original_id)
-    vim.api.nvim_set_current_win(terminal_id)
+    pcall(function()
+      local original_id = vim.api.nvim_get_current_win()
+      local original_pos = vim.api.nvim_win_get_cursor(original_id)
+      vim.api.nvim_set_current_win(terminal_id)
 
-    -- Get the number of lines in the terminal buffer
-    local line_count = vim.api.nvim_buf_line_count(0)
+      -- Get the number of lines in the terminal buffer
+      local line_count = vim.api.nvim_buf_line_count(0)
 
-    -- Ensure the cursor position is within the buffer range
-    local cursor_pos = { math.min(original_pos[1], line_count), original_pos[2] }
+      -- Ensure the cursor position is within the buffer range
+      local cursor_pos = { math.min(original_pos[1], line_count), original_pos[2] }
 
-    vim.api.nvim_win_set_cursor(terminal_id, cursor_pos)
-    vim.api.nvim_set_current_win(original_id)
+      vim.api.nvim_win_set_cursor(terminal_id, cursor_pos)
+      vim.api.nvim_set_current_win(original_id)
+    end)
   end, 100)
 end
 
