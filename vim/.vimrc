@@ -450,7 +450,7 @@ Plug 'mattn/vim-maketable',                 { 'commit': 'd72e73f333c64110524197e
 Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33b14a84336dee2a78f' }
 
 " Copilot
-Plug 'github/copilot.vim',                  { 'commit': '25f73977033c597d530c7ab0e211d99b60927d2d' }
+Plug 'github/copilot.vim',                  { 'commit': '87038123804796ca7af20d1b71c3428d858a9124' }
 Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
 Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '18d51754e9dc87d6b85f1e331c1fca0825384517' }
 call plug#end()
