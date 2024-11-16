@@ -32,6 +32,10 @@ ln -s `pwd`/vim/.vimrc ~/.ideavimrc
 mkdir ~/.config/direnv
 ln -s `pwd`/direnv/direnv.toml ~/.config/direnv/direnv.toml
 
+mkdir ~/.config/wezterm
+ln -s `pwd`/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
+
+
 ln -s `pwd`/tig/.tigrc ~/.tigrc
 
 ln -s `pwd`/tmux/.tmux.conf ~/.tmux.conf
