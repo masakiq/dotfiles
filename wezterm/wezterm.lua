@@ -38,4 +38,5 @@ return {
     -- コピーモードを開始するショートカットの設定
     { key = "Space", mods = "CTRL|SHIFT", action = wezterm.action.ActivateCopyMode },
   },
+  window_close_confirmation = 'NeverPrompt',
 }
