@@ -1,7 +1,13 @@
 local api = vim.api
 
+vim.g.preview_markdown_enabled = true
+
 -- Function to handle Markdown file preview
 local function preview_markdown()
+  if not vim.g.preview_markdown_enabled then
+    return
+  end
+
   if vim.bo.filetype ~= 'markdown' then
     return
   end
@@ -59,6 +65,24 @@ local function preview_markdown()
   end, 100)
 end
 
+local function close_preview_markdown()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local buf_name = vim.api.nvim_buf_get_name(buf)
+    if string.match(buf_name, "glow %-w 0") then
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
+  end
+end
+
+local function toggle_preview_markdown()
+  vim.g.preview_markdown_enabled = not vim.g.preview_markdown_enabled
+  if not vim.g.preview_markdown_enabled then
+    close_preview_markdown()
+  else
+    preview_markdown()
+  end
+end
+
 -- Auto command to trigger when opening a Markdown file
 api.nvim_create_autocmd("BufReadPost", {
   pattern = "*.md",
@@ -69,5 +93,5 @@ vim.api.nvim_exec([[
   autocmd BufWritePost *.md silent! lua vim.cmd('PreviewMarkdown')
 ]], false)
 
--- Create Vim command to run the preview_markdown function
 api.nvim_create_user_command('PreviewMarkdown', preview_markdown, {})
+api.nvim_create_user_command('TogglePreviewMarkdown', toggle_preview_markdown, {})
