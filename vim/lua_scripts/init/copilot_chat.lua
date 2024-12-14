@@ -61,7 +61,7 @@ require('CopilotChat').setup {
 
 -- Define a command 'CopilotChatReviewClear' that clears diagnostics for the 'copilot_review' namespace
 local function copilot_chat_review_clear()
-  local ns = vim.api.nvim_create_namespace('copilot_review')
+  local ns = vim.api.nvim_create_namespace('copilot_diagnostics')
   vim.diagnostic.reset(ns)
 end
 vim.api.nvim_create_user_command(
