@@ -33,7 +33,7 @@ require('CopilotChat').setup {
     GitBranch = {
       prompt =
       'Please come up with 5 git branch names by the selected difference.',
-      selection = require('CopilotChat.select').gitdiff,
+      selection = require('CopilotChat.context').git,
     },
     Commit = {
       prompt =
