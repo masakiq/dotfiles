@@ -26,4 +26,10 @@ bind refs   D !sh -c "git difftool %(branch)"
 bind status D !sh -c "git difftool %(file)"
 bind diff   D !sh -c "git difftool `git rev-list --parents -n 1 %(commit) | cut -d ' ' -f 2` %(commit) -- %(file)"
 
+# ステージされた変更を選択中のコミットにfixupコミットとして追加
+bind main F !sh -c "git commit --fixup=%(commit)"
+
+# 変更をステージして選択中のコミットにfixupコミットとして追加
+bind main A !sh -c "git rebase --committer-date-is-author-date --autosquash %(commit)^"
+
 set blame-view = date:default author:abbreviated file-name:auto id:yes,color date:relative line-number:yes,interval=1 text
