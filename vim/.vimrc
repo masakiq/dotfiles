@@ -412,8 +412,8 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 " -------------------------------------------
 " Code Completion and Linting
-Plug 'neoclide/coc.nvim',                   { 'commit': '79ccfeaa1db4a3b56767ee7b6b5fc577a5733fef', 'do': 'npm ci' }
-Plug 'antoinemadec/coc-fzf',                { 'commit': '5fae5a15497750483e21fc207aa6005f340f02f2' }
+" Plug 'neoclide/coc.nvim',                   { 'commit': '79ccfeaa1db4a3b56767ee7b6b5fc577a5733fef', 'do': 'npm ci' }
+" Plug 'antoinemadec/coc-fzf',                { 'commit': '5fae5a15497750483e21fc207aa6005f340f02f2' }
 
 " Language Support
 Plug 'dart-lang/dart-vim-plugin',           { 'commit': '928302ec931caf0dcf21835cca284ccd2b192f7b', 'for': 'dart' }
@@ -432,6 +432,10 @@ Plug 'voldikss/fzf-floaterm',               { 'commit': 'c023f97e49e894ac5649894
 Plug 'MunifTanjim/nui.nvim',                { 'commit': '61574ce6e60c815b0a0c4b5655b8486ba58089a1' }
 Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
 Plug 'liuchengxu/vim-which-key',            { 'commit': '470cd19ce11b616e0640f2b38fb845c42b31a106' }
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'klen/nvim-config-local'
 
 " Navigation
 Plug 'easymotion/vim-easymotion',           { 'commit': 'b3cfab2a6302b3b39f53d9fd2cd997e1127d7878' }
@@ -771,35 +775,35 @@ inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'wid
 
 " ## neoclide/coc.nvim {{{
 
-inoremap <silent><expr> <c-n>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
-inoremap <expr><c-p> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+" inoremap <silent><expr> <c-n>
+"       \ coc#pum#visible() ? coc#pum#next(1) :
+"       \ CheckBackspace() ? "\<Tab>" :
+"       \ coc#refresh()
+" inoremap <expr><c-p> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" function! CheckBackspace() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-nmap <space>f :call CocActionAsync('format')<cr>
+" nmap <space>f :call CocActionAsync('format')<cr>
 
 " https://github.com/neoclide/coc-tsserver/issues/282#issuecomment-819364074
-nmap <space>p <Plug>(coc-codeaction-cursor)
-nmap <space>r <Plug>(coc-rename)
+" nmap <space>p <Plug>(coc-codeaction-cursor)
+" nmap <space>r <Plug>(coc-rename)
 
 " nnoremap <silent> gd <Plug>(coc-definition)
 " nnoremap <silent> gr <Plug>(coc-references)
 " nnoremap <silent> gi <Plug>(coc-implementation)
 " nnoremap <silent> gy <Plug>(coc-type-definition)
 
-nnoremap <silent> gd :<C-u>call CocActionAsync('jumpDefinition', v:false)<CR>
-nnoremap <silent> gr :<C-u>call CocActionAsync('jumpReferences', v:false)<CR>
-nnoremap <silent> gi :<C-u>call CocActionAsync('jumpImplementation', v:false)<CR>
-nnoremap <silent> gy :<C-u>call CocActionAsync('jumpTypeDefinition', v:false)<CR>
+" nnoremap <silent> gd :<C-u>call CocActionAsync('jumpDefinition', v:false)<CR>
+" nnoremap <silent> gr :<C-u>call CocActionAsync('jumpReferences', v:false)<CR>
+" nnoremap <silent> gi :<C-u>call CocActionAsync('jumpImplementation', v:false)<CR>
+" nnoremap <silent> gy :<C-u>call CocActionAsync('jumpTypeDefinition', v:false)<CR>
 
 " }}}
 
