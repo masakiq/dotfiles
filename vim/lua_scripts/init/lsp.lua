@@ -47,13 +47,8 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- カレントワークディレクトリを取得
--- local cwd = vim.fn.getcwd()
 local cwd = vim.loop.cwd()
-if vim.loop.fs_stat(cwd .. "/.nvim.lua") then
-  -- dofile(cwd .. "/.nvim.lua")
-  -- return
-else
+if not vim.loop.fs_stat(cwd .. "/.nvim.lua") then
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "ruby",
     callback = function()
@@ -81,7 +76,6 @@ else
     callback = function()
       local bufnr = vim.api.nvim_get_current_buf()
 
-      -- LSPクライアントを起動
       vim.lsp.start({
         name = "ruby-lsp",
         cmd = { "ruby-lsp" },
@@ -103,22 +97,18 @@ else
         }),
       })
 
-      -- LSP接続後にイベントを設定（重要）
       vim.api.nvim_create_autocmd("LspAttach", {
         buffer = bufnr,
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
 
-          -- サーバーが補完をサポートしているか確認
           if client and client.supports_method("textDocument/completion") then
-            -- 補完トリガー文字の設定
             vim.api.nvim_create_autocmd("InsertCharPre", {
               buffer = bufnr,
               callback = function()
                 local char = vim.v.char
                 if char == "." or char == ":" then
                   vim.schedule(function()
-                    -- 正しいパラメータを指定
                     vim.lsp.omnifunc(1, 1)
                   end)
                 end
