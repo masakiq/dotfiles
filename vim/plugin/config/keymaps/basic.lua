@@ -50,3 +50,13 @@ if vim.fn.executable("macism") == 1 then
     end,
   })
 end
+
+-- 検索ハイライトの切り替え（<space>i）
+vim.keymap.set("n", "<space>i", function()
+  vim.opt.hlsearch = not vim.opt.hlsearch:get()
+end, { noremap = true, silent = true, desc = "検索ハイライトの切り替え" })
+
+-- 行番号表示の切り替え（<space>n）
+vim.keymap.set("n", "<space>n", function()
+  vim.opt.number = not vim.opt.number:get()
+end, { noremap = true, silent = true, desc = "行番号表示の切り替え" })
