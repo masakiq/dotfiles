@@ -767,55 +767,6 @@ inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files', {'window': { 'wid
 
 " }}}
 
-" ## LSP 設定 ---------------------- {{{
-
-" ## neoclide/coc.nvim {{{
-
-" inoremap <silent><expr> <c-n>
-"       \ coc#pum#visible() ? coc#pum#next(1) :
-"       \ CheckBackspace() ? "\<Tab>" :
-"       \ coc#refresh()
-" inoremap <expr><c-p> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-
-" function! CheckBackspace() abort
-"   let col = col('.') - 1
-"   return !col || getline('.')[col - 1]  =~# '\s'
-" endfunction
-
-" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" nmap <space>f :call CocActionAsync('format')<cr>
-
-" https://github.com/neoclide/coc-tsserver/issues/282#issuecomment-819364074
-" nmap <space>p <Plug>(coc-codeaction-cursor)
-" nmap <space>r <Plug>(coc-rename)
-
-" nnoremap <silent> gd <Plug>(coc-definition)
-" nnoremap <silent> gr <Plug>(coc-references)
-" nnoremap <silent> gi <Plug>(coc-implementation)
-" nnoremap <silent> gy <Plug>(coc-type-definition)
-
-" nnoremap <silent> gd :<C-u>call CocActionAsync('jumpDefinition', v:false)<CR>
-" nnoremap <silent> gr :<C-u>call CocActionAsync('jumpReferences', v:false)<CR>
-" nnoremap <silent> gi :<C-u>call CocActionAsync('jumpImplementation', v:false)<CR>
-" nnoremap <silent> gy :<C-u>call CocActionAsync('jumpTypeDefinition', v:false)<CR>
-
-" }}}
-
-" ## antoinemadec/coc-fzf {{{
-
-let g:coc_fzf_preview = 'down,50%'
-let g:coc_fzf_opts = [
-  \ '--layout=reverse',
-  \ '--expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x',
-  \ '--bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up',
-  \ ]
-
-" }}}
-
-" }}}
-
 " ## tmux 用設定 ---------------------- {{{
 
 " tmux の中で vim を開いているときに shift + 方向 キーを有効にする
