@@ -1,3 +1,11 @@
+-- リーダーキーは他のマッピングより前に行う必要がある
+vim.g.mapleader = ","
+
+-- リーダーキーのディレイタイム
+vim.opt.timeout = true
+vim.opt.timeoutlen = 800
+vim.opt.ttimeoutlen = 100
+
 vim.cmd([[
   source $HOME/.vimrc
 ]])

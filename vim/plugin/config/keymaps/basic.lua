@@ -1,11 +1,3 @@
--- リーダーキーを , にする
-vim.g.mapleader = ","
-
--- リーダーキーのディレイタイム
-vim.opt.timeout = true
-vim.opt.timeoutlen = 800
-vim.opt.ttimeoutlen = 100
-
 -- キーマッピング
 vim.keymap.set("i", "jk", "<esc>")
 vim.keymap.set("i", "ｊｋ", "<esc>", { silent = true })
