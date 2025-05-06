@@ -6,19 +6,6 @@ vnoremap <space>/ :call SearchWordBySelectedText()<cr>
 
 " }}}
 
-" ### ターミナルモード ---------------------- {{{
-
-" カレントウィンドウでターミナルを開く
-" nnoremap <space>ec :ter ++curwin<CR>
-
-if has('nvim')
-  tnoremap jf <C-\><C-n>
-else
-  tnoremap jf <C-w>N
-endif
-
-" }}}
-
 " ### quickfix ---------------------- {{{
 
 nnoremap <leader>' :NextQuickfix<cr>
