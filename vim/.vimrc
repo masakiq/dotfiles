@@ -1,29 +1,5 @@
 " ## カスタムマッピング ---------------------- {{{
 
-" ### 移動系 ---------------------- {{{
-
-nnoremap j gj
-vnoremap j gj
-nnoremap k gk
-vnoremap k gk
-nnoremap 0 g0
-vnoremap 0 g0
-nnoremap ^ g^
-vnoremap ^ g^
-nnoremap $ g$
-" vnoremap $ g$
-
-nnoremap <C-e> $a
-nnoremap <C-a> ^i
-
-nnoremap <C-u> 7gk
-nnoremap <C-d> 7gj
-
-inoremap <M-right> <right><right><right><right><right>
-inoremap <M-left> <left><left><left><left><left>
-
-" }}}
-
 " ### 変換系 ---------------------- {{{
 
 " 選択した両側を指定した記号で囲む　
