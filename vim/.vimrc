@@ -1,31 +1,5 @@
 " ## カスタムマッピング ---------------------- {{{
 
-" ### クリップボード系 ---------------------- {{{
-
-" ビジュアルモードで選択した範囲をクリップボードにコピー
-vnoremap y "+y
-" ビジュアルモードで選択した範囲にクリップボードからペースト
-vnoremap p "+p
-" ビジュアルモードで選択した範囲をカットしてクリップボードにコピー　
-vnoremap d "+d
-" ビジュアルモードで選択した範囲をカットしてクリップボードにコピー　
-vnoremap x "+x
-" ビジュアルモードで選択した箇所の末尾までクリップボードにコピー　
-" vnoremap <leader>y $h"+y
-" ビジュアルモードで選択した箇所の末尾までクリップボードからペースト
-" vnoremap <leader>p $h"+p
-" ビジュアルモードで選択した箇所の末尾までカットしてクリップボードにコピー
-" vnoremap <leader>d $h"+d
-" ビジュアルモードで選択した箇所の末尾までカットしてクリップボードにコピー
-" vnoremap <leader>x $h"+x
-
-" message をコピーする
-nnoremap <space>m :let @+ =execute('1messages')<CR>:echo 'last messages copied!'<CR>
-
-nnoremap <space>c :CopyCurrentPath<cr>
-
-" }}}
-
 " ### 移動系 ---------------------- {{{
 
 nnoremap j gj
