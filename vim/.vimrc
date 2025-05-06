@@ -1,13 +1,3 @@
-" ## カスタムマッピング ---------------------- {{{
-
-" ### 検索系 ---------------------- {{{
-
-vnoremap <space>/ :call SearchWordBySelectedText()<cr>
-
-" }}}
-
-" }}}
-
 " ## スニペット設定 ---------------------- {{{
 
 " Ruby 用スニペット
@@ -984,6 +974,7 @@ function! SearchWord(word, ...)
       \ })))
 endfunction
 
+vnoremap <space>/ :call SearchWordBySelectedText()<cr>
 function! SearchWordBySelectedText()
   let selected = SelectedVisualModeText()
   let @+=selected
