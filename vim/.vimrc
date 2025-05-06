@@ -1,23 +1,3 @@
-" ## Vimscript file settings ---------------------- {{{
-
-augroup filetype_vim
-  autocmd!
-  autocmd FileType vim setlocal foldmethod=marker
-augroup END
-
-" }}}
-
-" ## 基本設定 ---------------------- {{{
-
-" vi 非互換
-set nocompatible
-
-" フォーマット設定
-set encoding=utf-8
-set fileformats=unix,dos,mac
-
-" }}}
-
 " ## 検索の挙動に関する設定 ---------------------- {{{
 
 " 検索時に大文字小文字を無視 (noignorecase:無視しない)
