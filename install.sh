@@ -4,7 +4,7 @@ ln -s `pwd`/vim/.vimrc ~/.vimrc
 ln -s `pwd`/vim/.vimrc-light ~/.vimrc-light
 
 mkdir ~/.config/nvim
-ln -s `pwd`/vim/.vimrc ~/.config/nvim/init.vim
+ln -s `pwd`/vim/init.lua ~/.config/nvim/init.lua
 
 mkdir ~/.vim/functions
 for file in `pwd`/vim/functions/*; do
