@@ -60,3 +60,7 @@ end, { noremap = true, silent = true, desc = "検索ハイライトの切り替�
 vim.keymap.set("n", "<space>n", function()
   vim.opt.number = not vim.opt.number:get()
 end, { noremap = true, silent = true, desc = "行番号表示の切り替え" })
+
+-- スペースキーでのファイル保存と終了のショートカット
+vim.keymap.set("n", "<space>w", ":w!<CR>", { noremap = true, silent = true, desc = "ファイルを強制保存" })
+vim.keymap.set("n", "<space>q", ":q!<CR>", { noremap = true, silent = true, desc = "バッファを強制終了" })
