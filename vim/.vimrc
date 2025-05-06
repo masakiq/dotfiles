@@ -1,17 +1,5 @@
 " ## カスタムマッピング ---------------------- {{{
 
-" ### 補完系 ---------------------- {{{
-
-" 補完時の挙動を一般的な IDE と同じにする
-set completeopt=menuone,noinsert
-inoremap <expr><CR>  pumvisible() ? "<C-y>" : "<CR>"
-inoremap <expr><C-n> pumvisible() ? "<Down>" : "<C-n>"
-inoremap <expr><C-p> pumvisible() ? "<Up>" : "<C-p>"
-inoremap <expr><C-j> pumvisible() ? "<Down>" : "<C-n>"
-inoremap <expr><C-k> pumvisible() ? "<Up>" : "<C-p>"
-
-" }}}
-
 " ### ファイル操作系 ---------------------- {{{
 
 nnoremap <space>w :w!<cr>
