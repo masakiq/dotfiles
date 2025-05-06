@@ -1,30 +1,3 @@
-" ## 検索の挙動に関する設定 ---------------------- {{{
-
-" 検索時に大文字小文字を無視 (noignorecase:無視しない)
-" set ignorecase
-
-" 大文字小文字の両方が含まれている場合は大文字小文字を区別
-set smartcase
-
-" インクリメンタルサーチ
-set incsearch
-
-" 検索ハイライト
-set hlsearch
-
-" ビジュアルモードで選択したときに、検索した単語をハイライトにする
-" syn match cppSTL /\(::.*\)\@<=\<find\>/
-
-" :vim(grep) したときに自動的にquickfix-windowを開く
-autocmd QuickFixCmdPost *grep* cwindow
-" quickfix-window のサイズ調整
-autocmd FileType qf 15wincmd_
-
-" 検索時のハイライトを無効化
-set nohlsearch
-
-" }}}
-
 " ## カーソル移動に関する設定 ---------------------- {{{
 
 " スクロールオフ
