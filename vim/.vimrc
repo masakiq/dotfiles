@@ -1,18 +1,3 @@
-" ## スニペット設定 ---------------------- {{{
-
-" Ruby 用スニペット
-autocmd FileType ruby :iabbrev fro # frozen_string_literal: true<esc>
-autocmd FileType ruby :iabbrev yar # @param options [Type] description<CR>@return [Type] description<CR>@raise [StandardError] description<CR>@option options [Type] description<CR>@example description<CR>@yield [Type] description<esc>6k4w
-autocmd FileType ruby :iabbrev con context '' do<CR>end<esc>kw<esc>
-autocmd FileType ruby :iabbrev des describe '' do<CR>end<esc>kw<esc>
-autocmd FileType ruby :iabbrev let let(:) { }<esc>4hi<esc>
-autocmd FileType ruby :iabbrev sha shared_examples '' do<CR>end<esc>kw<esc>
-autocmd FileType ruby :iabbrev beh it_behaves_like ''<esc>h<esc>
-autocmd BufNewFile,BufRead *.md set filetype=markdown
-autocmd FileType markdown :iabbrev tab <table><CR><esc>i  <thead><CR><esc>i    <tr><CR><esc>i      <th colspan="2"></th><CR><esc>i    </tr><CR><esc>i  </thead><CR><esc>i  <tbody><CR><esc>i    <tr><CR><esc>i      <td></td><CR><esc>i      <td></td><CR><esc>i    </tr><CR><esc>i  </tbody><CR><esc>i</table><esc>
-
-" }}}
-
 " ## プラグイン設定 ---------------------- {{{
 
 call plug#begin('~/.vim/plugged')
