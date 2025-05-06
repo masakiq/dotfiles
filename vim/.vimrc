@@ -1,23 +1,5 @@
 " ## カスタムマッピング ---------------------- {{{
 
-" ### タブ操作系 ---------------------- {{{
-
-" 新規タブを開く
-nnoremap <space>t :tabnew<CR>
-
-if has('gui_running')
-else
-  nnoremap <space>; :normal gT<CR>
-  nnoremap <space>' :normal gt<CR>
-
-  " 現タブを右に移動
-  nnoremap <space><right> :+tabm<CR>
-  " 現タブを左に移動
-  nnoremap <space><left> :-tabm<CR>
-endif
-
-" }}}
-
 " ### 検索系 ---------------------- {{{
 
 vnoremap <space>/ :call SearchWordBySelectedText()<cr>
