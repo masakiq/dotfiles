@@ -1,7 +1,5 @@
-require("config-local").setup({
-  config_files = { ".lvimrc", ".nvim.lua" },
-  silent = false,
-})
+vim.o.exrc = true
+vim.o.secure = true
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "md" },

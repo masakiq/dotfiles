@@ -412,8 +412,8 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 " -------------------------------------------
 " Code Completion and Linting
-" Plug 'neoclide/coc.nvim',                   { 'commit': '79ccfeaa1db4a3b56767ee7b6b5fc577a5733fef', 'do': 'npm ci' }
-" Plug 'antoinemadec/coc-fzf',                { 'commit': '5fae5a15497750483e21fc207aa6005f340f02f2' }
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 
 " Language Support
 Plug 'dart-lang/dart-vim-plugin',           { 'commit': '928302ec931caf0dcf21835cca284ccd2b192f7b', 'for': 'dart' }
@@ -432,10 +432,6 @@ Plug 'voldikss/fzf-floaterm',               { 'commit': 'c023f97e49e894ac5649894
 Plug 'MunifTanjim/nui.nvim',                { 'commit': '61574ce6e60c815b0a0c4b5655b8486ba58089a1' }
 Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
 Plug 'liuchengxu/vim-which-key',            { 'commit': '470cd19ce11b616e0640f2b38fb845c42b31a106' }
-
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'klen/nvim-config-local'
 
 " Navigation
 Plug 'easymotion/vim-easymotion',           { 'commit': 'b3cfab2a6302b3b39f53d9fd2cd997e1127d7878' }
