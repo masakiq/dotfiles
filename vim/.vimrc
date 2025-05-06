@@ -795,7 +795,7 @@ endif
 
 command! PlugGetLatestCommits :call PlugGetLatestCommits()
 function! PlugGetLatestCommits()
-  let command = '~/.vim/lua_scripts/plug_get_latest_commits.lua'
+  let command = '~/.config/nvim/lua/plug_get_latest_commits.lua'
   silent! execute 'r!' . command
 endfunction
 
@@ -1583,15 +1583,15 @@ endfunction
 
 command! OpenGitHubRepo :call OpenGitHubRepo()
 function! OpenGitHubRepo()
-  lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/open_github.lua').open_github('repo')
+  lua dofile(os.getenv('HOME') .. '/.config/nvim/lua/open_github.lua').open_github('repo')
 endfunction
 
 command! OpenGitHubFile :call OpenGitHubFile()
 function! OpenGitHubFile()
   if g:mode == 'n'
-    lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/open_github.lua').open_github('normal')
+    lua dofile(os.getenv('HOME') .. '/.config/nvim/lua/open_github.lua').open_github('normal')
   else
-    lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/open_github.lua').open_github('visual')
+    lua dofile(os.getenv('HOME') .. '/.config/nvim/lua/open_github.lua').open_github('visual')
   endif
 endfunction
 
@@ -1765,16 +1765,6 @@ function! OpenDeepL()
 endfunction
 
 " }}}
-
-" }}}
-
-" ## for lua scripts ---------------------- {{{
-
-let lua_scripts_dir = expand('~/.vim/lua_scripts/init')
-let lua_files = split(glob(lua_scripts_dir . '/*.lua'), '\n')
-for lua_file in lua_files
-  execute 'luafile' lua_file
-endfor
 
 " }}}
 

@@ -12,19 +12,19 @@ for file in `pwd`/vim/functions/*; do
   ln -s $file ~/.vim/functions/$file_name
 done
 
-mkdir ~/.vim/lua_scripts
-for file in `pwd`/vim/lua_scripts/*; do
+mkdir ~/.config/nvim/lua
+for file in `pwd`/vim/lua/*; do
   if [ -d "$file" ]; then
     continue
   fi
   file_name=`basename $file`
-  ln -s $file ~/.vim/lua_scripts/$file_name
+  ln -s $file ~/.config/nvim/lua/$file_name
 done
 
-mkdir ~/.vim/lua_scripts/init
-for file in `pwd`/vim/lua_scripts/init/*; do
+mkdir ~/.config/nvim/plugin
+for file in `pwd`/vim/plugin/*; do
   file_name=`basename $file`
-  ln -s $file ~/.vim/lua_scripts/init/$file_name
+  ln -s $file ~/.config/nvim/plugin/$file_name
 done
 
 ln -s `pwd`/vim/.vimrc ~/.ideavimrc

@@ -73,7 +73,9 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 local cwd = vim.loop.cwd()
-if not vim.loop.fs_stat(cwd .. "/.nvim.lua") then
+if vim.loop.fs_stat(cwd .. "/.nvim.lua") then
+  dofile(cwd .. "/.nvim.lua")
+else
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "ruby",
     callback = function()
