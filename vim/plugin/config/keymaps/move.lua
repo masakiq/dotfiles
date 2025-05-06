@@ -18,3 +18,9 @@ vim.keymap.set("n", "<C-d>", "7gj", { noremap = true })
 -- 挿入モードでの移動ショートカット
 vim.keymap.set("i", "<M-right>", "<right><right><right><right><right>", { noremap = true })
 vim.keymap.set("i", "<M-left>", "<left><left><left><left><left>", { noremap = true })
+
+-- ウインドウ間移動
+vim.keymap.set("n", "<space>h", "<C-w>h", { noremap = true })
+vim.keymap.set("n", "<space>j", "<C-w>j", { noremap = true })
+vim.keymap.set("n", "<space>k", "<C-w>k", { noremap = true })
+vim.keymap.set("n", "<space>l", "<C-w>l", { noremap = true })

@@ -1,29 +1,5 @@
 " ## カスタムマッピング ---------------------- {{{
 
-" ### ウィンドウ操作系 ---------------------- {{{
-
-" ウインドウ間移動
-nnoremap <space>h <c-w>h
-nnoremap <space>j <c-w>j
-nnoremap <space>k <c-w>k
-nnoremap <space>l <c-w>l
-
-" ウインドウ幅を右に広げる
-nnoremap <space>. 41<c-w>>
-" ウインドウ幅を左に広げる
-nnoremap <space>, 41<c-w><
-" ウインドウ高さを高くする
-nnoremap <space>= 9<c-w>+
-" ウインドウ高さを低くする
-nnoremap <space>- 9<c-w>-
-
-" 前のバッファに戻る
-" nnoremap <space><left> :bprevious<CR>
-" 次のバッファに進む
-" nnoremap <space><right> :bnext<CR>
-
-" }}}
-
 " ### タブ操作系 ---------------------- {{{
 
 " 新規タブを開く
