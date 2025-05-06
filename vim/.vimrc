@@ -6,31 +6,6 @@ vnoremap <space>/ :call SearchWordBySelectedText()<cr>
 
 " }}}
 
-" ### quickfix ---------------------- {{{
-
-nnoremap <leader>' :NextQuickfix<cr>
-command! -nargs=0 NextQuickfix call NextQuickfix()
-function! NextQuickfix()
-  execute "normal! :silent! cnewer\<CR>"
-endfunction
-
-nnoremap <leader>; :PreviousQuickfix<cr>
-command! -nargs=0 PreviousQuickfix call PreviousQuickfix()
-function! PreviousQuickfix()
-  execute "normal! :silent! colder\<CR>"
-endfunction
-
-nnoremap <space>a :call ToggleQuickFix()<cr>
-function! ToggleQuickFix()
-    if empty(filter(getwininfo(), 'v:val.quickfix'))
-        copen
-    else
-        cclose
-    endif
-endfunction
-
-" }}}
-
 " }}}
 
 " ## スニペット設定 ---------------------- {{{
