@@ -46,6 +46,24 @@ Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33
 Plug 'github/copilot.vim',                  { 'commit': '87038123804796ca7af20d1b71c3428d858a9124' }
 Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
 Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': 'e0d6a5793a1faa0b88a97232bdbb09ea34744c7e' }
+
+" avante.nvim
+" 必須依存プラグイン
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'stevearc/dressing.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'MeanderingProgrammer/render-markdown.nvim'
+
+" 任意依存プラグイン（必要に応じて）
+Plug 'hrsh7th/nvim-cmp'
+Plug 'nvim-tree/nvim-web-devicons'    " または echasnovski/mini.icons
+Plug 'HakonHarnes/img-clip.nvim'
+Plug 'zbirenbaum/copilot.lua'
+
+" avante.nvim 本体（branch main／ビルド実行）
+Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+
 call plug#end()
 
 " }}}
