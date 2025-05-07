@@ -12,6 +12,8 @@ for file in `pwd`/vim/functions/*; do
   ln -s $file ~/.vim/functions/$file_name
 done
 
+rm -rf ~/.config/nvim/lua
+rm -rf ~/.config/nvim/plugin
 ./linktree.sh `pwd`/vim/lua ~/.config/nvim/lua
 ./linktree.sh `pwd`/vim/plugin ~/.config/nvim/plugin
 
