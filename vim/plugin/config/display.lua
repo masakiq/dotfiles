@@ -17,7 +17,7 @@ vim.opt.list = false
 vim.opt.wrap = true
 
 -- 常にステータス行を表示
-vim.opt.laststatus = 2
+vim.opt.laststatus = 3
 
 -- コマンドラインの高さ
 vim.opt.cmdheight = 1
