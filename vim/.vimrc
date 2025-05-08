@@ -1186,50 +1186,6 @@ endfunction
 
 " }}}
 
-" ## ドキュメント ---------------------- {{{
-
-command! OpenShopifyGraphQLDocument :call OpenShopifyGraphQLDocument()
-function! OpenShopifyGraphQLDocument() abort
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  let command = "ruby ~/.vim/functions/search_shopify_graphql_api_document_path.rb " . selected
-  let result = system(command)
-  let paths = split(result, "\n")
-  if len(paths) == 0
-    echohl WarningMsg | echon 'No documents were found for the selected ' | echohl ErrorMsg | echon selected | echohl None
-    sleep 1
-    return
-  endif
-  if len(paths) == 1
-    call s:open_shopify_graphql_document(paths[0])
-    return
-  endif
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': paths,
-          \ 'options': [
-          \   '--prompt', 'Shopify GraphQL Refs> ',
-          \ ],
-          \ 'sink':  function('s:open_shopify_graphql_document'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:open_shopify_graphql_document(path)
-  let url = 'https://shopify.dev/api/admin-graphql/' . a:path
-  call system('open ' . url)
-endfunction
-
-" }}}
-
 " }}}
 
 " ## for test lines ---------------------- {{{

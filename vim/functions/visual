@@ -4,7 +4,6 @@ RemoveUnderBar
 AddUnderBar
 CopyCurrentPathWithLineNumber
 OpenGitHubFile
-OpenShopifyGraphQLDocument
 CopilotChatOpen
 CopilotChatOptimize
 CopilotChatFix
