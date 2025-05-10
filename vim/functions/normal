@@ -7,7 +7,7 @@ CopyCurrentFile
 CopyAllTabPath
 CopyAllTabAbsolutePath
 OpenGitHubRepo
-OpenGitHubFile
+OpenGitHubFileNormal
 QuitAll
 LoadVIMRC
 MarkdownPreview

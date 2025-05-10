@@ -1073,20 +1073,6 @@ endfunction
 
 " ## Git ---------------------- {{{
 
-command! OpenGitHubRepo :call OpenGitHubRepo()
-function! OpenGitHubRepo()
-  lua dofile(os.getenv('HOME') .. '/.config/nvim/lua/open_github.lua').open_github('repo')
-endfunction
-
-command! OpenGitHubFile :call OpenGitHubFile()
-function! OpenGitHubFile()
-  if g:mode == 'n'
-    lua dofile(os.getenv('HOME') .. '/.config/nvim/lua/open_github.lua').open_github('normal')
-  else
-    lua dofile(os.getenv('HOME') .. '/.config/nvim/lua/open_github.lua').open_github('visual')
-  endif
-endfunction
-
 command! -bang DiffFileGitBranch call DiffFileGitBranch()
 function! DiffFileGitBranch()
   try
