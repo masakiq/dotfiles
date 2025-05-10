@@ -1071,32 +1071,6 @@ endfunction
 
 " }}}
 
-" ## Git ---------------------- {{{
-
-command! -bang DiffFileGitBranch call DiffFileGitBranch()
-function! DiffFileGitBranch()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'git --no-pager branch | sed "/* /d"',
-          \ 'sink': function('s:select_diff_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:get_current_branch()
-  return substitute(FugitiveStatusline(), '^\[Git(\(.*\))\]', '\1', '')
-endfunction
-
-" }}}
-
 " ## Util ---------------------- {{{
 
 nnoremap <space>os :call CommandSnippet()<cr>

@@ -24,7 +24,6 @@ PlugClean
 PlugStatus
 PlugGetLatestCommits
 DiffFile
-DiffFileGitBranch
 Registers
 Reload
 CloseTabs
