@@ -11,8 +11,6 @@ OpenGitHubFileNormal
 QuitAll
 LoadVIMRC
 MarkdownPreview
-PreviewMarkdown
-TogglePreviewMarkdown
 SwaggerPreview
 SwaggerPreviewStop
 DeleteBuffers
