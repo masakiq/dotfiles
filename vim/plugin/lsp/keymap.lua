@@ -7,8 +7,12 @@ vim.keymap.set("n", "<space>f", function()
   vim.lsp.buf.format({ async = true })
 end, { desc = "Format document" })
 local telescope = require("telescope.builtin")
-vim.keymap.set("n", "gd", telescope.lsp_definitions, { buffer = bufnr, desc = "Go to definition with Telescope" })
-vim.keymap.set("n", "gr", telescope.lsp_references, { buffer = bufnr, desc = "Find references with Telescope" })
+vim.keymap.set("n", "gd", function()
+  telescope.lsp_definitions({ jump_type = "never" })
+end, { buffer = bufnr, desc = "Telescope: Go to definition" })
+vim.keymap.set("n", "gr", function()
+  telescope.lsp_references({ jump_type = "never" })
+end, { buffer = bufnr, desc = "Find references with Telescope" })
 vim.keymap.set(
   "n",
   "gi",
