@@ -1,4 +1,4 @@
-require('avante_lib').load()
+require("avante_lib").load()
 require("avante").setup({
   provider = "copilot",
   dependencies = {
@@ -8,5 +8,9 @@ require("avante").setup({
   opts = {
     image_paste = { embed_image_as_base64 = false },
     markdown = { file_types = { "markdown", "Avante" } },
+  },
+  windows = {
+    position = "right",
+    width = 50,
   },
 })
