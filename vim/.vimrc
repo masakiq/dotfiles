@@ -14,7 +14,6 @@ Plug 'dart-lang/dart-vim-plugin',           { 'commit': '928302ec931caf0dcf21835
 Plug 'jparise/vim-graphql',                 { 'commit': '996749a7d69a3709768fa8c4d259f79b5fd9bdb1' }
 Plug 'maxmellon/vim-jsx-pretty',            { 'commit': '6989f1663cc03d7da72b5ef1c03f87e6ddb70b41', 'for': ['javascript', 'typescript'] }
 Plug 'rcmdnk/vim-markdown',                 { 'commit': '9a5572a18b2d0bbe96b2ed625f5fbe0462dbd801', 'for': 'markdown' }
-Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b', 'for': 'ruby' }
 
 " Interface
 Plug 'folke/tokyonight.nvim',               { 'commit': '2c85fad417170d4572ead7bf9fdd706057bd73d7', 'as': 'tokyonight' }
@@ -155,12 +154,6 @@ vmap <C-j> <Plug>MoveBlockDown
 vmap <C-k> <Plug>MoveBlockUp
 vmap <C-h> <Plug>MoveBlockLeft
 vmap <C-l> <Plug>MoveBlockRight
-
-" }}}
-
-" ## masakiq/vim-ruby-fold ---------------------- {{{
-
-let g:ruby_fold_lines_limit = 300
 
 " }}}
 
