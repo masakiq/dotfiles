@@ -14,3 +14,7 @@ require("avante").setup({
     width = 50,
   },
 })
+
+vim.keymap.set("n", "<space>oa", function()
+  require("avante.api").toggle()
+end, { desc = "avante: toggle panel" })
