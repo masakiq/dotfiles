@@ -449,14 +449,6 @@ nnoremap <space>oh :History<CR>
 
 " ## タブ操作 ---------------------- {{{
 
-function! MoveTabRight()
-  silent! execute '+tabm'
-endfunction
-
-function! MoveTabLeft()
-  silent! execute '-tabm'
-endfunction
-
 command! CopyAllTabPath call CopyAllTabPath()
 function! CopyAllTabPath()
   let files = [expand('%')]
