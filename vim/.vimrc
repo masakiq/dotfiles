@@ -898,45 +898,6 @@ endfunction
 
 " }}}
 
-" ## カスタム置換 ---------------------- {{{
-
-command! SnakeCase call SnakeCase()
-function! SnakeCase() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/\//g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! PascalCase call PascalCase()
-function! PascalCase() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)\/(\u)/\1::\2/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! RemoveUnderBar call RemoveUnderBar()
-function! RemoveUnderBar() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! AddUnderBar call AddUnderBar()
-function! AddUnderBar() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! DeleteAnsi silent! %s/\e\[[0-9;]*m//g
-
-" }}}
-
 " ## ヘルパー ---------------------- {{{
 
 function! s:setTitle()

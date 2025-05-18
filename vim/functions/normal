@@ -32,7 +32,7 @@ SeparateTab
 CopyStatusMessage
 StartCopyStatusMessages
 FinishCopyStatusMessages
-DeleteAnsi
+StripAnsi
 CopilotChatReset
 CopilotChatModels
 CopilotChatReviewClear
