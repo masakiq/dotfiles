@@ -502,20 +502,6 @@ function! CopyAllTabAbsolutePath()
   let @+=join(files, "\n")
 endfunction
 
-function! s:actuality_tab_count()
-  let ws = s:list_windows()
-  let tab_count = 0
-  let non_tab_count = 0
-  for win in ws
-    if win =~ '^.*\s\[No\-Name\]\s.*'
-      let non_tab_count = non_tab_count + 1
-    else
-      let tab_count = tab_count + 1
-    endif
-  endfor
-  return tab_count
-endfunction
-
 command! -bang CloseTabsRight call CloseTabsRight('<bang>')
 function! CloseTabsRight(bang)
   let cur=tabpagenr()
@@ -572,33 +558,6 @@ endfunction
 
 function! s:delete_windows(lines)
   execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[3]}))
-endfunction
-
-command! DeleteWindow call fzf#run(fzf#wrap({
-      \ 'source': s:list_windows(),
-      \ 'sink*': { lines -> s:delete_windows(lines) },
-      \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '
-      \ }))
-
-" https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
-function! s:list_windows()
-  let list = []
-  let tabnumber = 1
-
-  while tabnumber <= tabpagenr('$')
-    let buflist = tabpagebuflist(tabnumber)
-    let winnumber = 1
-    for buf in buflist
-      silent! let file = expandcmd('#'. buf .'<.rb')
-      let file = substitute(file, '#.*', '[No-Name]', '')
-      let line = tabnumber . ' ' . winnumber . ' ' . file . ' ' . buf
-      call add(list, line)
-      let winnumber = winnumber + 1
-    endfor
-    let tabnumber = tabnumber + 1
-  endwhile
-
-  return list
 endfunction
 
 " }}}
