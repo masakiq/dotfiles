@@ -43,9 +43,9 @@ Plug 'mattn/vim-maketable',                 { 'commit': 'd72e73f333c64110524197e
 Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33b14a84336dee2a78f' }
 
 " Copilot
-Plug 'github/copilot.vim',                  { 'commit': '87038123804796ca7af20d1b71c3428d858a9124' }
+Plug 'github/copilot.vim',                  { 'commit': '3955014c503b0cd7b30bc56c86c56c0736ca0951' }
 Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
-Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': 'e0d6a5793a1faa0b88a97232bdbb09ea34744c7e' }
+Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '16d897fd43d07e3b54478ccdb2f8a16e4df4f45a' }
 
 " avante.nvim
 " 必須依存プラグイン
@@ -59,7 +59,7 @@ Plug 'MeanderingProgrammer/render-markdown.nvim', { 'commit': 'b4016e812c9a18784
 Plug 'hrsh7th/nvim-cmp',                          { 'commit': 'b5311ab3ed9c846b585c0c15b7559be131ec4be9' }
 Plug 'nvim-tree/nvim-web-devicons',               { 'commit': '56f17def81478e406e3a8ec4aa727558e79786f3' }
 Plug 'HakonHarnes/img-clip.nvim',                 { 'commit': '08a02e14c8c0d42fa7a92c30a98fd04d6993b35d' }
-Plug 'zbirenbaum/copilot.lua',                    { 'commit': '7ba73866b9b3c696f80579c470c6eec374d3acec' }
+Plug 'zbirenbaum/copilot.lua',                    { 'commit': 'c1bb86abbed1a52a11ab3944ef00c8410520543d' }
 
 " avante.nvim 本体（branch main／ビルド実行）
 Plug 'yetone/avante.nvim',                        { 'commit': 'fdf4716ec04cf5d9f8f39a44b7d42ab37cc2bd40', 'branch': 'main', 'do': 'make' }
