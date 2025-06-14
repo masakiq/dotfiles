@@ -4,7 +4,7 @@ ln -s `pwd`/vim/.vimrc ~/.vimrc
 ln -s `pwd`/vim/.vimrc-light ~/.vimrc-light
 
 mkdir ~/.config/nvim
-ln -s `pwd`/vim/.vimrc ~/.config/nvim/init.vim
+ln -s `pwd`/vim/init.lua ~/.config/nvim/init.lua
 
 mkdir ~/.vim/functions
 for file in `pwd`/vim/functions/*; do
@@ -12,20 +12,10 @@ for file in `pwd`/vim/functions/*; do
   ln -s $file ~/.vim/functions/$file_name
 done
 
-mkdir ~/.vim/lua_scripts
-for file in `pwd`/vim/lua_scripts/*; do
-  if [ -d "$file" ]; then
-    continue
-  fi
-  file_name=`basename $file`
-  ln -s $file ~/.vim/lua_scripts/$file_name
-done
-
-mkdir ~/.vim/lua_scripts/init
-for file in `pwd`/vim/lua_scripts/init/*; do
-  file_name=`basename $file`
-  ln -s $file ~/.vim/lua_scripts/init/$file_name
-done
+rm -rf ~/.config/nvim/lua
+rm -rf ~/.config/nvim/plugin
+./linktree.sh `pwd`/vim/lua ~/.config/nvim/lua
+./linktree.sh `pwd`/vim/plugin ~/.config/nvim/plugin
 
 ln -s `pwd`/vim/.vimrc ~/.ideavimrc
 

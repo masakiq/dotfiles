@@ -1,409 +1,3 @@
-" ## Vimscript file settings ---------------------- {{{
-
-augroup filetype_vim
-  autocmd!
-  autocmd FileType vim setlocal foldmethod=marker
-augroup END
-
-" }}}
-
-" ## 基本設定 ---------------------- {{{
-
-" vi 非互換
-set nocompatible
-
-" フォーマット設定
-set encoding=utf-8
-set fileformats=unix,dos,mac
-
-" }}}
-
-" ## 検索の挙動に関する設定 ---------------------- {{{
-
-" 検索時に大文字小文字を無視 (noignorecase:無視しない)
-" set ignorecase
-
-" 大文字小文字の両方が含まれている場合は大文字小文字を区別
-set smartcase
-
-" インクリメンタルサーチ
-set incsearch
-
-" 検索ハイライト
-set hlsearch
-
-" ビジュアルモードで選択したときに、検索した単語をハイライトにする
-" syn match cppSTL /\(::.*\)\@<=\<find\>/
-
-" :vim(grep) したときに自動的にquickfix-windowを開く
-autocmd QuickFixCmdPost *grep* cwindow
-" quickfix-window のサイズ調整
-autocmd FileType qf 15wincmd_
-
-" 検索時のハイライトを無効化
-set nohlsearch
-
-" }}}
-
-" ## カーソル移動に関する設定 ---------------------- {{{
-
-" スクロールオフ
-set scrolloff=15
-
-" マウススクロール
-set mouse=a
-
-" }}}
-
-" ## 編集に関する設定 ---------------------- {{{
-
-" タブの画面上での幅
-set tabstop=2
-
-" 連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
-set softtabstop=2
-
-" 自動インデントでずれる幅
-set shiftwidth=2
-
-" タブをスペースに展開する/ しない (expandtab:展開する)
-set expandtab
-
-" 自動的にインデントする (noautoindent:インデントしない)
-set autoindent
-
-" バックスペースでインデントや改行を削除できるようにする
-set backspace=indent,eol,start
-
-" 検索時にファイルの最後まで行ったら最初に戻る (nowrapscan:戻らない)
-set wrapscan
-
-" 括弧入力時に対応する括弧を表示 (noshowmatch:表示しない)
-set showmatch
-
-" コマンドライン補完するときに強化されたものを使う
-set wildmenu
-set wildmode=longest:full,full
-
-" テキスト挿入中の自動折り返しを日本語に対応させる
-set formatoptions+=mM
-
-" タイポチェック
-set spell spelllang+=cjk
-" set nospell
-
-" バッファ切り替え時のワーニングを無視
-set hidden
-
-" 保存時に行末空白削除
-autocmd BufWritePre * if &filetype != 'markdown' | :%s/\s\+$//ge | endif
-
-" Undo の永続化
-if has('persistent_undo')
-  let undo_path = expand('~/.vim/undo')
-  exe 'set undodir=' .. undo_path
-  set undofile
-endif
-
-" }}}
-
-" ## ファイル操作に関する設定 ---------------------- {{{
-
-" バックアップファイルを作成しない (次行の先頭の " を削除すれば有効になる)
-set nobackup
-
-" スワップファイルを作成しない (次行の先頭の " を削除すれば有効になる)
-set noswapfile
-
-" 新しいウィンドウを下に開く
-set splitbelow
-
-" 新しいウィンドウを右に開く
-set splitright
-
-" }}}
-
-" ## カスタムマッピング ---------------------- {{{
-
-" ### マップ基本設定 ---------------------- {{{
-
-" リーダーキーを , にする
-let mapleader = ','
-
-" ローカルリーダーキーを , にする
-" let maplocalleader = ","
-
-" リーダーキーのディレイタイム
-set timeout timeoutlen=800 ttimeoutlen=100
-
-inoremap jk <esc>
-inoremap <silent> ｊｋ <esc>
-inoremap <C-c> <esc>
-vnoremap <C-c> <esc>
-
-nnoremap あ a
-nnoremap い i
-nnoremap お o
-
-" 以下はクリップボードが正常に働かなくなる
-" :inoremap <esc> <nop>
-" :inoremap <c-[> <nop>
-
-" Insert モードで Emacs のキーバインドを使えるようにする
-inoremap <C-p> <Up>
-inoremap <C-n> <Down>
-inoremap <C-b> <Left>
-inoremap <C-f> <Right>
-inoremap <C-e> <End>
-inoremap <C-d> <Del>
-inoremap <C-h> <BS>
-inoremap <C-a> <Home>
-inoremap <C-k> <esc>`^DA
-
-" 方向キーとバックスペースキーを無効にする
-" vnoremap <Up>    <nop>
-" vnoremap <Down>  <nop>
-" vnoremap <Left>  <nop>
-" vnoremap <Right> <nop>
-vnoremap <Bs>    <nop>
-" inoremap <Up>    <nop>
-" inoremap <Down>  <nop>
-" inoremap <Left>  <nop>
-" inoremap <Right> <nop>
-" inoremap <Bs>    <nop> for multi cursor
-" nnoremap <Up>    <nop>
-" nnoremap <Down>  <nop>
-" nnoremap <Left>  <nop>
-" nnoremap <Right> <nop>
-nnoremap <Bs>    <nop>
-" tnoremap <Up>    <nop>
-" tnoremap <Down>  <nop>
-" tnoremap <Left>  <nop>
-" tnoremap <Right> <nop>
-" tnoremap <Bs>    <nop>
-
-" ビジュアルモードで単語の最後まで選択する
-vnoremap E $h
-" ビジュアルモードでライン選択(ただし行末の改行は除く)
-vnoremap V 0<esc>v$h
-
-vnoremap a <esc>G$vgg0
-
-nnoremap V 0v$h
-
-" J で後の行を連結したときに空白を入れない
-nnoremap J gJ
-
-" インサートモードを抜けるときに IME を "英数" に切り替える
-" https://github.com/laishulu/macism
-if executable('macism')
-  autocmd InsertLeave * :lua os.execute('macism com.apple.keylayout.ABC')
-endif
-
-" }}}
-
-" ### 表示系 ---------------------- {{{
-
-nnoremap <space>i :set hlsearch!<CR>
-nnoremap <space>n :set invnumber<CR>
-
-" }}}
-
-" ### クリップボード系 ---------------------- {{{
-
-" ビジュアルモードで選択した範囲をクリップボードにコピー
-vnoremap y "+y
-" ビジュアルモードで選択した範囲にクリップボードからペースト
-vnoremap p "+p
-" ビジュアルモードで選択した範囲をカットしてクリップボードにコピー　
-vnoremap d "+d
-" ビジュアルモードで選択した範囲をカットしてクリップボードにコピー　
-vnoremap x "+x
-" ビジュアルモードで選択した箇所の末尾までクリップボードにコピー　
-" vnoremap <leader>y $h"+y
-" ビジュアルモードで選択した箇所の末尾までクリップボードからペースト
-" vnoremap <leader>p $h"+p
-" ビジュアルモードで選択した箇所の末尾までカットしてクリップボードにコピー
-" vnoremap <leader>d $h"+d
-" ビジュアルモードで選択した箇所の末尾までカットしてクリップボードにコピー
-" vnoremap <leader>x $h"+x
-
-" message をコピーする
-nnoremap <space>m :let @+ =execute('1messages')<CR>:echo 'last messages copied!'<CR>
-
-nnoremap <space>c :CopyCurrentPath<cr>
-
-" }}}
-
-" ### 移動系 ---------------------- {{{
-
-nnoremap j gj
-vnoremap j gj
-nnoremap k gk
-vnoremap k gk
-nnoremap 0 g0
-vnoremap 0 g0
-nnoremap ^ g^
-vnoremap ^ g^
-nnoremap $ g$
-" vnoremap $ g$
-
-nnoremap <C-e> $a
-nnoremap <C-a> ^i
-
-nnoremap <C-u> 7gk
-nnoremap <C-d> 7gj
-
-inoremap <M-right> <right><right><right><right><right>
-inoremap <M-left> <left><left><left><left><left>
-
-" }}}
-
-" ### 変換系 ---------------------- {{{
-
-" 選択した両側を指定した記号で囲む　
-vnoremap ' c'<C-r>"'<Esc>
-vnoremap " c"<C-r>""<Esc>
-vnoremap ` c`<C-r>"`<Esc>
-vnoremap ( c(<C-r>")<Esc>
-vnoremap ) c(<C-r>")<Esc>
-vnoremap [ c[<C-r>"]<Esc>
-vnoremap ] c[<C-r>"]<Esc>
-vnoremap { c{<C-r>"}<Esc>
-vnoremap } c{<C-r>"}<Esc>
-vnoremap < c<<C-r>"><Esc>
-vnoremap > c<<C-r>"><Esc>
-vnoremap * c*<C-r>"*<Esc>
-vnoremap ~ c~<C-r>"~<Esc>
-vnoremap \| c\|<C-r>"\|<Esc>
-vnoremap <space> c<space><C-r>" <Esc>
-" 選択した両側を一文字ずつ削除
-vnoremap <bs> c<Right><Bs><Bs><C-r>"<Esc>
-
-" }}}
-
-" ### 補完系 ---------------------- {{{
-
-" 補完時の挙動を一般的な IDE と同じにする
-set completeopt=menuone,noinsert
-inoremap <expr><CR>  pumvisible() ? "<C-y>" : "<CR>"
-inoremap <expr><C-n> pumvisible() ? "<Down>" : "<C-n>"
-inoremap <expr><C-p> pumvisible() ? "<Up>" : "<C-p>"
-inoremap <expr><C-j> pumvisible() ? "<Down>" : "<C-n>"
-inoremap <expr><C-k> pumvisible() ? "<Up>" : "<C-p>"
-
-" }}}
-
-" ### ファイル操作系 ---------------------- {{{
-
-nnoremap <space>w :w!<cr>
-nnoremap <space>q :q!<cr>
-
-" }}}
-
-" ### ウィンドウ操作系 ---------------------- {{{
-
-" ウインドウ間移動
-nnoremap <space>h <c-w>h
-nnoremap <space>j <c-w>j
-nnoremap <space>k <c-w>k
-nnoremap <space>l <c-w>l
-
-" ウインドウ幅を右に広げる
-nnoremap <space>. 41<c-w>>
-" ウインドウ幅を左に広げる
-nnoremap <space>, 41<c-w><
-" ウインドウ高さを高くする
-nnoremap <space>= 9<c-w>+
-" ウインドウ高さを低くする
-nnoremap <space>- 9<c-w>-
-
-" 前のバッファに戻る
-" nnoremap <space><left> :bprevious<CR>
-" 次のバッファに進む
-" nnoremap <space><right> :bnext<CR>
-
-" }}}
-
-" ### タブ操作系 ---------------------- {{{
-
-" 新規タブを開く
-nnoremap <space>t :tabnew<CR>
-
-if has('gui_running')
-else
-  nnoremap <space>; :normal gT<CR>
-  nnoremap <space>' :normal gt<CR>
-
-  " 現タブを右に移動
-  nnoremap <space><right> :+tabm<CR>
-  " 現タブを左に移動
-  nnoremap <space><left> :-tabm<CR>
-endif
-
-" }}}
-
-" ### 検索系 ---------------------- {{{
-
-vnoremap <space>/ :call SearchWordBySelectedText()<cr>
-
-" }}}
-
-" ### ターミナルモード ---------------------- {{{
-
-" カレントウィンドウでターミナルを開く
-" nnoremap <space>ec :ter ++curwin<CR>
-
-if has('nvim')
-  tnoremap jf <C-\><C-n>
-else
-  tnoremap jf <C-w>N
-endif
-
-" }}}
-
-" ### quickfix ---------------------- {{{
-
-nnoremap <leader>' :NextQuickfix<cr>
-command! -nargs=0 NextQuickfix call NextQuickfix()
-function! NextQuickfix()
-  execute "normal! :silent! cnewer\<CR>"
-endfunction
-
-nnoremap <leader>; :PreviousQuickfix<cr>
-command! -nargs=0 PreviousQuickfix call PreviousQuickfix()
-function! PreviousQuickfix()
-  execute "normal! :silent! colder\<CR>"
-endfunction
-
-nnoremap <space>a :call ToggleQuickFix()<cr>
-function! ToggleQuickFix()
-    if empty(filter(getwininfo(), 'v:val.quickfix'))
-        copen
-    else
-        cclose
-    endif
-endfunction
-
-" }}}
-
-" }}}
-
-" ## スニペット設定 ---------------------- {{{
-
-" Ruby 用スニペット
-autocmd FileType ruby :iabbrev fro # frozen_string_literal: true<esc>
-autocmd FileType ruby :iabbrev yar # @param options [Type] description<CR>@return [Type] description<CR>@raise [StandardError] description<CR>@option options [Type] description<CR>@example description<CR>@yield [Type] description<esc>6k4w
-autocmd FileType ruby :iabbrev con context '' do<CR>end<esc>kw<esc>
-autocmd FileType ruby :iabbrev des describe '' do<CR>end<esc>kw<esc>
-autocmd FileType ruby :iabbrev let let(:) { }<esc>4hi<esc>
-autocmd FileType ruby :iabbrev sha shared_examples '' do<CR>end<esc>kw<esc>
-autocmd FileType ruby :iabbrev beh it_behaves_like ''<esc>h<esc>
-autocmd BufNewFile,BufRead *.md set filetype=markdown
-autocmd FileType markdown :iabbrev tab <table><CR><esc>i  <thead><CR><esc>i    <tr><CR><esc>i      <th colspan="2"></th><CR><esc>i    </tr><CR><esc>i  </thead><CR><esc>i  <tbody><CR><esc>i    <tr><CR><esc>i      <td></td><CR><esc>i      <td></td><CR><esc>i    </tr><CR><esc>i  </tbody><CR><esc>i</table><esc>
-
-" }}}
-
 " ## プラグイン設定 ---------------------- {{{
 
 call plug#begin('~/.vim/plugged')
@@ -420,7 +14,6 @@ Plug 'dart-lang/dart-vim-plugin',           { 'commit': '928302ec931caf0dcf21835
 Plug 'jparise/vim-graphql',                 { 'commit': '996749a7d69a3709768fa8c4d259f79b5fd9bdb1' }
 Plug 'maxmellon/vim-jsx-pretty',            { 'commit': '6989f1663cc03d7da72b5ef1c03f87e6ddb70b41', 'for': ['javascript', 'typescript'] }
 Plug 'rcmdnk/vim-markdown',                 { 'commit': '9a5572a18b2d0bbe96b2ed625f5fbe0462dbd801', 'for': 'markdown' }
-Plug 'masakiq/vim-ruby-fold',               { 'commit': 'b8c35810a94bb2976d023ece2b929c8a9279765b', 'for': 'ruby' }
 
 " Interface
 Plug 'folke/tokyonight.nvim',               { 'commit': '2c85fad417170d4572ead7bf9fdd706057bd73d7', 'as': 'tokyonight' }
@@ -456,109 +49,6 @@ Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': 'e0d6a5793a1faa0b88a9723
 call plug#end()
 
 " }}}
-
-" ## 画面表示に関する設定 ---------------------- {{{
-
-" シンタックス
-syntax enable
-" タイトルを表示する
-
-set title
-
-" 行番号を表示 (nonumber:非表示)
-set number
-
-" ルーラーを表示 (noruler:非表示)
-set ruler
-
-" タブや改行を表示 (list:表示)
-set nolist
-
-" どの文字でタブや改行を表示するかを設定
-"set listchars=tab:>-,extends:<,trail:-,eol:<
-
-" 長い行を折り返して表示
-set wrap
-
-" 常にステータス行を表示
-set laststatus=2
-
-" コマンドラインの高さ
-set cmdheight=1
-
-" コマンドをステータス行に表示
-set showcmd
-
-" モードを表示する
-set showmode
-
-" アンダーライン
-set cursorline
-
-" autocmd TerminalOpen * set nonu
-
-" ファイルを読み込み
-set autoread
-
-" 最初は折りたたむ
-au BufRead * normal zR
-
-" カラースキーマ設定
-colorscheme tokyonight
-
-" シンタックスエラーを下線にする
-hi clear SpellBad
-hi SpellBad cterm=underline
-hi SpellCap cterm=underline
-hi SpellRare cterm=underline
-hi SpellLocal cterm=underline
-
-" Background color
-hi Normal               ctermfg=none ctermbg=none guifg=none guibg=#000000
-" hide the `~` at the start of an empty line
-hi EndOfBuffer          ctermfg=16 ctermbg=none guifg=#000000 guibg=#000000
-
-" fold した行に `-` を付与しないための設定
-" https://vi.stackexchange.com/questions/14217/how-to-hide-horizontal-line-between-windows#answer-14222
-" set fillchars=stl:_     " fill active window's statusline with _
-" set fillchars+=stlnc:_  " also fill inactive windows
-" ウィンドウ間のバーをカスタマイズ
-hi VertSplit ctermfg=16 ctermbg=16
-" https://stackoverflow.com/questions/9001337/vim-split-bar-styling
-set fillchars+=vert:\ "White space at the end
-
-
-hi SignColumn           ctermfg=none  cterm=none guifg=none guibg=#000000
-
-hi LineNr               ctermfg=31  cterm=none guifg=#777777 guibg=none
-hi CursorLineNr         ctermfg=87  cterm=none guifg=#eeeeee guibg=#222222
-hi CursorLine           ctermbg=237 cterm=none guifg=none    guibg=#222222
-hi CursorColumn         ctermbg=19  cterm=none guifg=none    guibg=#222222
-
-" タブ
-hi TabLineSel           ctermfg=87  cterm=none
-hi TabLine              ctermfg=31  ctermbg=none cterm=none guifg=#777777 guibg=none
-hi TabLineFill          ctermfg=31  ctermbg=none cterm=none guibg=none
-
-" Floating window
-hi NormalFloat          ctermfg=31  ctermbg=none guifg=none guibg=#000000
-
-" txt ファイルの highlight
-autocmd BufRead,BufNewFile *.txt set syntax=conf
-autocmd BufRead,BufNewFile *.fish set syntax=sh
-
-" *.log のシンタックスをカスタマイズ
-hi keywordWhen        ctermfg=green   guifg=green
-hi matchBehavesLikeTo ctermfg=magenta guifg=magenta
-augroup vimrcsyntax
-  autocmd!
-  au FileType log syntax keyword keywordWhen when containedin=ALL
-  au FileType log syntax match matchBehavesLikeTo /behaves like/ containedin=ALL
-augroup END
-
-" }}}
-
-" ### plugin liuchengxu/vim-which-key ---------------------- {{{
 
 if has('gui_running')
 else
@@ -664,12 +154,6 @@ vmap <C-j> <Plug>MoveBlockDown
 vmap <C-k> <Plug>MoveBlockUp
 vmap <C-h> <Plug>MoveBlockLeft
 vmap <C-l> <Plug>MoveBlockRight
-
-" }}}
-
-" ## masakiq/vim-ruby-fold ---------------------- {{{
-
-let g:ruby_fold_lines_limit = 300
 
 " }}}
 
@@ -795,7 +279,7 @@ endif
 
 command! PlugGetLatestCommits :call PlugGetLatestCommits()
 function! PlugGetLatestCommits()
-  let command = '~/.vim/lua_scripts/plug_get_latest_commits.lua'
+  let command = '~/.config/nvim/lua/plug_get_latest_commits.lua'
   silent! execute 'r!' . command
 endfunction
 
@@ -965,14 +449,6 @@ nnoremap <space>oh :History<CR>
 
 " ## タブ操作 ---------------------- {{{
 
-function! MoveTabRight()
-  silent! execute '+tabm'
-endfunction
-
-function! MoveTabLeft()
-  silent! execute '-tabm'
-endfunction
-
 command! CopyAllTabPath call CopyAllTabPath()
 function! CopyAllTabPath()
   let files = [expand('%')]
@@ -1016,20 +492,6 @@ function! CopyAllTabAbsolutePath()
     call add(files, file)
   endwhile
   let @+=join(files, "\n")
-endfunction
-
-function! s:actuality_tab_count()
-  let ws = s:list_windows()
-  let tab_count = 0
-  let non_tab_count = 0
-  for win in ws
-    if win =~ '^.*\s\[No\-Name\]\s.*'
-      let non_tab_count = non_tab_count + 1
-    else
-      let tab_count = tab_count + 1
-    endif
-  endfor
-  return tab_count
 endfunction
 
 command! -bang CloseTabsRight call CloseTabsRight('<bang>')
@@ -1088,33 +550,6 @@ endfunction
 
 function! s:delete_windows(lines)
   execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[3]}))
-endfunction
-
-command! DeleteWindow call fzf#run(fzf#wrap({
-      \ 'source': s:list_windows(),
-      \ 'sink*': { lines -> s:delete_windows(lines) },
-      \ 'options': '--multi --bind=ctrl-a:select-all,ctrl-u:toggle,?:toggle-preview,ctrl-n:preview-down,ctrl-p:preview-up '
-      \ }))
-
-" https://stackoverflow.com/questions/5927952/whats-the-implementation-of-vims-default-tabline-function
-function! s:list_windows()
-  let list = []
-  let tabnumber = 1
-
-  while tabnumber <= tabpagenr('$')
-    let buflist = tabpagebuflist(tabnumber)
-    let winnumber = 1
-    for buf in buflist
-      silent! let file = expandcmd('#'. buf .'<.rb')
-      let file = substitute(file, '#.*', '[No-Name]', '')
-      let line = tabnumber . ' ' . winnumber . ' ' . file . ' ' . buf
-      call add(list, line)
-      let winnumber = winnumber + 1
-    endfor
-    let tabnumber = tabnumber + 1
-  endwhile
-
-  return list
 endfunction
 
 " }}}
@@ -1365,6 +800,7 @@ function! SearchWord(word, ...)
       \ })))
 endfunction
 
+vnoremap <space>/ :call SearchWordBySelectedText()<cr>
 function! SearchWordBySelectedText()
   let selected = SelectedVisualModeText()
   let @+=selected
@@ -1410,45 +846,6 @@ function! s:open_files_via_rg(lines)
     endif
   endif
 endfunction
-
-" }}}
-
-" ## カスタム置換 ---------------------- {{{
-
-command! SnakeCase call SnakeCase()
-function! SnakeCase() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)(\u)/\1_\L\2\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)(\u)/\1_\L\2\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V::/\//g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\u)/\L\1\e/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! PascalCase call PascalCase()
-function! PascalCase() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V<(\l)/\U\1\e/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_([a-z])/\u\1/g'
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V(\l)\/(\u)/\1::\2/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! RemoveUnderBar call RemoveUnderBar()
-function! RemoveUnderBar() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V_/ /g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! AddUnderBar call AddUnderBar()
-function! AddUnderBar() range
-  let start_col = col('.')
-  silent! execute a:firstline . ',' . a:lastline . 's/\v%V\s/_/g'
-  silent! exec 'normal ' . start_col . '|'
-endfunction
-
-command! DeleteAnsi silent! %s/\e\[[0-9;]*m//g
 
 " }}}
 
@@ -1579,46 +976,6 @@ endfunction
 
 " }}}
 
-" ## Git ---------------------- {{{
-
-command! OpenGitHubRepo :call OpenGitHubRepo()
-function! OpenGitHubRepo()
-  lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/open_github.lua').open_github('repo')
-endfunction
-
-command! OpenGitHubFile :call OpenGitHubFile()
-function! OpenGitHubFile()
-  if g:mode == 'n'
-    lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/open_github.lua').open_github('normal')
-  else
-    lua dofile(os.getenv('HOME') .. '/.vim/lua_scripts/open_github.lua').open_github('visual')
-  endif
-endfunction
-
-command! -bang DiffFileGitBranch call DiffFileGitBranch()
-function! DiffFileGitBranch()
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': 'git --no-pager branch | sed "/* /d"',
-          \ 'sink': function('s:select_diff_files'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 },
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:get_current_branch()
-  return substitute(FugitiveStatusline(), '^\[Git(\(.*\))\]', '\1', '')
-endfunction
-
-" }}}
-
 " ## Util ---------------------- {{{
 
 nnoremap <space>os :call CommandSnippet()<cr>
@@ -1693,88 +1050,6 @@ function! s:fill_in_selected_command_snippet(line)
 endfunction
 
 " }}}
-
-" ## ドキュメント ---------------------- {{{
-
-command! OpenShopifyGraphQLDocument :call OpenShopifyGraphQLDocument()
-function! OpenShopifyGraphQLDocument() abort
-  let selected = SelectedVisualModeText()
-  let @+=selected
-  let command = "ruby ~/.vim/functions/search_shopify_graphql_api_document_path.rb " . selected
-  let result = system(command)
-  let paths = split(result, "\n")
-  if len(paths) == 0
-    echohl WarningMsg | echon 'No documents were found for the selected ' | echohl ErrorMsg | echon selected | echohl None
-    sleep 1
-    return
-  endif
-  if len(paths) == 1
-    call s:open_shopify_graphql_document(paths[0])
-    return
-  endif
-  try
-    call fzf#run(fzf#wrap({
-          \ 'source': paths,
-          \ 'options': [
-          \   '--prompt', 'Shopify GraphQL Refs> ',
-          \ ],
-          \ 'sink':  function('s:open_shopify_graphql_document'),
-          \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-          \ }))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-function! s:open_shopify_graphql_document(path)
-  let url = 'https://shopify.dev/api/admin-graphql/' . a:path
-  call system('open ' . url)
-endfunction
-
-" }}}
-
-" ## 翻訳 ---------------------- {{{
-
-nnoremap <space>od :call OpenDeepL()<CR>
-command! OpenDeepL call OpenDeepL()
-function! OpenDeepL()
-  let input_file_path = '~/.vim/deepl/input.txt'
-  let output_file_path = '~/.vim/deepl/output.txt'
-  let dir_path = fnamemodify(input_file_path, ':h')
-
-  if !isdirectory(expand(dir_path))
-    call mkdir(expand(dir_path), "p")
-  endif
-  if !filereadable(expand(input_file_path))
-    call writefile([], expand(input_file_path))
-  endif
-  if !filereadable(expand(output_file_path))
-    call writefile([], expand(output_file_path))
-  endif
-
-  silent execute ':tab drop ~/.vim/deepl/input.txt'
-  if winnr('$') == 1
-    silent execute ':vsplit ~/.vim/deepl/output.txt'
-    silent execute "normal \<c-w>h"
-  endif
-endfunction
-
-" }}}
-
-" }}}
-
-" ## for lua scripts ---------------------- {{{
-
-let lua_scripts_dir = expand('~/.vim/lua_scripts/init')
-let lua_files = split(glob(lua_scripts_dir . '/*.lua'), '\n')
-for lua_file in lua_files
-  execute 'luafile' lua_file
-endfor
 
 " }}}
 
