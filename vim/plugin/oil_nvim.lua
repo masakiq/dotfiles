@@ -7,6 +7,9 @@ require("oil").setup({
       return get_oil_winbar()
     end,
   },
+  view_options = {
+    show_hidden = true,
+  },
 })
 
 vim.api.nvim_create_augroup("OilRelPathFix", {})
@@ -16,7 +19,7 @@ vim.api.nvim_create_autocmd("BufLeave", {
   callback = vim.schedule_wrap(function()
     vim.cmd("cd .")
   end),
-});
+})
 
 vim.api.nvim_create_autocmd("User", {
   pattern = "OilEnter",
