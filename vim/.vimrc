@@ -49,20 +49,20 @@ Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': 'e0d6a5793a1faa0b88a9723
 
 " avante.nvim
 " 必須依存プラグイン
-Plug 'nvim-treesitter/nvim-treesitter'
-Plug 'stevearc/dressing.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'MunifTanjim/nui.nvim'
-Plug 'MeanderingProgrammer/render-markdown.nvim'
+Plug 'nvim-treesitter/nvim-treesitter',           { 'commit': '28d480e0624b259095e56f353ec911f9f2a0f404' }
+Plug 'stevearc/dressing.nvim',                    { 'commit': '2d7c2db2507fa3c4956142ee607431ddb2828639' }
+Plug 'nvim-lua/plenary.nvim',                     { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
+Plug 'MunifTanjim/nui.nvim',                      { 'commit': '61574ce6e60c815b0a0c4b5655b8486ba58089a1' }
+Plug 'MeanderingProgrammer/render-markdown.nvim', { 'commit': 'b4016e812c9a18784d8c1c6b4f0b2858a4cf502d' }
 
 " 任意依存プラグイン（必要に応じて）
-Plug 'hrsh7th/nvim-cmp'
-Plug 'nvim-tree/nvim-web-devicons'    " または echasnovski/mini.icons
-Plug 'HakonHarnes/img-clip.nvim'
-Plug 'zbirenbaum/copilot.lua'
+Plug 'hrsh7th/nvim-cmp',                          { 'commit': 'b5311ab3ed9c846b585c0c15b7559be131ec4be9' }
+Plug 'nvim-tree/nvim-web-devicons',               { 'commit': '56f17def81478e406e3a8ec4aa727558e79786f3' }
+Plug 'HakonHarnes/img-clip.nvim',                 { 'commit': '08a02e14c8c0d42fa7a92c30a98fd04d6993b35d' }
+Plug 'zbirenbaum/copilot.lua',                    { 'commit': '7ba73866b9b3c696f80579c470c6eec374d3acec' }
 
 " avante.nvim 本体（branch main／ビルド実行）
-Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+Plug 'yetone/avante.nvim',                        { 'commit': 'fdf4716ec04cf5d9f8f39a44b7d42ab37cc2bd40', 'branch': 'main', 'do': 'make' }
 
 call plug#end()
 
