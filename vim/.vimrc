@@ -807,7 +807,7 @@ function! SearchWord(word, ...)
     return
   endif
   call fzf#run(fzf#vim#with_preview(fzf#wrap({
-      \ 'source':  printf("rg --column --no-heading --color always --smart-case %s %s", shellescape(a:word), l:path),
+      \ 'source':  printf("rg --column --no-heading --color always --smart-case --fixed-strings %s %s", shellescape(a:word), l:path),
       \ 'sink*':    function('s:open_files_via_rg'),
       \ 'options': '--layout=reverse --ansi --expect=ctrl-v,enter,ctrl-a,ctrl-e,ctrl-x '.
       \            '--prompt="Search> " '.
