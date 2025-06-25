@@ -65,6 +65,9 @@ Plug 'yetone/avante.nvim',                        { 'commit': 'fdf4716ec04cf5d9f
 
 " Claude Code
 Plug 'coder/claudecode.nvim',                     { 'commit': 'da78309eaa2ca29fd38b22ed6155697ae1e65dc4' }
+
+" Remote Neovim
+Plug 'amitds1997/remote-nvim.nvim'
 call plug#end()
 
 " }}}

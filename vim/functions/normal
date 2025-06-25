@@ -42,3 +42,8 @@ AvanteClear
 AvanteStop
 AvanteModels
 AvanteHistory
+RemoteStart
+RemoteStop
+RemoteInfo
+RemoteConfigDel
+RemoteLog
