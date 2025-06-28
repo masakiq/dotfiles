@@ -21,7 +21,7 @@ claudecode.setup({
   terminal_cmd = nil,
 
   -- Log level (trace, debug, info, warn, error)
-  log_level = "info",
+  log_level = "warn",
 
   -- Send selection updates to Claude
   track_selection = true,
