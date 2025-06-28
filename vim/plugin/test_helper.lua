@@ -22,7 +22,7 @@ local function execute_ruby_test(file_path, line_number)
 
   local linter_pane = get_pane_index(3)
   if linter_pane ~= "" then
-    send_command_to_pane(2, "docker compose exec $service_name rubocop")
+    send_command_to_pane(2, "docker compose exec $service_name rubocop -A")
   end
 end
 
@@ -62,7 +62,7 @@ local function execute_linter()
 
   if file_ext == "rb" then
     local cmd = string.format(
-      "tmux send -t $(printf ':.%%s' $(math $(tmux display-message -p '#{pane_index}') + 1)) 'docker compose exec $service_name rubocop %s' C-m",
+      "tmux send -t $(printf ':.%%s' $(math $(tmux display-message -p '#{pane_index}') + 1)) 'docker compose exec $service_name rubocop -A %s' C-m",
       file_path
     )
     vim.fn.system(cmd)
