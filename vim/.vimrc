@@ -64,7 +64,7 @@ Plug 'zbirenbaum/copilot.lua',                    { 'commit': 'c1bb86abbed1a52a1
 Plug 'yetone/avante.nvim',                        { 'commit': 'fdf4716ec04cf5d9f8f39a44b7d42ab37cc2bd40', 'branch': 'main', 'do': 'make' }
 
 " Claude Code
-Plug 'coder/claudecode.nvim',                     { 'commit': 'da78309eaa2ca29fd38b22ed6155697ae1e65dc4' }
+Plug 'coder/claudecode.nvim',                     { 'commit': '91357d810ccf92f6169f3754436901c6ff5237ec' }
 call plug#end()
 
 " }}}
