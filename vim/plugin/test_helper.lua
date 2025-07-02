@@ -14,11 +14,16 @@ end
 local function execute_ruby_test(file_path, line_number)
   local test_pane = get_pane_index(2)
   if test_pane ~= "" then
-    local cmd = string.format("docker compose exec $service_name rspec %s:%d", file_path, line_number)
+    local cmd
+    if line_number then
+      cmd = string.format("docker compose exec $service_name rspec %s:%d", file_path, line_number)
+    else
+      cmd = string.format("docker compose exec $service_name rspec %s", file_path)
+    end
     send_command_to_pane(1, cmd)
   end
 
-  vim.wait(500)
+  vim.wait(100)
 
   local linter_pane = get_pane_index(3)
   if linter_pane ~= "" then
@@ -29,11 +34,16 @@ end
 local function execute_dart_test(file_path, line_number)
   local test_pane = get_pane_index(2)
   if test_pane ~= "" then
-    local cmd = string.format("flutter test %s", file_path, line_number)
+    local cmd
+    if line_number then
+      cmd = string.format("flutter test %s", file_path, line_number)
+    else
+      cmd = string.format("flutter test %s", file_path)
+    end
     send_command_to_pane(1, cmd)
   end
 
-  vim.wait(500)
+  vim.wait(100)
 
   local linter_pane = get_pane_index(3)
   if linter_pane ~= "" then
@@ -55,6 +65,19 @@ local function execute_test_line()
 end
 
 vim.keymap.set("n", "<leader>t", execute_test_line, { desc = "Execute Test" })
+
+local function execute_test()
+  local file_path = vim.fn.expand("%")
+  local file_ext = vim.fn.expand("%:e")
+
+  if file_ext == "rb" then
+    execute_ruby_test(file_path, nil)
+  elseif file_ext == "dart" then
+    execute_dart_test(file_path, line_number)
+  end
+end
+
+vim.keymap.set("n", "<leader>T", execute_test, { desc = "Execute Test" })
 
 local function execute_linter()
   local file_path = vim.fn.expand("%")
