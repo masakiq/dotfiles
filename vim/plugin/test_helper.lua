@@ -3,11 +3,15 @@ local function get_pane_index(pane_number)
 end
 
 local function send_command_to_pane(pane_offset, command)
-  local cmd = string.format(
-    "tmux send -t $(printf ':.%%s' $(math $(tmux display-message -p '#{pane_index}') + %d)) '%s' C-m",
-    pane_offset,
-    command
-  )
+  local target_pane =
+      string.format("$(printf ':.%%s' $(math $(tmux display-message -p '#{pane_index}') + %d))", pane_offset)
+
+  -- Cancel copy-mode first
+  local cancel_cmd = string.format("tmux send -t %s -X cancel", target_pane)
+  vim.fn.system(cancel_cmd)
+
+  -- Send the actual command
+  local cmd = string.format("tmux send -t %s '%s' C-m", target_pane, command)
   vim.fn.system(cmd)
 end
 
