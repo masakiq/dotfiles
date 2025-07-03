@@ -69,6 +69,8 @@ call plug#end()
 
 " }}}
 
+set timeoutlen=400
+
 if has('gui_running')
 else
   let g:which_key_map =  {}
@@ -78,7 +80,6 @@ else
   nnoremap <silent> <leader> :WhichKey '<leader>'<CR>
   vnoremap <silent> <space> :<c-u>WhichKeyVisual '<space>'<CR>
   vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<leader>'<CR>
-  set timeoutlen=1000
   let g:which_key_use_floating_win = 1
   " let g:which_key_vertical = 1
   highlight WhichKeyFloating ctermbg=232
