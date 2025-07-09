@@ -48,7 +48,8 @@ Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': '16d897fd43d07e3b54478cc
 Plug 'zbirenbaum/copilot.lua',              { 'commit': 'c1bb86abbed1a52a11ab3944ef00c8410520543d' }
 
 " Claude Code
-Plug 'coder/claudecode.nvim',                     { 'commit': '91357d810ccf92f6169f3754436901c6ff5237ec' }
+" Plug 'coder/claudecode.nvim',             { 'commit': '91357d810ccf92f6169f3754436901c6ff5237ec' }
+Plug 'masakiq/claudecode.nvim',             { 'branch': 'diff_strip_path_prefix' }
 call plug#end()
 
 " }}}
