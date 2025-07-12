@@ -54,8 +54,6 @@ call plug#end()
 
 " }}}
 
-set timeoutlen=400
-
 if has('gui_running')
 else
   let g:which_key_map =  {}

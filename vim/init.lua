@@ -3,7 +3,7 @@ vim.g.mapleader = ","
 
 -- リーダーキーのディレイタイム
 vim.opt.timeout = true
-vim.opt.timeoutlen = 1000
+vim.opt.timeoutlen = 300
 vim.opt.ttimeoutlen = 500
 
 vim.cmd([[
