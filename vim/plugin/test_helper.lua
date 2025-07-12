@@ -65,12 +65,8 @@ local function execute_test_line()
 
   if file_ext == "rb" then
     execute_ruby_test(3, file_path, line_number)
-    vim.wait(100)
-    execute_ruby_format(4, file_path)
   elseif file_ext == "dart" then
     execute_dart_test(3, file_path, line_number)
-    vim.wait(100)
-    execute_dart_format(4, file_path)
   end
 end
 
@@ -91,4 +87,4 @@ local function execute_test()
   end
 end
 
-vim.keymap.set("n", "<leader>T", execute_test, { desc = "Execute Test" })
+vim.keymap.set("n", "<C-t>", execute_test, { desc = "Execute Test" })

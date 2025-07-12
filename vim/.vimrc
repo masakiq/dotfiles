@@ -185,7 +185,7 @@ let g:vim_markdown_folding_level = 4
 
 "## voldikss/vim-floaterm ---------------------- {{{
 
-let g:floaterm_keymap_toggle = '<c-t>'
+" let g:floaterm_keymap_toggle = '<c-t>'
 let g:floaterm_keymap_prev = '<S-left>'
 let g:floaterm_keymap_next = '<S-right>'
 let g:floaterm_keymap_new = '<F12>'
