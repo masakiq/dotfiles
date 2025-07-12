@@ -14,11 +14,11 @@ else
     vim.cmd("normal gt")
   end, { desc = "次のタブに移動" })
   -- 現タブを右に移動
-  vim.keymap.set("n", "<space><right>", function()
+  vim.keymap.set("n", "<space>.", function()
     vim.cmd("+tabmove")
   end, { desc = "現タブを右に移動" })
   -- 現タブを左に移動
-  vim.keymap.set("n", "<space><left>", function()
+  vim.keymap.set("n", "<space>,", function()
     vim.cmd("-tabmove")
   end, { desc = "現タブを左に移動" })
 end
