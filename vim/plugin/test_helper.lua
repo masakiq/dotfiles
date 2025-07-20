@@ -18,12 +18,11 @@ end
 local function execute_ruby_test(pane_index, file_path, line_number)
   local test_pane = get_pane_index(pane_index)
   if test_pane ~= "" then
-    local cmd
-    if line_number then
-      cmd = string.format("docker compose exec $service_name rspec %s:%d", file_path, line_number)
-    else
-      cmd = string.format("docker compose exec $service_name rspec %s", file_path)
-    end
+    local test_target = line_number and string.format("%s:%d", file_path, line_number) or file_path
+    local cmd = string.format(
+      'docker compose exec $service_name rspec %s && any-notifier send "🟢 Test Succeeded" || any-notifier send "❌️ Test Failed" --sound Ping',
+      test_target
+    )
     send_command_to_pane(test_pane - 1, cmd)
   end
 end
@@ -31,7 +30,10 @@ end
 local function execute_ruby_format(pane_index, file_path)
   local linter_pane = get_pane_index(pane_index)
   if linter_pane ~= "" then
-    send_command_to_pane(linter_pane - 1, "docker compose exec $service_name rubocop -A")
+    send_command_to_pane(
+      linter_pane - 1,
+      'docker compose exec $service_name rubocop -A && any-notifier send "🟢 Format Succeeded" || any-notifier send "❌️ Format Failed" --sound Ping'
+    )
   end
 end
 
