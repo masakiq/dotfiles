@@ -18,6 +18,7 @@ end
 local function execute_ruby_test(pane_index, file_path, line_number)
   local test_pane = get_pane_index(pane_index)
   if test_pane ~= "" then
+    send_command_to_pane(test_pane - 1, 'clear && printf "\\033[3J"')
     local test_target = line_number and string.format("%s:%d", file_path, line_number) or file_path
     local cmd = string.format(
       'docker compose exec $service_name rspec %s && any-notifier send "🟢 Test Succeeded" || any-notifier send "❌️ Test Failed" --sound Ping',
