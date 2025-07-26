@@ -518,29 +518,6 @@ function! CloseTabs(bang)
   call CloseTabsLeft(a:bang)
 endfunction
 
-command! MergeTab call MergeTab()
-function! MergeTab()
-  let bufnums = tabpagebuflist()
-  hide tabclose
-  topleft vsplit
-  for n in bufnums
-    execute 'vertical sb ' . n
-    wincmd _
-  endfor
-  wincmd t
-  quit
-  wincmd =
-endfunction
-
-command! SeparateTab call SeparateTab()
-function! SeparateTab()
-  wincmd l
-  let file=expand('%')
-  exec 'close'
-  exec 'tab drop ' . file
-  normal gT
-endfunction
-
 " }}}
 
 " ## ウィンドウ操作 ---------------------- {{{
