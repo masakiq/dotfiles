@@ -3,7 +3,6 @@ OpenFilesFromClipboard
 CopyCurrentPath
 CopyCurrentPathWithLineNumber
 CopyAbsolutePath
-CopyCurrentFile
 CopyAllTabPath
 CopyAllTabAbsolutePath
 OpenGitHubRepo

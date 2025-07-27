@@ -368,40 +368,6 @@ function! s:open_quickfix_list(cmd, list)
   endif
 endfunction
 
-command! -nargs=0 CopyCurrentPath call CopyCurrentPath()
-function! CopyCurrentPath()
-  cd .
-  let @+=expand('%')
-  echo "copied current path: " . expand('%')
-endfunction
-
-command! -nargs=0 CopyCurrentPathWithLineNumber call CopyCurrentPathWithLineNumber()
-function! CopyCurrentPathWithLineNumber()
-  if g:mode == 'n'
-    let l:path = expand('%') . ':' . line('.')
-    let @+ = l:path
-    echo 'copied current path: ' . l:path
-  elseif  g:mode == 'v'
-    let l:lines = range(g:firstline, g:lastline)
-    let l:path = expand('%') . ':' . join(map(l:lines, 'string(v:val)'), ':')
-    let @+ = l:path
-    echo 'copied current path: ' . l:path
-  endif
-endfunction
-
-command! -nargs=0 CopyAbsolutePath call CopyAbsolutePath()
-function! CopyAbsolutePath()
-  let @+=expand('%:p')
-  echo "copied absolute path: " . expand('%:p')
-endfunction
-
-command! -nargs=0 CopyCurrentFile call CopyCurrentFile()
-function! CopyCurrentFile()
-  let filepath = expand("%")
-  let filename = fnamemodify(filepath, ":t")
-  let @+= filename
-  echo "copied current file: " . filename
-endfunction
 
 nnoremap <space>ot :OpenTargetFile<CR>
 command! OpenTargetFile call OpenTargetFile()
