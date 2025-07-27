@@ -29,10 +29,3 @@ ln -s `pwd`/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
 ln -s `pwd`/tig/.tigrc ~/.tigrc
 
 ln -s `pwd`/tmux/.tmux.conf ~/.tmux.conf
-
-ln -s `pwd`/alacritty/.alacritty.yml ~/.alacritty.yml
-
-ln -s `pwd`/alacritty/.stylua.toml ~/.stylua.toml
-
-mkdir ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch
-ln -s `pwd`/iTerm2/Scripts/AutoLaunch/launch_alacritty.py ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/launch_alacritty.py
