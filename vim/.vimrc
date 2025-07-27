@@ -416,20 +416,6 @@ nnoremap <space>oh :History<CR>
 
 " }}}
 
-" ## ウィンドウ操作 ---------------------- {{{
-
-command! SwapWindow call SwapWindow()
-function! SwapWindow()
-  " https://stackoverflow.com/questions/2228353/how-to-swap-files-between-windows-in-vim
-  silent! exec "normal \<c-w>x"
-endfunction
-
-function! s:delete_windows(lines)
-  execute 'bwipeout!' join(map(a:lines, {_, line -> split(line)[3]}))
-endfunction
-
-" }}}
-
 " ## バッファ操作 ---------------------- {{{
 
 function! DeleteBufsWithoutExistingWindows()
