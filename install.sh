@@ -17,8 +17,6 @@ rm -rf ~/.config/nvim/plugin
 ./linktree.sh `pwd`/vim/lua ~/.config/nvim/lua
 ./linktree.sh `pwd`/vim/plugin ~/.config/nvim/plugin
 
-ln -s `pwd`/vim/.vimrc ~/.ideavimrc
-
 mkdir ~/.config/direnv
 ln -s `pwd`/direnv/direnv.toml ~/.config/direnv/direnv.toml
 
