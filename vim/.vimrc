@@ -473,35 +473,6 @@ endfunction
 
 " ## レジスタ操作 ---------------------- {{{
 
-" https://github.com/junegunn/fzf.vim/issues/647#issuecomment-520259307
-function! s:get_registers() abort
-  redir => l:regs
-  silent registers
-  redir END
-
-  return split(l:regs, '\n')[1:]
-endfunction
-
-function! s:registers(...) abort
-  try
-    let l:opts = {
-          \ 'source': s:get_registers(),
-          \ 'sink': {x -> feedkeys(matchstr(x, '\v^\S+\ze.*') . (a:1 ? 'P' : 'p'), 'x')},
-          \ 'options': '--prompt="Reg> "'
-          \ }
-    call fzf#run(fzf#wrap(l:opts))
-    if has('nvim')
-      call feedkeys('i', 'n')
-    endif
-  catch
-    echohl WarningMsg
-    echom v:exception
-    echohl None
-  endtry
-endfunction
-
-command! -bang Registers call s:registers('<bang>' ==# '!')
-
 command! -bang StartCopyStatusMessages call s:start_copy_status_messages()
 function! s:start_copy_status_messages() abort
   redir @+

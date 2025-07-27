@@ -21,7 +21,6 @@ PlugClean
 PlugStatus
 PlugGetLatestCommits
 DiffFile
-Registers
 Reload
 CloseTabs
 CloseTabsRight
