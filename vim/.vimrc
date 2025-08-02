@@ -20,8 +20,6 @@ Plug 'folke/tokyonight.nvim',               { 'commit': '2c85fad417170d4572ead7b
 Plug 'stevearc/oil.nvim',                   { 'commit': 'cca1631d5ea450c09ba72f3951a9e28105a3632c' }
 Plug 'nvim-tree/nvim-web-devicons',         { 'commit': '56f17def81478e406e3a8ec4aa727558e79786f3' }
 Plug 'junegunn/fzf.vim',                    { 'commit': 'f7c7b44764a601e621432b98c85709c9a53a7be8' }
-Plug 'voldikss/vim-floaterm',               { 'commit': '4e28c8dd0271e10a5f55142fb6fe9b1599ee6160' }
-Plug 'voldikss/fzf-floaterm',               { 'commit': 'c023f97e49e894ac5649894b7e05505b6df9b055' }
 Plug 'MunifTanjim/nui.nvim',                { 'commit': '61574ce6e60c815b0a0c4b5655b8486ba58089a1' }
 Plug 'masakiq/vim-tabline',                 { 'commit': 'ddebfdd25e6de91e3e89c2ec18c80cd3d2adadd9' }
 Plug 'liuchengxu/vim-which-key',            { 'commit': '470cd19ce11b616e0640f2b38fb845c42b31a106' }
@@ -178,23 +176,6 @@ noremap <leader>c :Commentary<cr>
 
 let g:vim_markdown_folding_disabled = 0
 let g:vim_markdown_folding_level = 4
-
-" }}}
-
-"## voldikss/vim-floaterm ---------------------- {{{
-
-" let g:floaterm_keymap_toggle = '<c-t>'
-let g:floaterm_keymap_prev = '<S-left>'
-let g:floaterm_keymap_next = '<S-right>'
-let g:floaterm_keymap_new = '<F12>'
-let g:floaterm_height = 0.95
-let g:floaterm_width = 0.95
-let g:floaterm_title = 'terminal:$1/$2'
-let g:floaterm_keymap_kill = '<c-q>'
-tnoremap <C-[> <C-\><C-n><C-w><C-w>
-
-tnoremap <M-down> <C-\><C-n>:FloatermUpdate --width=0.95 --height=0.35 --position=bottom --wintype=float<cr>
-tnoremap <M-up> <C-\><C-n>:FloatermUpdate --width=0.95 --height=0.95 --position=center --wintype=float<cr>
 
 " }}}
 
