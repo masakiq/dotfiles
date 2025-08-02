@@ -1,6 +1,10 @@
 local function get_pane_by_name(pane_name)
   local current_session = vim.fn.system("tmux display-message -p '#{session_name}'"):gsub("%s+", "")
-  local cmd = string.format("tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}:#{@pane_name}' | grep '^%s:' | grep ':%s$'", current_session, pane_name)
+  local cmd = string.format(
+    "tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}:#{@pane_name}' | grep '^%s:' | grep ':%s$'",
+    current_session,
+    pane_name
+  )
   local result = vim.fn.system(cmd):gsub("%s+", "")
   if result == "" then
     return nil
@@ -88,7 +92,7 @@ local function execute_test_line()
   end
 end
 
-vim.keymap.set("n", "<leader>t", execute_test_line, { desc = "Execute Test" })
+vim.keymap.set("n", "T", execute_test_line, { desc = "Execute Test line" })
 
 local function execute_test()
   local file_path = vim.fn.expand("%")
@@ -105,4 +109,4 @@ local function execute_test()
   end
 end
 
-vim.keymap.set("n", "<C-t>", execute_test, { desc = "Execute Test" })
+vim.keymap.set("n", "<C-t>", execute_test, { desc = "Execute Test (file)" })
