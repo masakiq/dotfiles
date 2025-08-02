@@ -6,9 +6,15 @@ local tab_drop_action = function(prompt_bufnr)
   actions.close(prompt_bufnr)
 
   if selection then
-    local path = selection.path or selection.filename or selection.value
-    if path then
-      vim.cmd("tab drop " .. path)
+    local filepath = selection.filename
+    local lnum = selection.lnum
+    local col = selection.col
+
+    if filepath then
+      vim.cmd("tab drop " .. filepath)
+      if lnum and col then
+        vim.api.nvim_win_set_cursor(0, { lnum, col })
+      end
     end
   end
 end
