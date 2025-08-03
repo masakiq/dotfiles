@@ -7,7 +7,8 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 " -------------------------------------------
 " Code Completion and Linting
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim',       { 'commit': 'b4da76be54691e854d3e0e02c36b0245f945c2c7' }
+" Plug 'nvim-telescope/telescope.nvim',       { 'commit': 'b4da76be54691e854d3e0e02c36b0245f945c2c7' }
+Plug 'masakiq/telescope.nvim',              { 'branch': 'strip_path_prefix' }
 
 " Language Support
 Plug 'dart-lang/dart-vim-plugin',           { 'commit': '928302ec931caf0dcf21835cca284ccd2b192f7b', 'for': 'dart' }
