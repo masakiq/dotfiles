@@ -109,4 +109,4 @@ vim.api.nvim_create_user_command("OpenFilesFromClipboard", open_files_from_clipb
 vim.api.nvim_create_user_command("CopyAllTabAbsolutePath", copy_all_tab_absolute_path, {})
 
 vim.keymap.set("n", "<leader>m", merge_tab, { desc = "Merge Tab" })
-vim.keymap.set("n", "<leader>.", separate_tab, { desc = "Separate Tab" })
+vim.keymap.set("n", "<leader>s", separate_tab, { desc = "Separate Tab" })

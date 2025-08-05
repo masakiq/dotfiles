@@ -3,4 +3,4 @@ local function swap_window()
 end
 
 vim.api.nvim_create_user_command("SwapWindow", swap_window, {})
-vim.keymap.set("n", "<leader>s", swap_window, { desc = "Swap Window" })
+vim.keymap.set("n", "<leader>w", swap_window, { desc = "Swap Window" })
