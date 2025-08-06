@@ -23,6 +23,7 @@ require("telescope").setup({
   defaults = {
     layout_strategy = "vertical",
     sorting_strategy = "ascending",
+    winblend = 0,
     mappings = {
       i = {
         ["<C-s>"] = actions.select_horizontal,
@@ -63,3 +64,11 @@ require("telescope").setup({
     },
   },
 })
+
+vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = "#000000" })
+vim.api.nvim_set_hl(0, "TelescopePromptNormal", { bg = "#000000" })
+vim.api.nvim_set_hl(0, "TelescopeResultsNormal", { bg = "#000000" })
+
+vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { bg = "#000000" })
+vim.api.nvim_set_hl(0, "TelescopePromptBorder", { bg = "#000000" })
+vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { bg = "#000000" })
