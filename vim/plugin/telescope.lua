@@ -21,6 +21,8 @@ end
 
 require("telescope").setup({
   defaults = {
+    layout_strategy = "vertical",
+    sorting_strategy = "ascending",
     mappings = {
       i = {
         ["<C-s>"] = actions.select_horizontal,
@@ -33,6 +35,17 @@ require("telescope").setup({
         ["<C-v>"] = actions.select_vertical,
         ["<C-e>"] = actions.select_default,
         ["<Enter>"] = tab_drop_action,
+      },
+    },
+    layout_config = {
+      vertical = {
+        height = 0.9,
+        preview_cutoff = 0,
+        prompt_position = "top",
+        mirror = true,
+        width = 0.9,
+        preview_height = 0.5,
+        results_title = false,
       },
     },
   },
