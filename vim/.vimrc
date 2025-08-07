@@ -195,8 +195,8 @@ endfunction
 
 let g:fzf_buffers_jump = 1
 
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 } }
-let g:fzf_preview_window = 'down,50%'
+let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.95, 'xoffset': 0.5, 'yoffset': 0.5 } }
+let g:fzf_preview_window = 'right,50%'
 let g:fzf_action = {
       \ 'ctrl-v': 'vsplit',
       \ 'ctrl-s': 'split',
