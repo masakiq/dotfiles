@@ -21,7 +21,7 @@ end
 
 require("telescope").setup({
   defaults = {
-    layout_strategy = "vertical",
+    layout_strategy = "horizontal",
     sorting_strategy = "ascending",
     winblend = 0,
     mappings = {
@@ -47,13 +47,12 @@ require("telescope").setup({
       },
     },
     layout_config = {
-      vertical = {
-        height = 0.9,
+      horizontal = {
+        height = 0.95,
         preview_cutoff = 0,
         prompt_position = "top",
-        mirror = true,
-        width = 0.9,
-        preview_height = 0.5,
+        width = 0.95,
+        preview_width = 0.5,
         results_title = false,
       },
     },
