@@ -11,9 +11,78 @@ require("oil").setup({
     show_hidden = true,
   },
   keymaps = {
-    ["<C-s>"] = "actions.select_split",
-    ["<C-v>"] = "actions.select_vsplit",
-    ["<C-e>"] = "actions.select",
+    ["<C-s>"] = {
+      callback = function()
+        local oil = require("oil")
+        local entry = oil.get_cursor_entry()
+        if entry then
+          local dir = oil.get_current_dir()
+          local path = dir .. entry.name
+          local stat = vim.loop.fs_stat(path)
+          if stat and stat.type == "file" then
+            local relative_path = vim.fn.fnamemodify(path, ":.")
+            oil.close()
+            vim.cmd("split " .. vim.fn.fnameescape(relative_path))
+          else
+            oil.select()
+          end
+        end
+      end,
+    },
+    ["<C-v>"] = {
+      callback = function()
+        local oil = require("oil")
+        local entry = oil.get_cursor_entry()
+        if entry then
+          local dir = oil.get_current_dir()
+          local path = dir .. entry.name
+          local stat = vim.loop.fs_stat(path)
+          if stat and stat.type == "file" then
+            local relative_path = vim.fn.fnamemodify(path, ":.")
+            oil.close()
+            vim.cmd("vsplit " .. vim.fn.fnameescape(relative_path))
+          else
+            oil.select()
+          end
+        end
+      end,
+    },
+    ["<C-e>"] = {
+      callback = function()
+        local oil = require("oil")
+        local entry = oil.get_cursor_entry()
+        if entry then
+          local dir = oil.get_current_dir()
+          local path = dir .. entry.name
+          local stat = vim.loop.fs_stat(path)
+          if stat and stat.type == "file" then
+            local relative_path = vim.fn.fnamemodify(path, ":.")
+            oil.close()
+            vim.cmd("edit " .. vim.fn.fnameescape(relative_path))
+          else
+            oil.select()
+          end
+        end
+      end,
+    },
+    ["<C-t>"] = {
+      callback = function()
+        local oil = require("oil")
+        local entry = oil.get_cursor_entry()
+        if entry then
+          local dir = oil.get_current_dir()
+          local path = dir .. entry.name
+          local stat = vim.loop.fs_stat(path)
+          if stat and stat.type == "file" then
+            local relative_path = vim.fn.fnamemodify(path, ":.")
+            oil.close()
+            vim.cmd("tabnew " .. vim.fn.fnameescape(relative_path))
+          else
+            oil.select()
+          end
+        end
+      end,
+    },
     ["<Enter>"] = {
       callback = function()
         local oil = require("oil")
@@ -23,8 +92,9 @@ require("oil").setup({
           local path = dir .. entry.name
           local stat = vim.loop.fs_stat(path)
           if stat and stat.type == "file" then
+            local relative_path = vim.fn.fnamemodify(path, ":.")
             oil.close()
-            vim.cmd("tab drop " .. vim.fn.fnameescape(path))
+            vim.cmd("tab drop " .. vim.fn.fnameescape(relative_path))
           else
             oil.select()
           end
