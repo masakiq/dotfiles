@@ -51,7 +51,7 @@ copilot.setup({
     ["."] = false,
   },
   copilot_node_command = "node",
-  copilot_model = "claude-sonnet-4",
+  copilot_model = "claude-sonnet-4.5",
   server_opts_overrides = {},
 })
 
