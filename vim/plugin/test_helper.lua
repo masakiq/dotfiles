@@ -52,7 +52,7 @@ local function execute_ruby_test(file_path, line_number)
   send_command_to_pane_by_name("test", 'clear && printf "\\033[3J"')
   local test_target = line_number and string.format("%s:%d", file_path, line_number) or file_path
   local cmd = string.format(
-    'docker compose exec $service_name rspec %s && any-notifier send "🟢 Test Succeeded" || any-notifier send "❌️ Test Failed" --sound Ping',
+    'docker compose exec $service_name rspec %s && any-notifier send "🟢 Test Succeeded" || any-notifier send "❌️ Test Failed"',
     test_target
   )
   send_command_to_pane_by_name("test", cmd)
@@ -61,7 +61,7 @@ end
 local function execute_ruby_format()
   send_command_to_pane_by_name(
     "format",
-    'docker compose exec $service_name rubocop -A && any-notifier send "🟢 Format Succeeded" || any-notifier send "❌️ Format Failed" --sound Ping'
+    'docker compose exec $service_name rubocop -A && any-notifier send "🟢 Format Succeeded" || any-notifier send "❌️ Format Failed"'
   )
 end
 
@@ -100,8 +100,6 @@ local function execute_test()
 
   if file_ext == "rb" then
     execute_ruby_test(file_path, nil)
-    vim.wait(100)
-    execute_ruby_format()
   elseif file_ext == "dart" then
     execute_dart_test(file_path, nil)
     vim.wait(100)
