@@ -51,7 +51,7 @@ copilot.setup({
     ["."] = false,
   },
   copilot_node_command = "node",
-  copilot_model = "claude-sonnet-4.5",
+  copilot_model = "gpt-5-codex",
   server_opts_overrides = {},
 })
 
