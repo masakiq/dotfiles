@@ -150,12 +150,12 @@ let g:tabline_charmax = 40
 let g:move_map_keys = 0
 " let g:move_auto_indent = 0
 let g:move_past_end_of_line = 0
-nmap <C-j> <Plug>MoveLineDown
-nmap <C-k> <Plug>MoveLineUp
-vmap <C-j> <Plug>MoveBlockDown
-vmap <C-k> <Plug>MoveBlockUp
-vmap <C-h> <Plug>MoveBlockLeft
-vmap <C-l> <Plug>MoveBlockRight
+nmap <M-j> <Plug>MoveLineDown
+nmap <M-k> <Plug>MoveLineUp
+vmap <M-j> <Plug>MoveBlockDown
+vmap <M-k> <Plug>MoveBlockUp
+vmap <M-h> <Plug>MoveBlockLeft
+vmap <M-l> <Plug>MoveBlockRight
 
 " }}}
 
