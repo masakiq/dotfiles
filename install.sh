@@ -20,6 +20,9 @@ rm -rf ~/.config/nvim/plugin
 mkdir -p ~/.config/direnv
 ln -sf `pwd`/direnv/direnv.toml ~/.config/direnv/direnv.toml
 
+mkdir -p ~/.config/efm-langserver
+ln -sf `pwd`/efm-langserver/config.yaml ~/.config/efm-langserver/config.yaml
+
 ln -sf `pwd`/tig/.tigrc ~/.tigrc
 
 ln -sf `pwd`/tmux/.tmux.conf ~/.tmux.conf

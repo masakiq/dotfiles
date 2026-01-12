@@ -1,0 +1,26 @@
+version: 2
+tools:
+  markdown-textlint: &markdown-textlint
+    lint-command: "npx --no-install textlint -f unix --stdin --stdin-filename ${INPUT}"
+    lint-ignore-exit-code: true
+    lint-stdin: true
+    lint-formats:
+      - "%f:%l:%c: %m"
+    root-markers:
+      - .textlintrc
+
+  markdown-markdownlint: &markdown-markdownlint
+    lint-command: 'markdownlint -s -c %HOME%\.markdownlintrc'
+    lint-stdin: true
+    lint-formats:
+      - "%f:%l %m"
+      - "%f:%l:%c %m"
+      - "%f: %l: %m"
+    format-command: "markdownlint -f"
+
+languages:
+  markdown:
+    - <<: *markdown-textlint
+    # - <<: *markdown-markdownlint
+  text:
+    - <<: *markdown-textlint
