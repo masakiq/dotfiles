@@ -1,8 +1,7 @@
 local function get_pane_by_name(pane_name)
-  local current_session = vim.fn.system("tmux display-message -p '#{session_name}'"):gsub("%s+", "")
+  -- セッション名取得と pane 検索を1つのコマンドにまとめる
   local cmd = string.format(
-    "tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}:#{@pane_name}' | grep '^%s:' | grep ':%s$'",
-    current_session,
+    "tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}:#{@pane_name}' | grep \"^$(tmux display-message -p '#{session_name}'):\" | grep ':%s$'",
     pane_name
   )
   local result = vim.fn.system(cmd):gsub("%s+", "")
@@ -24,35 +23,31 @@ local function send_command_to_pane_by_name(pane_name, command)
     return
   end
 
-  local target_pane = pane_index
-
-  -- Cancel copy-mode first
-  local cancel_cmd = string.format("tmux send -t %s -X cancel", target_pane)
-  vim.fn.system(cancel_cmd)
-
-  -- Send the actual command
-  local cmd = string.format("tmux send -t %s '%s' C-m", target_pane, command)
-  vim.fn.system(cmd)
+  -- cancel と send を1つのコマンドにまとめて非同期実行
+  local cmd = string.format(
+    "tmux send -t %s -X cancel 2>/dev/null; tmux send -t %s '%s' C-m",
+    pane_index, pane_index, command
+  )
+  vim.fn.jobstart(cmd, { detach = true })
 end
 
 local function send_command_to_pane(pane_offset, command)
   local target_pane =
       string.format("$(printf ':.%%s' $(math $(tmux display-message -p '#{pane_index}') + %d))", pane_offset)
 
-  -- Cancel copy-mode first
-  local cancel_cmd = string.format("tmux send -t %s -X cancel", target_pane)
-  vim.fn.system(cancel_cmd)
-
-  -- Send the actual command
-  local cmd = string.format("tmux send -t %s '%s' C-m", target_pane, command)
-  vim.fn.system(cmd)
+  -- cancel と send を1つのコマンドにまとめて非同期実行
+  local cmd = string.format(
+    "tmux send -t %s -X cancel 2>/dev/null; tmux send -t %s '%s' C-m",
+    target_pane, target_pane, command
+  )
+  vim.fn.jobstart(cmd, { detach = true })
 end
 
 local function execute_ruby_test(file_path, line_number)
-  send_command_to_pane_by_name("test", 'clear && printf "\\033[3J"')
   local test_target = line_number and string.format("%s:%d", file_path, line_number) or file_path
+  -- clear とテストコマンドを1つにまとめる
   local cmd = string.format(
-    'docker compose exec $service_name rspec %s && any-notifier send "🟢 Test Succeeded" || any-notifier send "❌️ Test Failed"',
+    'clear && printf "\\033[3J" && docker compose exec $service_name rspec %s && any-notifier send "🟢 Test Succeeded" || any-notifier send "❌️ Test Failed"',
     test_target
   )
   send_command_to_pane_by_name("test", cmd)
