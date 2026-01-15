@@ -53,13 +53,6 @@ local function execute_ruby_test(file_path, line_number)
   send_command_to_pane_by_name("test", cmd)
 end
 
-local function execute_ruby_format()
-  send_command_to_pane_by_name(
-    "format",
-    'docker compose exec $service_name rubocop -A && any-notifier send "🟢 Format Succeeded" || any-notifier send "❌️ Format Failed"'
-  )
-end
-
 local function execute_dart_test(file_path, line_number)
   local cmd
   if line_number then
@@ -69,10 +62,6 @@ local function execute_dart_test(file_path, line_number)
   end
   send_command_to_pane_by_name("test", cmd)
   vim.wait(100)
-end
-
-local function execute_dart_format()
-  send_command_to_pane_by_name("test", "dart format .")
 end
 
 local function execute_test_line()
@@ -97,8 +86,6 @@ local function execute_test()
     execute_ruby_test(file_path, nil)
   elseif file_ext == "dart" then
     execute_dart_test(file_path, nil)
-    vim.wait(100)
-    execute_dart_format()
   end
 end
 
