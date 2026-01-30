@@ -24,5 +24,3 @@ mkdir -p ~/.config/efm-langserver
 ln -sf `pwd`/efm-langserver/config.yaml ~/.config/efm-langserver/config.yaml
 
 ln -sf `pwd`/tig/.tigrc ~/.tigrc
-
-ln -sf `pwd`/tmux/.tmux.conf ~/.tmux.conf
