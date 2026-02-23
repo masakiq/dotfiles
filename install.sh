@@ -24,3 +24,6 @@ mkdir -p ~/.config/efm-langserver
 ln -sf `pwd`/efm-langserver/config.yaml ~/.config/efm-langserver/config.yaml
 
 ln -sf `pwd`/tig/.tigrc ~/.tigrc
+
+mkdir -p ~/.config/diffview
+ln -sf `pwd`/diffview/config.toml ~/.config/diffview/config.toml
