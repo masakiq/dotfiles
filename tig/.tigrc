@@ -21,7 +21,7 @@ bind blame G !@hub browse -- commit/%(commit)/%(file)
 bind main R !git rebase --committer-date-is-author-date -i %(commit)
 
 # diff を開く
-bind main   D !git diff %(commit)
+bind main   D !diffview %(commit)
 bind status D !git diff -- %(file)
 bind diff   D !git diff -- %(file)
 bind refs   D !git diff %(branch)
