@@ -11,7 +11,7 @@ local custom_additional_prompt = "And, please translate it into Japanese as well
 
 require("CopilotChat").setup({
   debug = true, -- Enable debugging
-  model = "claude-sonnet-4.5",
+  model = "claude-opus-4.6",
   highlight_selection = false,
 
   prompts = {
