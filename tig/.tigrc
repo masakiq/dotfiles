@@ -18,13 +18,13 @@ bind log   G !@hub browse -- commit/%(commit)
 bind blame G !@hub browse -- commit/%(commit)/%(file)
 
 # rebase する
-bind main R !git rebase --committer-date-is-author-date -i %(commit)
+bind main R >sh -c 'git rebase --committer-date-is-author-date -i "$1" || :' sh %(commit)
 
 # diff を開く
-bind main   D !diffview %(commit)
-bind status D !git diff -- %(file)
-bind diff   D !git diff -- %(file)
-bind refs   D !git diff %(branch)
+bind main   D >sh -c "if [ '%(commit)' = '0000000000000000000000000000000000000000' ]; then diffview; else diffview %(commit); fi"
+bind status D >git diff -- %(file)
+bind diff   D >git diff -- %(file)
+bind refs   D >git diff %(branch)
 
 # ステージされた変更を選択中のコミットにfixupコミットとして追加
 bind main F !sh -c "git commit --fixup=%(commit)"
