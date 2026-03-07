@@ -33,8 +33,7 @@ require("CopilotChat").setup({
     },
     Commit = {
       prompt =
-          "> #git:staged\n\nWrite a commit message for the change following the commitizen convention. Keep the title within a maximum of 80 characters. No body is required. Wrap the entire message in a code block with the language set to gitcommit."
-          .. custom_additional_prompt,
+      "> #git:staged\n\nWrite a commit message for the change following the commitizen convention. Keep the title within a maximum of 80 characters. No body is required. Wrap the entire message in a code block with the language set to gitcommit.",
     },
   },
 
