@@ -1,5 +1,5 @@
 # commit 時に `-v` オプションを付与
-bind status C !git commit -v
+bind status C >git commit -v
 
 # commit hash をクリップボードに保存
 bind main  C !@sh -c "printf `git rev-parse %(commit)` | pbcopy"
@@ -22,15 +22,16 @@ bind main R >sh -c 'git rebase --committer-date-is-author-date -i "$1"^ || :' sh
 
 # diff を開く
 bind main   d >sh -c "if [ '%(commit)' = '0000000000000000000000000000000000000000' ]; then diffview; else diffview %(commit); fi"
-bind status d >git diff -- %(file)
+bind status d >sh -c "if git diff --cached --name-only | grep -qx '%(file)'; then git diff --staged -- %(file); else git diff -- %(file); fi"
+bind status D >diffview
 bind diff   d >git diff -- %(file)
 bind refs   d >git diff %(branch)
 
 # ステージされた変更を選択中のコミットにfixupコミットとして追加
-bind main F !sh -c "git commit --fixup=%(commit)"
+bind main F >sh -c "git commit --fixup=%(commit)"
 
 # 変更をステージして選択中のコミットにfixupコミットとして追加
-bind main A !sh -c "git rebase --committer-date-is-author-date --autosquash %(commit)^"
+bind main A >sh -c "git rebase --committer-date-is-author-date --autosquash %(commit)^"
 
 set blame-view = date:default author:abbreviated file-name:auto id:yes,color date:relative line-number:yes,interval=1 text
 
