@@ -9,8 +9,6 @@ OpenGitHubRepo
 OpenGitHubFileNormal
 QuitAll
 LoadVIMRC
-MarkdownOn
-MarkdownOff
 SwaggerPreview
 SwaggerPreviewStop
 DeleteBuffers
