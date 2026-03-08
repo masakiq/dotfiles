@@ -9,6 +9,8 @@ OpenGitHubRepo
 OpenGitHubFileNormal
 QuitAll
 LoadVIMRC
+MarkdownPreviewITerm
+MarkdownPreviewITermStop
 SwaggerPreview
 SwaggerPreviewStop
 DeleteBuffers

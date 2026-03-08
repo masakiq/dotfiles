@@ -3,7 +3,8 @@
 call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'selimacerbas/markdown-preview.nvim'
+Plug 'selimacerbas/live-server.nvim'
 " -------------------------------------------
 " Code Completion and Linting
 Plug 'nvim-lua/plenary.nvim'
