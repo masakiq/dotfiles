@@ -85,8 +85,6 @@ local function open_markdown_preview_in_iterm()
     return
   end
 
-  local port = require("markdown_preview").config.port or 8421
-  local url = ("http://localhost:%d"):format(port)
   local script = [[
 on run argv
   set previewUrl to item 1 of argv
@@ -138,7 +136,14 @@ on run argv
 end run
 ]]
 
+  local markdown_preview = require("markdown_preview")
   vim.cmd("MarkdownPreview")
+  local url = markdown_preview.url()
+
+  if not url or url == "" then
+    vim.notify("Markdown Preview URL could not be resolved", vim.log.levels.ERROR)
+    return
+  end
 
   if preview_iterm_session_exists() then
     return
