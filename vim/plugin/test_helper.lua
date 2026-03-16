@@ -47,7 +47,7 @@ local function execute_ruby_test(file_path, line_number)
   local test_target = line_number and string.format("%s:%d", file_path, line_number) or file_path
   -- clear とテストコマンドを1つにまとめる
   local cmd = string.format(
-    'clear && printf "\\033[3J" && docker compose exec $service_name rspec %s && any-notifier send "🟢 Test Succeeded" || any-notifier send "❌️ Test Failed"',
+    'clear && printf "\\033[3J" && docker compose exec $service_name rspec %s && terminal-notifier -message "🟢 Test Succeeded" || terminal-notifier -message "❌️ Test Failed"',
     test_target
   )
   send_command_to_pane_by_name("test", cmd)
