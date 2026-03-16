@@ -44,7 +44,6 @@ Plug 'mtdl9/vim-log-highlighting',          { 'commit': '1037e26f3120e6a6a2c0c33
 
 " Copilot
 Plug 'nvim-lua/plenary.nvim',               { 'commit': 'a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683' }
-Plug 'CopilotC-Nvim/CopilotChat.nvim',      { 'commit': 'db56110b19c702053e86d54b48d8d570c59d0b6b' }
 Plug 'zbirenbaum/copilot.lua',              { 'commit': '5bde2cfe01f049f522eeb8b52c5c723407db8bdf' }
 
 " Claude Code

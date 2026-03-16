@@ -32,6 +32,3 @@ CopyStatusMessage
 StartCopyStatusMessages
 FinishCopyStatusMessages
 StripAnsi
-CopilotChatReset
-CopilotChatModels
-CopilotChatReviewClear
