@@ -53,20 +53,3 @@ copilot.setup({
   copilot_node_command = "node",
   server_opts_overrides = {},
 })
-
--- Auto command to ensure copilot is enabled for supported filetypes
-vim.api.nvim_create_autocmd("BufRead", {
-  pattern = "*",
-  callback = function()
-    -- local ft = vim.bo.filetype
-    -- local excluded = { "yaml", "markdown", "help", "gitcommit", "gitrebase", "hgcommit", "svn", "cvs" }
-    -- for _, excluded_ft in ipairs(excluded) do
-    --   if ft == excluded_ft then
-    --     return
-    --   end
-    -- end
-
-    -- Enable copilot for supported file types
-    vim.cmd("Copilot enable")
-  end,
-})
