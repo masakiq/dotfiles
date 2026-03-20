@@ -1,5 +1,6 @@
 " ## プラグイン設定 ---------------------- {{{
 
+if !exists('g:dotfiles_skip_vim_plug')
 call plug#begin('~/.vim/plugged')
 " ---- Do not change the following lines ----
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', '   do': './install --all' }
@@ -50,14 +51,17 @@ Plug 'zbirenbaum/copilot.lua',              { 'commit': '8e2a91828210d6043744468
 " Plug 'coder/claudecode.nvim',             { 'commit': '91357d810ccf92f6169f3754436901c6ff5237ec' }
 Plug 'masakiq/claudecode.nvim',             { 'branch': 'diff_strip_path_prefix' }
 call plug#end()
+endif
 
 " }}}
 
 if has('gui_running')
 else
   let g:which_key_map =  {}
-  call which_key#register('<space>', "g:which_key_map")
-  call which_key#register('<leader>', "g:which_key_map")
+  if exists('*which_key#register')
+    call which_key#register('<space>', "g:which_key_map")
+    call which_key#register('<leader>', "g:which_key_map")
+  endif
   nnoremap <silent> <space> :WhichKey '<space>'<CR>
   nnoremap <silent> <leader> :WhichKey '<leader>'<CR>
   vnoremap <silent> <space> :<c-u>WhichKeyVisual '<space>'<CR>
