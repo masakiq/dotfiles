@@ -4,11 +4,3 @@ RemoveUnderBar
 AddUnderBar
 CopyCurrentPathWithLineNumber
 OpenGitHubFileVisual
-CopilotChatOpen
-CopilotChatOptimize
-CopilotChatFix
-CopilotChatTests
-CopilotChatDocs
-CopilotChatExplain
-CopilotChatReview
-CopilotChatTranslate

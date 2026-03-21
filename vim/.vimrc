@@ -398,8 +398,6 @@ function! QuitAll()
   normal ZQ
 endfunction
 
-nnoremap <space>oh :History<CR>
-
 " }}}
 
 " ## バッファ操作 ---------------------- {{{
@@ -657,55 +655,6 @@ function! ListTermBufNums()
     call add(listbufnums, num)
   endfor
   return listbufnums
-endfunction
-
-nnoremap <space><space> :<c-u>call SelectFunction()<CR>
-function! SelectFunction()
-  let g:mode = 'n'
-  execute 'SelectFunction'
-endfunction
-
-command! -nargs=0 SelectFunction call fzf#run(fzf#wrap({
-      \ 'source': 'cat ~/.vim/functions/normal',
-      \ 'sink':  function('s:select_function_handler'),
-      \ 'options': [
-      \   '--prompt', 'Function> ',
-      \ ],
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
-
-if exists('*s:select_function_handler')
-else
-  function! s:select_function_handler(line)
-    execute a:line
-    unlet g:mode
-  endfunction
-endif
-
-vnoremap <space><space> :<c-u>call SelectVisualFunction()<CR>
-function! SelectVisualFunction()
-  let g:mode = 'v'
-  let [line_start, column_start] = getpos("'<")[1:2]
-  let [line_end, column_end] = getpos("'>")[1:2]
-  let g:firstline = line_start
-  let g:lastline = line_end
-  execute 'SelectVidualFunction'
-endfunction
-
-command! -nargs=* SelectVidualFunction call fzf#run(fzf#wrap({
-      \ 'source': 'cat ~/.vim/functions/visual',
-      \ 'sink':  function('s:select_visual_function_handler'),
-      \ 'options': [
-      \   '--prompt', 'Function> ',
-      \ ],
-      \ 'window': { 'width': 0.9, 'height': 0.9, 'xoffset': 0.5, 'yoffset': 0.5 }
-      \ }))
-
-function! s:select_visual_function_handler(line) range
-  execute a:line
-  unlet g:mode
-  unlet g:firstline
-  unlet g:lastline
 endfunction
 
 function! s:open_quickfix(line)
