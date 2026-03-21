@@ -1,4 +1,5 @@
 local M = {}
+local picker_commands = require("commands.pickers")
 
 -- sort : Specify sort options to use with `ripgrep`
 --   e.g. "--sortr modified"(default), "--sort path"
@@ -9,8 +10,8 @@ function M.search_word(path, sort)
 
   local input = Input({
     position = {
-      row = '30%',
-      col = '50%',
+      row = "30%",
+      col = "50%",
     },
     size = {
       width = 60,
@@ -18,7 +19,7 @@ function M.search_word(path, sort)
     border = {
       style = "double",
       text = {
-        top = " Search in " .. (path:match("/([^/]+)$") or 'Current Directory') .. " (or Find Files) ",
+        top = " Search in " .. (path:match("/([^/]+)$") or "Current Directory") .. " (or Find Files) ",
         top_align = "center",
       },
     },
@@ -32,7 +33,7 @@ function M.search_word(path, sort)
       print("Input Closed!")
     end,
     on_submit = function(value)
-      vim.cmd('call SearchWord("' .. value .. '", "' .. path .. '", "' .. sort .. '")')
+      picker_commands.search_word(value, path, sort)
     end,
   })
 

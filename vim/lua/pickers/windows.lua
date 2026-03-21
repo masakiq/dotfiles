@@ -6,6 +6,7 @@ local core = require("pickers.core")
 local entry_display = require("telescope.pickers.entry_display")
 local finders = require("telescope.finders")
 local pickers = require("telescope.pickers")
+local previewers = require("telescope.previewers")
 
 local M = {}
 
@@ -41,6 +42,44 @@ function M.jump(item)
   vim.api.nvim_set_current_win(item.win)
 end
 
+local function preview_window_buffer()
+  return previewers.new_buffer_previewer({
+    title = "Window Preview",
+    dyn_title = function(_, entry)
+      return entry.value.label
+    end,
+    get_buffer_by_name = function(_, entry)
+      local value = entry.value
+      if value.path then
+        return value.path
+      end
+
+      return string.format("window_%d_%d", value.tabnr, value.winnr)
+    end,
+    define_preview = function(self, entry)
+      local value = entry.value
+      if value.path and vim.loop.fs_stat(value.path) then
+        conf.buffer_previewer_maker(value.path, self.state.bufnr, {
+          bufname = self.state.bufname,
+          winid = self.state.winid,
+        })
+        return
+      end
+
+      if not vim.api.nvim_buf_is_valid(value.bufnr) then
+        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, {
+          "[Buffer is no longer available]",
+        })
+        return
+      end
+
+      local lines = vim.api.nvim_buf_get_lines(value.bufnr, 0, -1, false)
+      vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+      vim.bo[self.state.bufnr].filetype = vim.bo[value.bufnr].filetype
+    end,
+  })
+end
+
 function M.pick(opts)
   opts = core.default_picker_opts(opts)
 
@@ -62,43 +101,45 @@ function M.pick(opts)
     end
   end
 
-  pickers.new(opts, {
-    prompt_title = opts.prompt_title or "Windows",
-    finder = finders.new_table({
-      results = M.collect(),
-      entry_maker = function(item)
-        return {
-          value = item,
-          ordinal = string.format("%d %d %s", item.tabnr, item.winnr, item.label),
-          display = function(entry)
-            local value = entry.value
-            local modified = value.modified and " [+]" or ""
-            return displayer({
-              { value.is_current and ">" or " " },
-              { string.format("%3d", value.tabnr), "Number" },
-              { string.format("%3d", value.winnr), "String" },
-              value.label .. modified,
-            })
-          end,
-          filename = item.path,
-          path = item.path,
-        }
-      end,
-    }),
-    previewer = conf.file_previewer(opts),
-    sorter = conf.generic_sorter(opts),
-    attach_mappings = core.chain_attach_mappings(function(prompt_bufnr, map)
-      for _, mode in ipairs({ "i", "n" }) do
-        map(mode, "<CR>", jump_action)
-        map(mode, "<C-e>", jump_action)
-        map(mode, "?", action_layout.toggle_preview)
-        map(mode, "<C-n>", actions.preview_scrolling_down)
-        map(mode, "<C-p>", actions.preview_scrolling_up)
-      end
+  pickers
+    .new(opts, {
+      prompt_title = opts.prompt_title or "Windows",
+      finder = finders.new_table({
+        results = M.collect(),
+        entry_maker = function(item)
+          return {
+            value = item,
+            ordinal = string.format("%d %d %s", item.tabnr, item.winnr, item.label),
+            display = function(entry)
+              local value = entry.value
+              local modified = value.modified and " [+]" or ""
+              return displayer({
+                { value.is_current and ">" or " " },
+                { string.format("%3d", value.tabnr), "Number" },
+                { string.format("%3d", value.winnr), "String" },
+                value.label .. modified,
+              })
+            end,
+            filename = item.path,
+            path = item.path,
+          }
+        end,
+      }),
+      previewer = preview_window_buffer(),
+      sorter = conf.generic_sorter(opts),
+      attach_mappings = core.chain_attach_mappings(function(prompt_bufnr, map)
+        for _, mode in ipairs({ "i", "n" }) do
+          map(mode, "<CR>", jump_action)
+          map(mode, "<C-e>", jump_action)
+          map(mode, "?", action_layout.toggle_preview)
+          map(mode, "<C-n>", actions.preview_scrolling_down)
+          map(mode, "<C-p>", actions.preview_scrolling_up)
+        end
 
-      return true
-    end, opts.attach_mappings),
-  }):find()
+        return true
+      end, opts.attach_mappings),
+    })
+    :find()
 end
 
 return M

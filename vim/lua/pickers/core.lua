@@ -94,13 +94,17 @@ function M.with_file_mappings(opts)
   local original_attach = opts.attach_mappings
   opts.attach_mappings = M.chain_attach_mappings(function(prompt_bufnr, map)
     for _, mode in ipairs({ "i", "n" }) do
-      map(mode, "<CR>", picker_actions.select_tab_drop)
-      map(mode, "<C-e>", picker_actions.open_with("edit"))
-      map(mode, "<C-s>", picker_actions.open_with("split"))
-      map(mode, "<C-v>", picker_actions.open_with("vsplit"))
-      map(mode, "<C-x>", picker_actions.open_first_and_send_to_qflist("tab drop", {
-        title = opts.prompt_title or "Telescope",
-      }))
+      map(mode, "<CR>", picker_actions.open_all_with("tab drop"))
+      map(mode, "<C-e>", picker_actions.open_all_with("edit"))
+      map(mode, "<C-s>", picker_actions.open_all_with("split"))
+      map(mode, "<C-v>", picker_actions.open_all_with("vsplit"))
+      map(
+        mode,
+        "<C-x>",
+        picker_actions.open_first_and_send_to_qflist("tab drop", {
+          title = opts.prompt_title or "Telescope",
+        })
+      )
       map(mode, "<C-a>", actions.select_all)
       map(mode, "<C-u>", actions.toggle_selection)
       map(mode, "?", action_layout.toggle_preview)
