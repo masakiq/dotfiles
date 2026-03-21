@@ -1,5 +1,12 @@
 local M = {}
 
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+local conf = require("telescope.config").values
+local core = require("pickers.core")
+local finders = require("telescope.finders")
+local pickers = require("telescope.pickers")
+
 local function list_tabs()
   local list = {}
   local tabnumber = 1
@@ -48,11 +55,39 @@ end
 
 function M.diff_file()
   local ok, _ = pcall(function()
-    vim.fn["fzf#run"](vim.fn["fzf#wrap"]({
-      source = list_tabs(),
-      sink = diff_files,
-      window = { width = 0.9, height = 0.9, xoffset = 0.5, yoffset = 0.5 },
-    }))
+    local picker_opts = core.default_picker_opts({
+      prompt_title = "Diff Files",
+      previewer = false,
+      attach_mappings = function(prompt_bufnr, map)
+        local function select_entry()
+          local selection = action_state.get_selected_entry()
+          actions.close(prompt_bufnr)
+
+          if selection and selection.value then
+            vim.schedule(function()
+              diff_files(selection.value)
+            end)
+          end
+        end
+
+        for _, mode in ipairs({ "i", "n" }) do
+          map(mode, "<CR>", select_entry)
+          map(mode, "<C-e>", select_entry)
+        end
+
+        return true
+      end,
+    })
+
+    pickers
+      .new(picker_opts, {
+        finder = finders.new_table({
+          results = list_tabs(),
+        }),
+        previewer = false,
+        sorter = conf.generic_sorter(picker_opts),
+      })
+      :find()
   end)
   if not ok then
     vim.api.nvim_echo({ { vim.v.exception, "WarningMsg" } }, true, {})

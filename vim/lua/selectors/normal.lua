@@ -23,7 +23,6 @@ M.entries = {
   { label = "PlugUpdate", command = "PlugUpdate" },
   { label = "PlugClean", command = "PlugClean" },
   { label = "PlugStatus", command = "PlugStatus" },
-  { label = "PlugGetLatestCommits", command = "PlugGetLatestCommits" },
   { label = "DiffFile", command = "DiffFile" },
   { label = "Reload", command = "Reload" },
   { label = "CloseTabs", command = "CloseTabs" },

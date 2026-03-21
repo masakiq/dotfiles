@@ -47,12 +47,18 @@ local function create_plug_compat_command(name, target)
 end
 
 function M.setup()
+  if vim.g.dotfiles_lazy_setup_complete then
+    return
+  end
+
   bootstrap_lazy()
 
   create_plug_compat_command("PlugInstall", "install")
   create_plug_compat_command("PlugUpdate", "update")
   create_plug_compat_command("PlugClean", "clean")
   create_plug_compat_command("PlugStatus", "")
+
+  vim.g.dotfiles_lazy_setup_complete = true
 end
 
 return M

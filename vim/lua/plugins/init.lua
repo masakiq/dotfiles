@@ -24,11 +24,6 @@ local function plugin(repo, opts)
 end
 
 return {
-  plugin("junegunn/fzf", {
-    local_dir = "~/.fzf",
-    name = "fzf",
-    build = "./install --all",
-  }),
   plugin("selimacerbas/markdown-preview.nvim", {
     local_dir = "~/.vim/plugged/markdown-preview.nvim",
   }),
@@ -76,11 +71,6 @@ return {
   plugin("nvim-tree/nvim-web-devicons", {
     local_dir = "~/.vim/plugged/nvim-web-devicons",
     commit = "56f17def81478e406e3a8ec4aa727558e79786f3",
-  }),
-  plugin("junegunn/fzf.vim", {
-    local_dir = "~/.vim/plugged/fzf.vim",
-    commit = "f7c7b44764a601e621432b98c85709c9a53a7be8",
-    dependencies = { "fzf" },
   }),
   plugin("MunifTanjim/nui.nvim", {
     local_dir = "~/.vim/plugged/nui.nvim",

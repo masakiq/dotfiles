@@ -12,5 +12,4 @@ vim.o.exrc = true
 -- .nvim.lua 内の外部プログラム呼び出しを禁止する
 vim.o.secure = true
 
-require("config.legacy").setup()
 require("config.lazy").setup()
