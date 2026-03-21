@@ -2,6 +2,7 @@
 
 mkdir -p ~/.config/nvim
 ln -sf `pwd`/vim/init.lua ~/.config/nvim/init.lua
+ln -sf `pwd`/vim/lazy-lock.json ~/.config/nvim/lazy-lock.json
 
 rm -f ~/.vimrc
 rm -f ~/.vimrc-light
