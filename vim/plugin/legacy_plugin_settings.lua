@@ -23,7 +23,15 @@ vim.keymap.set("v", "<M-l>", "<Plug>MoveBlockRight")
 vim.g.html_indent_script1 = "inc"
 vim.g.html_indent_style1 = "inc"
 
-vim.keymap.set("n", "<leader>c", "<cmd>Commentary<CR>", { silent = true })
+vim.keymap.set("n", "<leader>c", "<cmd>Commentary<CR>", {
+  desc = "Commentary",
+  silent = true,
+})
+vim.keymap.set("x", "<leader>c", "<Plug>Commentary", {
+  desc = "Commentary",
+  remap = true,
+  silent = true,
+})
 
 vim.g.vim_markdown_folding_disabled = 0
 vim.g.vim_markdown_folding_level = 4
