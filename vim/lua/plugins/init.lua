@@ -16,6 +16,10 @@ return {
     },
   },
   {
+    "nvim-telescope/telescope-ui-select.nvim",
+    dependencies = { "telescope.nvim" },
+  },
+  {
     "dart-lang/dart-vim-plugin",
   },
   {

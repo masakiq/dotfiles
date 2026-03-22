@@ -28,8 +28,17 @@ local function is_rubocop_diagnostic(diagnostic)
   return extract_cop_name(diagnostic) ~= nil
 end
 
-local function collect_current_line_cops(bufnr, line)
-  local cops = {}
+local function normalize_message(diagnostic, cop)
+  local message = diagnostic.message or ""
+  message = message:gsub("%s*%[[^%[%]]+/[^%[%]]+%]%s*$", "")
+  if cop and message:sub(1, #cop + 2) == cop .. ": " then
+    message = message:sub(#cop + 3)
+  end
+  return trim(message)
+end
+
+local function collect_current_line_offenses(bufnr, line)
+  local offenses = {}
   local seen = {}
 
   for _, diagnostic in ipairs(vim.diagnostic.get(bufnr, { lnum = line })) do
@@ -37,13 +46,28 @@ local function collect_current_line_cops(bufnr, line)
       local cop = extract_cop_name(diagnostic)
       if cop and not seen[cop] then
         seen[cop] = true
-        table.insert(cops, cop)
+        table.insert(offenses, {
+          cop = cop,
+          message = normalize_message(diagnostic, cop),
+          source = diagnostic.source or "",
+        })
       end
     end
   end
 
-  table.sort(cops)
-  return cops
+  table.sort(offenses, function(a, b)
+    return a.cop < b.cop
+  end)
+
+  return offenses
+end
+
+local function format_offense_item(item)
+  if item.message ~= "" then
+    return item.cop .. ": " .. item.message
+  end
+
+  return item.cop
 end
 
 local function parse_disable_cops(value)
@@ -95,23 +119,36 @@ end
 function M.disable_current_line_cops()
   local bufnr = vim.api.nvim_get_current_buf()
   local line = vim.api.nvim_win_get_cursor(0)[1] - 1
-  local cops = collect_current_line_cops(bufnr, line)
+  local offenses = collect_current_line_offenses(bufnr, line)
 
-  if vim.tbl_isempty(cops) then
+  if vim.tbl_isempty(offenses) then
     vim.notify("No RuboCop diagnostics found on the current line.", vim.log.levels.WARN)
     return
   end
 
-  local current_line = vim.api.nvim_buf_get_lines(bufnr, line, line + 1, false)[1] or ""
-  local updated_line = append_disable_comment(current_line, cops)
+  vim.ui.select(offenses, {
+    prompt = "Select RuboCop offense to disable",
+    format_item = format_offense_item,
+  }, function(choice)
+    if not choice then
+      return
+    end
 
-  if updated_line == current_line then
-    vim.notify("Current line already disables all RuboCop cops.", vim.log.levels.INFO)
-    return
-  end
+    if not vim.api.nvim_buf_is_valid(bufnr) then
+      return
+    end
 
-  vim.api.nvim_buf_set_lines(bufnr, line, line + 1, false, { updated_line })
-  vim.notify("Added rubocop:disable for " .. table.concat(cops, ", "), vim.log.levels.INFO)
+    local current_line = vim.api.nvim_buf_get_lines(bufnr, line, line + 1, false)[1] or ""
+    local updated_line = append_disable_comment(current_line, { choice.cop })
+
+    if updated_line == current_line then
+      vim.notify("Current line already disables " .. choice.cop .. ".", vim.log.levels.INFO)
+      return
+    end
+
+    vim.api.nvim_buf_set_lines(bufnr, line, line + 1, false, { updated_line })
+    vim.notify("Added rubocop:disable for " .. choice.cop, vim.log.levels.INFO)
+  end)
 end
 
 return M

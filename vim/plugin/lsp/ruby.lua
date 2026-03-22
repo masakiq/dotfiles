@@ -79,3 +79,14 @@ vim.api.nvim_create_user_command("RubocopDisableCurrentLineCops", function()
 end, {
   desc = "Add inline rubocop:disable comment for current line diagnostics",
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "ruby",
+  callback = function(args)
+    vim.keymap.set("n", "<leader>r", "<cmd>RubocopDisableCurrentLineCops<CR>", {
+      buffer = args.buf,
+      silent = true,
+      desc = "Disable RuboCop offense on current line",
+    })
+  end,
+})
