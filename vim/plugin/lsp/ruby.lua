@@ -73,3 +73,9 @@ else
     end,
   })
 end
+
+vim.api.nvim_create_user_command("RubocopDisableCurrentLineCops", function()
+  require("rubocop").disable_current_line_cops()
+end, {
+  desc = "Add inline rubocop:disable comment for current line diagnostics",
+})

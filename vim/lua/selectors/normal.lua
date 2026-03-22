@@ -34,6 +34,7 @@ M.entries = {
   { label = "StartCopyStatusMessages", command = "StartCopyStatusMessages" },
   { label = "FinishCopyStatusMessages", command = "FinishCopyStatusMessages" },
   { label = "StripAnsi", command = "StripAnsi" },
+  { label = "RubocopDisableCurrentLineCops", command = "RubocopDisableCurrentLineCops" },
 }
 
 return M
