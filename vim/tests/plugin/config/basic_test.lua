@@ -1,55 +1,45 @@
 local helpers = dofile("vim/tests/helpers.lua")
 
-local child = helpers.new_child_neovim()
 local eq = MiniTest.expect.equality
 local new_set = MiniTest.new_set
 
-local T = new_set({
-  hooks = {
-    pre_case = child.setup,
-    post_once = child.stop,
-  },
-})
+local T = new_set()
 
 T["basic.lua, file_operation.lua, and scroll.lua configure options and autocmds"] = function()
-  local config = child.lua_get([[
-    (function()
-      dofile("vim/plugin/config/basic.lua")
-      dofile("vim/plugin/config/file_operation.lua")
-      dofile("vim/plugin/config/scroll.lua")
+  helpers.track_editor_state({
+    options = {
+      "compatible",
+      "encoding",
+      "fileformats",
+      "splitbelow",
+      "splitright",
+      "backup",
+      "swapfile",
+      "scrolloff",
+      "mouse",
+    },
+    window_options = { "foldmethod" },
+  })
 
-      vim.wo.foldmethod = "manual"
-      vim.api.nvim_exec_autocmds("FileType", { pattern = "vim" })
+  dofile("vim/plugin/config/basic.lua")
+  dofile("vim/plugin/config/file_operation.lua")
+  dofile("vim/plugin/config/scroll.lua")
 
-      return {
-        compatible = vim.o.compatible,
-        encoding = vim.o.encoding,
-        fileformats = vim.o.fileformats,
-        splitbelow = vim.o.splitbelow,
-        splitright = vim.o.splitright,
-        backup = vim.o.backup,
-        swapfile = vim.o.swapfile,
-        scrolloff = vim.o.scrolloff,
-        mouse = vim.o.mouse,
-        foldmethod = vim.wo.foldmethod,
-        has_filetype_group = vim.fn.exists("#filetype_vim"),
-        has_resize_group = vim.fn.exists("#ResizeEqualWindows"),
-      }
-    end)()
-  ]])
+  vim.wo.foldmethod = "manual"
+  vim.api.nvim_exec_autocmds("FileType", { pattern = "vim" })
 
-  eq(config.compatible, false)
-  eq(config.encoding, "utf-8")
-  eq(config.fileformats, "unix,dos,mac")
-  eq(config.splitbelow, true)
-  eq(config.splitright, true)
-  eq(config.backup, false)
-  eq(config.swapfile, false)
-  eq(config.scrolloff, 15)
-  eq(config.mouse, "a")
-  eq(config.foldmethod, "marker")
-  eq(config.has_filetype_group, 1)
-  eq(config.has_resize_group, 1)
+  eq(vim.o.compatible, false)
+  eq(vim.o.encoding, "utf-8")
+  eq(vim.o.fileformats, "unix,dos,mac")
+  eq(vim.o.splitbelow, true)
+  eq(vim.o.splitright, true)
+  eq(vim.o.backup, false)
+  eq(vim.o.swapfile, false)
+  eq(vim.o.scrolloff, 15)
+  eq(vim.o.mouse, "a")
+  eq(vim.wo.foldmethod, "marker")
+  eq(vim.fn.exists("#filetype_vim"), 1)
+  eq(vim.fn.exists("#ResizeEqualWindows"), 1)
 end
 
 return T

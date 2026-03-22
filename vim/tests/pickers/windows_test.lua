@@ -6,7 +6,8 @@ local new_set = MiniTest.new_set
 
 local T = new_set({
   hooks = {
-    pre_case = child.setup,
+    pre_once = child.setup,
+    pre_case = child.reset,
     post_once = child.stop,
   },
 })
