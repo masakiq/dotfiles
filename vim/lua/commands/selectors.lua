@@ -76,6 +76,10 @@ local function run_entry(entry, context)
   end
 end
 
+local function format_entry(entry)
+  return entry.label
+end
+
 local function open_picker(title, entries, context)
   local picker_opts = core.default_picker_opts({
     prompt_title = title,
@@ -117,6 +121,21 @@ local function open_picker(title, entries, context)
       sorter = conf.generic_sorter(picker_opts),
     })
     :find()
+end
+
+local function open_ui_select(title, entries, context)
+  vim.ui.select(available_entries(entries), {
+    prompt = title,
+    format_item = format_entry,
+  }, function(choice)
+    if not choice then
+      return
+    end
+
+    vim.schedule(function()
+      run_entry(choice, context)
+    end)
+  end)
 end
 
 local function visual_context()
@@ -168,7 +187,7 @@ function M.select_visual_function(context)
     return
   end
 
-  open_picker("Function", visual_registry.entries, context)
+  open_ui_select("Function", visual_registry.entries, context)
 end
 
 return M
