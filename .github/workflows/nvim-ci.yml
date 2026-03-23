@@ -1,0 +1,67 @@
+name: nvim-ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+
+env:
+  NVIM_VERSION: v0.11.6
+  MINI_NVIM_COMMIT: a995fe9cd4193fb492b5df69175a351a74b3d36b
+
+jobs:
+  vim-fast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache pinned mini.nvim
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/dotfiles-test/site/pack/deps/start/mini.nvim
+          key: ${{ runner.os }}-mini-nvim-${{ env.MINI_NVIM_COMMIT }}
+
+      - name: Cache Neovim test cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/dotfiles-test
+          key: ${{ runner.os }}-dotfiles-test-cache-${{ env.NVIM_VERSION }}-${{ hashFiles('vim/**/*.lua') }}
+          restore-keys: |
+            ${{ runner.os }}-dotfiles-test-cache-${{ env.NVIM_VERSION }}-
+
+      - name: Install Neovim v0.11.6 and Lua tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cargo curl lua5.1 tar
+
+          curl -fsSL \
+            -o /tmp/nvim-linux-x86_64.tar.gz \
+            "https://github.com/neovim/neovim-releases/releases/download/${NVIM_VERSION}/nvim-linux-x86_64.tar.gz"
+
+          mkdir -p "$HOME/.local"
+          tar -C "$HOME/.local" -xzf /tmp/nvim-linux-x86_64.tar.gz
+          echo "$HOME/.local/nvim-linux-x86_64/bin" >> "$GITHUB_PATH"
+
+          cargo install stylua --locked
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - name: Show tool versions
+        run: |
+          nvim --version | head -n 1
+          stylua --version
+          luac -v
+
+      - name: Check formatting
+        run: stylua --check vim/scripts vim/tests
+
+      - name: Check Lua syntax
+        run: find vim/scripts vim/tests -name '*.lua' -print0 | xargs -0 -n1 luac -p
+
+      - name: Run fast Neovim tests
+        run: ./vim/scripts/test-lua.sh --fast
