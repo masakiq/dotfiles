@@ -12,7 +12,7 @@
 | `vim/scripts/minimal_init.lua` | test 用の最小 init |
 | `vim/scripts/minitest.lua` | `*_test.lua` を集め、source path を related test へ解決して `MiniTest.run()` する thin wrapper |
 | `vim/scripts/test-lua.sh` | persistent cache, temp state, fixed `NVIM_APPNAME` で test を起動する shell wrapper |
-| `.github/workflows/nvim-ci.yml` | GitHub Actions 上で format / syntax / fast suite を回す CI workflow |
+| `.github/workflows/nvim-ci.yml` | GitHub Actions 上で format / syntax / full suite を回す CI workflow |
 | `vim/tests/` | test file 本体 |
 | `vim/tests/helpers.lua` | child Neovim, in-process state cleanup, stub, scratch buffer などの共通 helper |
 
@@ -78,4 +78,4 @@ flowchart TD
 - child Neovim test は socket 作成が必要なので、強い sandbox 環境では失敗することがある。その場合は通常のローカル shell で `./vim/scripts/test-lua.sh` を実行する。
 - `mini.nvim` の初回取得には network が要る。更新や再取得が必要なら test 用 `stdpath('data')` 配下の `site/pack/deps/start/mini.nvim` を消してから再実行する。
 - Neovim の test cache を掃除したい場合は test 用 `stdpath('cache')` 配下、通常は `~/.cache/dotfiles-test` を消す。
-- GitHub Actions では `.github/workflows/nvim-ci.yml` が `actions/cache` で pinned `mini.nvim` checkout と `~/.cache/dotfiles-test` を保持しつつ、Neovim `v0.11.6` 固定で `stylua`, `luac -p`, `./vim/scripts/test-lua.sh --fast` を実行する。
+- GitHub Actions では `.github/workflows/nvim-ci.yml` が `actions/cache` で pinned `mini.nvim` checkout と `~/.cache/dotfiles-test` を保持しつつ、Neovim `v0.11.6` 固定で `stylua`, `luac -p`, `./vim/scripts/test-lua.sh` を実行する。

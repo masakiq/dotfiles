@@ -14,7 +14,7 @@ env:
   MINI_NVIM_COMMIT: a995fe9cd4193fb492b5df69175a351a74b3d36b
 
 jobs:
-  vim-fast:
+  vim:
     runs-on: ubuntu-latest
 
     steps:
@@ -63,5 +63,5 @@ jobs:
       - name: Check Lua syntax
         run: find vim/scripts vim/tests -name '*.lua' -print0 | xargs -0 -n1 luac -p
 
-      - name: Run fast Neovim tests
-        run: ./vim/scripts/test-lua.sh --fast
+      - name: Run full Neovim test suite
+        run: ./vim/scripts/test-lua.sh
