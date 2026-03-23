@@ -236,6 +236,16 @@ local function snapshot_globals(names)
   return snapshot
 end
 
+local function snapshot_lua_globals(names)
+  local snapshot = {}
+
+  for _, name in ipairs(names or {}) do
+    snapshot[name] = _G[name]
+  end
+
+  return snapshot
+end
+
 local function snapshot_loaded_modules(names)
   local snapshot = {}
 
@@ -274,6 +284,7 @@ Helpers.track_editor_state = function(opts)
       return vim.wo[name]
     end),
     globals = snapshot_globals(opts.globals),
+    lua_globals = snapshot_lua_globals(opts.lua_globals),
     loaded_modules = snapshot_loaded_modules(opts.modules),
   }
 
@@ -325,6 +336,10 @@ Helpers.track_editor_state = function(opts)
 
     for name, value in pairs(state.globals) do
       vim.g[name] = value
+    end
+
+    for name, value in pairs(state.lua_globals) do
+      _G[name] = value
     end
 
     for name, value in pairs(state.loaded_modules) do

@@ -38,6 +38,7 @@ local source_file_prefixes = {
   { source = "vim/lua/selectors", test = "vim/tests/selectors" },
   { source = "vim/plugin/config", test = "vim/tests/plugin/config" },
   { source = "vim/plugin/lsp", test = "vim/tests/plugin/lsp" },
+  { source = "vim/plugin", test = "vim/tests/plugin" },
   { source = "vim/lua", test = "vim/tests" },
   { source = "vim", test = "vim/tests" },
 }
@@ -49,6 +50,7 @@ local source_dir_prefixes = {
   { source = "vim/lua/selectors", test = "vim/tests/selectors" },
   { source = "vim/plugin/config", test = "vim/tests/plugin/config" },
   { source = "vim/plugin/lsp", test = "vim/tests/plugin/lsp" },
+  { source = "vim/plugin", test = "vim/tests/plugin" },
 }
 
 local file_profile_overrides = {}

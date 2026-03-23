@@ -35,8 +35,10 @@ flowchart TD
 | fast suite だけ実行 | `./vim/scripts/test-lua.sh --fast` |
 | slow suite だけ実行 | `./vim/scripts/test-lua.sh --slow` |
 | source file から関連 test を実行 | `./vim/scripts/test-lua.sh vim/plugin/lsp/ruby.lua` |
+| plugin root file の関連 test を実行 | `./vim/scripts/test-lua.sh --fast vim/plugin/claudecode.lua` |
 | source file の slow test だけ実行 | `./vim/scripts/test-lua.sh --slow vim/plugin/lsp/ruby.lua` |
 | source directory から関連 test を実行 | `./vim/scripts/test-lua.sh vim/plugin/lsp` |
+| plugin 配下の test をまとめて実行 | `./vim/scripts/test-lua.sh --fast vim/plugin` |
 | 特定 test file だけ実行 | `./vim/scripts/test-lua.sh vim/tests/commands/selectors_test.lua` |
 | test directory 単位で実行 | `./vim/scripts/test-lua.sh vim/tests/plugin/lsp` |
 | 使い方表示 | `./vim/scripts/test-lua.sh --help` |
@@ -50,8 +52,10 @@ flowchart TD
 - `mini.nvim` は初回実行時だけ clone され、以後は同じ `stdpath('data')` から再利用される。repo 内の `vim/deps/` は使わない。
 - `vim/scripts/minitest.lua` は `vim/tests/**/*_test.lua` を収集する。`mini.test` の既定は `test_*.lua` なので、この wrapper で repo の命名規則に合わせている。
 - `./vim/scripts/test-lua.sh vim/plugin/lsp/ruby.lua` のように source file を渡すと、runner が関連 test file へ解決して focused run を行う。Phase 2/3 の grouped test も override table で関連付けている。
+- `vim/tests/plugin/*.lua` には plugin root wrapper と external integration の test を置いている。ここは command / keymap / autocmd 登録を main process で確認しつつ、`vim.system`, `vim.fn.jobstart`, `vim.fn.systemlist`, `os.execute`, `io.popen` の contract を stub して fast profile に残している。
 - `--fast` は child Neovim を使わない test file、`--slow` は `helpers.new_child_neovim()` を使う test file だけを実行する。分類は file 本文の `new_child_neovim` usage で判定している。
 - fast 側では `helpers.track_editor_state()` を使い、main process の mapping / command / autocmd / option / buffer state を case ごとに rollback する。単純な keymap/option/dispatch test はまずこちらを選ぶ。
+- plugin file が `_G.open_github` や `_G.get_oil_winbar` のような Lua global function を生やす場合は、`helpers.track_editor_state({ lua_globals = { ... } })` で rollback する。
 - child Neovim test では `helpers.new_child_neovim()` の `child.reset()` を使い、`pre_once = child.setup`, `pre_case = child.reset` で lightweight cleanup する。毎 case の `child.restart()` は避け、function stub、user command、autocmd、mapping、buffer/window state を child 内で戻す。
 - child Neovim を使う test は `nvim --listen` を使って RPC 接続する。
 
@@ -61,9 +65,10 @@ flowchart TD
 2. 共通化できる処理は `vim/tests/helpers.lua` に寄せる。
 3. pure な変換は unit test、mapping/command/option 登録のように main process cleanup で足りるものは `helpers.track_editor_state()` ベースの fast test、buffer/window/mark を強く使う挙動は child Neovim test、外部 plugin 依存は `package.loaded[...]` stub で切る。
 4. grouped test にまとめる場合は `vim/scripts/minitest.lua` の source-to-test override も同時に更新し、source file から focused run できる状態を保つ。
-5. child Neovim test は、まず `pre_once = child.setup`, `pre_case = child.reset` を検討する。case ごとに process restart が要るのは、lightweight reset で戻せない global state があるときだけに絞る。
-6. child Neovim を使う test file は `--slow` に入る。切り替えたくない場合は `new_child_neovim` 判定か profile override を更新する。
-7. 追加後は `stylua`, `luac -p`, `./vim/scripts/test-lua.sh`, 必要に応じて `./vim/scripts/test-lua.sh --fast` / `--slow` を通す。
+5. user command 本体が `vim.cmd()` を内部で叩く test は、command dispatch に `vim.api.nvim_cmd()` を使うと `vim.cmd` 自体を stub しても test を組みやすい。
+6. child Neovim test は、まず `pre_once = child.setup`, `pre_case = child.reset` を検討する。case ごとに process restart が要るのは、lightweight reset で戻せない global state があるときだけに絞る。
+7. child Neovim を使う test file は `--slow` に入る。切り替えたくない場合は `new_child_neovim` 判定か profile override を更新する。
+8. 追加後は `stylua`, `luac -p`, `./vim/scripts/test-lua.sh`, 必要に応じて `./vim/scripts/test-lua.sh --fast` / `--slow` を通す。2026-03-23 時点の suite は `101 cases / 50 groups` で、`--fast` が `77 cases / 42 groups`, `--slow` が `24 cases / 8 groups`。
 
 ## Notes
 
