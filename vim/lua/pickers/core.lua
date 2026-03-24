@@ -106,10 +106,7 @@ function M.with_file_mappings(opts)
         })
       )
       map(mode, "<C-a>", actions.select_all)
-      map(mode, "<C-u>", actions.toggle_selection)
       map(mode, "?", action_layout.toggle_preview)
-      map(mode, "<C-n>", actions.preview_scrolling_down)
-      map(mode, "<C-p>", actions.preview_scrolling_up)
     end
 
     return true

@@ -53,7 +53,6 @@ T["default_config() exposes expected Telescope mappings"] = function()
   eq(config.mappings.i["<CR>"], "select_default")
   eq(config.mappings.i["<C-s>"], "select_horizontal")
   eq(config.mappings.n["<C-v>"], "select_vertical")
-  eq(config.mappings.n["<C-p>"], "preview_scrolling_up")
 end
 
 T["apply_highlights() defines Telescope highlight groups"] = function()
