@@ -10,7 +10,6 @@ T["legacy_plugin_settings.lua registers globals and commentary/move mappings"] =
     globals = {
       "dart_html_in_string",
       "dart_style_guide",
-      "VM_maps",
       "tabline_charmax",
       "move_map_keys",
       "move_past_end_of_line",
@@ -25,7 +24,6 @@ T["legacy_plugin_settings.lua registers globals and commentary/move mappings"] =
 
   eq(vim.g.dart_html_in_string, true)
   eq(vim.g.dart_style_guide, 2)
-  eq(vim.g.VM_maps["Add Cursor Down"], "<M-Down>")
   eq(vim.g.tabline_charmax, 40)
   eq(vim.g.move_map_keys, 0)
   eq(vim.g.html_indent_script1, "inc")

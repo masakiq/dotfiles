@@ -1,14 +1,6 @@
 vim.g.dart_html_in_string = true
 vim.g.dart_style_guide = 2
 
-vim.g.VM_maps = {
-  Align = "<M-a>",
-  Surround = "S",
-  ["Case Conversion Menu"] = "C",
-  ["Add Cursor Down"] = "<M-Down>",
-  ["Add Cursor Up"] = "<M-Up>",
-}
-
 vim.g.tabline_charmax = 40
 
 vim.g.move_map_keys = 0
