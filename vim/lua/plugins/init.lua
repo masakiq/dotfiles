@@ -1,13 +1,3 @@
-local function setup_visual_multi()
-  vim.g.VM_maps = {
-    Align = "<M-a>",
-    Surround = "S",
-    ["Case Conversion Menu"] = "C",
-    ["Add Cursor Down"] = "<M-Down>",
-    ["Add Cursor Up"] = "<M-Up>",
-  }
-end
-
 return {
   {
     "masakiq/markdown-preview.nvim",
@@ -80,7 +70,9 @@ return {
   },
   {
     "mg979/vim-visual-multi",
-    init = setup_visual_multi,
+    init = function()
+      require("config.visual_multi").setup()
+    end,
   },
   {
     "jiangmiao/auto-pairs",

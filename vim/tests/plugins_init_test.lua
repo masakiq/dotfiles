@@ -39,6 +39,7 @@ T["vim-visual-multi spec restores legacy VM_maps during init"] = function()
   eq(type(visual_multi_spec.init), "function")
 
   local previous_maps = vim.g.VM_maps
+  local previous_mono_hl = vim.g.VM_Mono_hl
 
   vim.g.VM_maps = nil
   visual_multi_spec.init()
@@ -50,8 +51,10 @@ T["vim-visual-multi spec restores legacy VM_maps during init"] = function()
     ["Add Cursor Down"] = "<M-Down>",
     ["Add Cursor Up"] = "<M-Up>",
   })
+  eq(vim.g.VM_Mono_hl, "VisualMultiMono")
 
   vim.g.VM_maps = previous_maps
+  vim.g.VM_Mono_hl = previous_mono_hl
 end
 
 return T
