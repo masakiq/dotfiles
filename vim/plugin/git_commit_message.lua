@@ -10,7 +10,7 @@
 
 local group = vim.api.nvim_create_augroup("CommitMessageGenerator", { clear = true })
 local provider_var = "git_commit_message_provider"
-local default_provider = "claude"
+local default_provider = "codex"
 
 local providers = {
   claude = {
@@ -36,11 +36,14 @@ local providers = {
     build_command = function()
       return {
         "codex",
+        -- Global Codex CLI options must precede `exec`.
+        "-c",
+        [[model_reasoning_effort="low"]],
+        "--ask-for-approval",
+        "never",
         "exec",
         "--sandbox",
         "read-only",
-        "--ask-for-approval",
-        "never",
         "--color",
         "never",
         "--ephemeral",
@@ -283,7 +286,11 @@ local function apply_preview_to_commit_buffer(bufnr)
     preview_bufnr = vim.b[bufnr].commit_message_preview_bufnr
   end
 
-  if not source_bufnr or not vim.api.nvim_buf_is_valid(source_bufnr) or vim.bo[source_bufnr].filetype ~= "gitcommit" then
+  if
+    not source_bufnr
+    or not vim.api.nvim_buf_is_valid(source_bufnr)
+    or vim.bo[source_bufnr].filetype ~= "gitcommit"
+  then
     notify("No target gitcommit buffer available", vim.log.levels.WARN)
     return
   end
@@ -336,50 +343,58 @@ local function generate_commit_message(bufnr)
   local cwd = vim.fn.getcwd()
   vim.b[bufnr].commit_message_generation_inflight = true
 
-  vim.system({ "git", "diff", "--staged", "--no-ext-diff" }, { cwd = cwd, text = true }, vim.schedule_wrap(function(diff_result)
-    if not vim.api.nvim_buf_is_valid(bufnr) then
-      return
-    end
-
-    if diff_result.code ~= 0 then
-      vim.b[bufnr].commit_message_generation_inflight = false
-      preview_status(bufnr, provider.display_name, "Failed to read staged diff")
-      notify("Failed to read staged diff: " .. vim.trim(diff_result.stderr or ""), vim.log.levels.WARN)
-      return
-    end
-
-    local diff_text = diff_result.stdout or ""
-    if not has_staged_diff(diff_text) then
-      vim.b[bufnr].commit_message_generation_inflight = false
-      preview_status(bufnr, provider.display_name, "No staged changes to summarize")
-      return
-    end
-
-    local prompt = build_prompt(diff_text)
-
-    vim.system(provider.build_command(), { cwd = cwd, text = true, stdin = prompt }, vim.schedule_wrap(function(provider_result)
-      vim.b[bufnr].commit_message_generation_inflight = false
-
+  vim.system(
+    { "git", "diff", "--staged", "--no-ext-diff" },
+    { cwd = cwd, text = true },
+    vim.schedule_wrap(function(diff_result)
       if not vim.api.nvim_buf_is_valid(bufnr) then
         return
       end
 
-      if provider_result.code ~= 0 then
-        preview_status(bufnr, provider.display_name, provider.failure_label .. " failed")
-        notify(provider.failure_label .. " failed: " .. vim.trim(provider_result.stderr or ""), vim.log.levels.WARN)
+      if diff_result.code ~= 0 then
+        vim.b[bufnr].commit_message_generation_inflight = false
+        preview_status(bufnr, provider.display_name, "Failed to read staged diff")
+        notify("Failed to read staged diff: " .. vim.trim(diff_result.stderr or ""), vim.log.levels.WARN)
         return
       end
 
-      local message = normalize_commit_message(provider_result.stdout or "")
-      if not message then
-        preview_status(bufnr, provider.display_name, "No usable commit message returned")
-        notify(provider.display_name .. " did not return a usable commit message", vim.log.levels.WARN)
+      local diff_text = diff_result.stdout or ""
+      if not has_staged_diff(diff_text) then
+        vim.b[bufnr].commit_message_generation_inflight = false
+        preview_status(bufnr, provider.display_name, "No staged changes to summarize")
         return
       end
 
-      update_preview_buffer(bufnr, provider.display_name, message)
-    end))
-  end))
+      local prompt = build_prompt(diff_text)
+
+      vim.system(
+        provider.build_command(),
+        { cwd = cwd, text = true, stdin = prompt },
+        vim.schedule_wrap(function(provider_result)
+          vim.b[bufnr].commit_message_generation_inflight = false
+
+          if not vim.api.nvim_buf_is_valid(bufnr) then
+            return
+          end
+
+          if provider_result.code ~= 0 then
+            preview_status(bufnr, provider.display_name, provider.failure_label .. " failed")
+            notify(provider.failure_label .. " failed: " .. vim.trim(provider_result.stderr or ""), vim.log.levels.WARN)
+            return
+          end
+
+          local message = normalize_commit_message(provider_result.stdout or "")
+          if not message then
+            preview_status(bufnr, provider.display_name, "No usable commit message returned")
+            notify(provider.display_name .. " did not return a usable commit message", vim.log.levels.WARN)
+            return
+          end
+
+          update_preview_buffer(bufnr, provider.display_name, message)
+        end)
+      )
+    end)
+  )
 end
 
 vim.api.nvim_create_user_command("CommitMessageGenerate", function()
