@@ -1,105 +1,84 @@
 local helpers = dofile("vim/tests/helpers.lua")
 
 local eq = MiniTest.expect.equality
-local match = helpers.expect.match
 local new_set = MiniTest.new_set
 
 local T = new_set()
 
-T["git_commit_message.lua reports and normalizes the configured provider"] = function()
-  helpers.track_editor_state({
-    globals = { "git_commit_message_provider" },
-  })
+T["git_commit_message.lua starts the external pane helper when COMMIT_EDITMSG is read"] = function()
+  helpers.track_editor_state()
 
-  local notifications = helpers.track_notify()
+  local jobstart_calls = {}
 
-  helpers.stub(vim, "schedule", function(callback)
-    callback()
-  end)
-
-  vim.g.git_commit_message_provider = "CODEX"
-  dofile("vim/plugin/git_commit_message.lua")
-
-  vim.cmd("CommitMessageProvider")
-  vim.cmd("CommitMessageProvider invalid")
-
-  eq(vim.g.git_commit_message_provider, "codex")
-  eq(vim.fn.exists(":CommitMessageGenerate"), 2)
-  eq(vim.fn.exists(":CommitMessageApply"), 2)
-  eq(vim.fn.exists(":CommitMessageProvider"), 2)
-  eq(notifications[1].message, "Commit message provider: codex")
-  eq(notifications[2].message, "Unknown commit message provider: invalid")
-  eq(notifications[2].level, vim.log.levels.WARN)
-end
-
-T["git_commit_message.lua generates a preview and applies the suggested subject"] = function()
-  helpers.track_editor_state({
-    globals = { "git_commit_message_provider" },
-  })
-
-  local notifications = helpers.track_notify()
-  local system_calls = {}
-
-  helpers.stub(vim, "schedule", function(callback)
-    callback()
-  end)
-  helpers.stub(vim.fn, "executable", function(command)
-    if command == "codex" then
-      return 1
-    end
-
-    return 0
-  end)
-  helpers.stub(vim, "system", function(cmd, opts, on_exit)
-    table.insert(system_calls, {
-      cmd = cmd,
+  helpers.stub(vim.fn, "jobstart", function(command, opts)
+    table.insert(jobstart_calls, {
+      command = command,
       opts = opts,
     })
-
-    if cmd[1] == "git" then
-      on_exit({
-        code = 0,
-        stdout = "diff --git a/vim/init.lua b/vim/init.lua\n+require('tests')\n",
-        stderr = "",
-      })
-      return
-    end
-
-    on_exit({
-      code = 0,
-      stdout = "```text\n- test(vim): add plugin wrapper coverage\n```",
-      stderr = "",
-    })
+    return 42
   end)
 
-  vim.g.git_commit_message_provider = "codex"
   dofile("vim/plugin/git_commit_message.lua")
 
-  local source_buf = helpers.make_scratch_buffer({
-    "",
+  local commit_message_dir = vim.fn.tempname()
+  local commit_message_path = commit_message_dir .. "/COMMIT_EDITMSG"
+  vim.fn.mkdir(commit_message_dir, "p")
+  vim.fn.writefile({
     "",
     "# Please enter the commit message for your changes.",
-  }, ".git/COMMIT_EDITMSG")
-  vim.bo[source_buf].filetype = "gitcommit"
-  vim.api.nvim_set_current_buf(source_buf)
+  }, commit_message_path)
 
-  vim.cmd("CommitMessageGenerate")
+  vim.cmd("edit " .. vim.fn.fnameescape(commit_message_path))
+  local commit_message_bufnr = vim.api.nvim_get_current_buf()
 
-  local preview_buf = vim.b[source_buf].commit_message_preview_bufnr
-  local preview_lines = vim.api.nvim_buf_get_lines(preview_buf, 0, -1, false)
+  MiniTest.finally(function()
+    if vim.api.nvim_buf_is_valid(commit_message_bufnr) then
+      pcall(vim.api.nvim_buf_delete, commit_message_bufnr, { force = true })
+    end
+    vim.fn.delete(commit_message_dir, "rf")
+  end)
 
-  vim.cmd("CommitMessageApply")
-
-  eq(system_calls[1].cmd, { "git", "diff", "--staged", "--no-ext-diff" })
-  eq(system_calls[2].cmd[1], "codex")
-  match(system_calls[2].opts.stdin, "Staged diff:")
-  eq(preview_lines[1], "test(vim): add plugin wrapper coverage")
-  eq(preview_lines[3], "# Provider: Codex")
-  eq(vim.api.nvim_buf_get_lines(source_buf, 0, 2, false), {
-    "test(vim): add plugin wrapper coverage",
-    "",
+  vim.api.nvim_exec_autocmds("BufReadPost", {
+    pattern = "COMMIT_EDITMSG",
   })
-  eq(notifications[#notifications].message, "Applied commit message suggestion")
+  vim.api.nvim_exec_autocmds("BufReadPost", {
+    pattern = "COMMIT_EDITMSG",
+  })
+
+  eq(jobstart_calls[1].command, "git_generate_commit_message_pane")
+  eq(jobstart_calls[1].opts.cwd, vim.fn.getcwd())
+  eq(jobstart_calls[1].opts.detach, true)
+  eq(#jobstart_calls, 1)
+  eq(vim.fn.exists(":CommitMessageGenerate"), 0)
+  eq(vim.fn.exists(":CommitMessageApply"), 0)
+  eq(vim.fn.exists(":CommitMessageProvider"), 0)
+end
+
+T["git_commit_message.lua warns when the external pane helper cannot be started"] = function()
+  helpers.track_editor_state()
+
+  local notifications = helpers.track_notify()
+
+  helpers.stub(vim, "schedule", function(callback)
+    callback()
+  end)
+  helpers.stub(vim.fn, "jobstart", function()
+    return 0
+  end)
+
+  dofile("vim/plugin/git_commit_message.lua")
+
+  local bufnr = helpers.make_scratch_buffer({
+    "",
+  }, ".git/COMMIT_EDITMSG")
+  vim.api.nvim_set_current_buf(bufnr)
+
+  vim.api.nvim_exec_autocmds("BufReadPost", {
+    pattern = "COMMIT_EDITMSG",
+  })
+
+  eq(notifications[1].message, "Failed to start `git_generate_commit_message_pane`")
+  eq(notifications[1].level, vim.log.levels.WARN)
 end
 
 return T
