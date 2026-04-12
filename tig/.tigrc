@@ -22,7 +22,7 @@ bind main R >sh -c 'git rebase --committer-date-is-author-date -i "$1"^ || :' sh
 
 # diff を開く
 bind main d >sh -c 'commit="$1"; shift; if [ "$commit" = "0000000000000000000000000000000000000000" ]; then git diff -- "$@"; else git show --format= --patch "$commit" -- "$@"; fi' _ %(commit) %(fileargs)
-bind main   D >sh -c "if [ '%(commit)' = '0000000000000000000000000000000000000000' ]; then diffview; else diffview %(commit); fi"
+bind main   D >diffview %(commit)
 bind status d >sh -c "if git diff --cached --name-only | grep -qx '%(file)'; then git diff --staged -- %(file); else git diff -- %(file); fi"
 bind status D >diffview
 bind diff   d >git diff -- %(file)
