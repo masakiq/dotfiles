@@ -31,7 +31,7 @@ local function load_module()
   return module, state
 end
 
-T["grep_string() normalizes search dirs and fixed-string args"] = function()
+T["grep_string() normalizes search dirs without extra fixed-string args"] = function()
   local grep, state = load_module()
 
   grep.grep_string({
@@ -43,11 +43,24 @@ T["grep_string() normalizes search dirs and fixed-string args"] = function()
   eq(state.grep_string_opts.search, "TODO")
   eq(state.grep_string_opts.search_dirs, { "vim/lua" })
   eq(state.grep_string_opts.additional_args(), {
-    "--fixed-strings",
     "--sort",
     "path",
   })
   eq(state.grep_string_opts.with_file_mappings, true)
+end
+
+T["live_grep() keeps fixed-string mode enabled by default"] = function()
+  local grep, state = load_module()
+
+  grep.live_grep({
+    search_dirs = { "vim/lua" },
+  })
+
+  eq(state.live_grep_opts.search_dirs, { "vim/lua" })
+  eq(state.live_grep_opts.additional_args(), {
+    "--fixed-strings",
+  })
+  eq(state.live_grep_opts.with_file_mappings, true)
 end
 
 T["live_grep() respects disabled fixed-string mode"] = function()

@@ -277,7 +277,6 @@ function M.search_word(word, path, sort)
   grep_pickers.grep_string(legacy_file_opts(path, sort, {
     prompt_title = "Search",
     search = word,
-    fixed_strings = true,
   }))
 end
 

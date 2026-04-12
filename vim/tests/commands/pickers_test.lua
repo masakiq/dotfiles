@@ -153,14 +153,13 @@ T["search_word() dispatches to rg files when query is empty"] = function()
   eq(state.file_calls[1].search_dirs, { vim.fn.expand("vim/lua") })
 end
 
-T["search_word() dispatches to grep picker with fixed strings"] = function()
+T["search_word() dispatches to grep picker without redundant fixed-string opts"] = function()
   local pickers, state = load_module()
 
   pickers.search_word("TODO", "vim/lua", "path")
 
   eq(state.grep_calls[1].prompt_title, "Search")
   eq(state.grep_calls[1].search, "TODO")
-  eq(state.grep_calls[1].fixed_strings, true)
   eq(state.grep_calls[1].sort, "path")
 end
 
