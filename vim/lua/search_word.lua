@@ -2,7 +2,7 @@ local M = {}
 local picker_commands = require("commands.pickers")
 
 -- sort : Specify sort options to use with `ripgrep`
---   e.g. "--sortr modified"(default), "--sort path"
+--   e.g. "--sort path"
 function M.search_word(path, sort)
   local Input = require("nui.input")
   path = path or ""

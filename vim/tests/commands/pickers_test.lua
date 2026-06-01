@@ -163,6 +163,16 @@ T["search_word() dispatches to grep picker without redundant fixed-string opts"]
   eq(state.grep_calls[1].sort, "path")
 end
 
+T["search_word() does not apply legacy default sort to grep queries"] = function()
+  local pickers, state = load_module()
+
+  pickers.search_word("TODO")
+
+  eq(state.grep_calls[1].prompt_title, "Search")
+  eq(state.grep_calls[1].search, "TODO")
+  eq(state.grep_calls[1].sort, nil)
+end
+
 T["selected_visual_mode_text() reads current visual marks"] = function()
   local pickers = load_module()
   local buf = helpers.make_scratch_buffer({ "AlphaBeta" })

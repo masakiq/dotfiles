@@ -38,6 +38,10 @@ local function normalize_sort(sort)
 end
 
 local function legacy_file_opts(path, sort, extra)
+  extra = vim.deepcopy(extra or {})
+  local disable_default_sort = extra.disable_default_sort
+  extra.disable_default_sort = nil
+
   local normalized_path = path or ""
   local normalized_sort = sort or ""
 
@@ -46,14 +50,14 @@ local function legacy_file_opts(path, sort, extra)
     normalized_path = ""
   end
 
-  if normalized_path == "" and normalized_sort == "" and not (extra and extra.include_ignored) then
+  if normalized_path == "" and normalized_sort == "" and not extra.include_ignored and not disable_default_sort then
     normalized_sort = "--sortr modified"
   end
 
   return vim.tbl_deep_extend("force", {
     search_dirs = normalize_search_dirs(normalized_path),
     sort = normalize_sort(normalized_sort),
-  }, extra or {})
+  }, extra)
 end
 
 local function with_preview_toggle(opts, callback)
@@ -275,6 +279,7 @@ function M.search_word(word, path, sort)
   end
 
   grep_pickers.grep_string(legacy_file_opts(path, sort, {
+    disable_default_sort = true,
     prompt_title = "Search",
     search = word,
   }))
