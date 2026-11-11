@@ -11,11 +11,11 @@ bind tree  C !@sh -c "printf %(file) | pbcopy"
 bind diff  C !@sh -c "printf %(file) | pbcopy"
 bind stage C !@sh -c "printf %(file) | pbcopy"
 
-# commit を hub で開く
-bind main  G !@hub browse -- commit/%(commit)
-bind diff  G !@hub browse -- commit/%(commit)
-bind log   G !@hub browse -- commit/%(commit)
-bind blame G !@hub browse -- commit/%(commit)/%(file)
+# commit を gh で開く
+bind main  G !@gh browse %(commit)
+bind diff  G !@gh browse %(commit)
+bind log   G !@gh browse %(commit)
+bind blame G !@gh browse %(file) --commit=%(commit)
 
 # rebase する
 bind main R >sh -c 'git rebase --committer-date-is-author-date -i "$1"^ || :' sh %(commit)
