@@ -19,3 +19,6 @@ ln -sf `pwd`/tig/.tigrc ~/.tigrc
 
 mkdir -p ~/.config/diffview
 ln -sf `pwd`/diffview/config.toml ~/.config/diffview/config.toml
+
+mkdir -p ~/.config/ghostty
+ln -sf `pwd`/ghostty/config ~/.config/ghostty/config

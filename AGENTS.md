@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository manages editor and shell tooling through symlinked dotfiles. `vim/init.lua` is the Neovim entrypoint. Shared Lua helpers live in `vim/lua/`. Most day-to-day behavior changes belong in `vim/plugin/`, with grouped settings under `vim/plugin/config/` and language-specific LSP setup under `vim/plugin/lsp/`. Legacy Vim helpers live in `vim/functions/`. Other tool configs are split by app in `direnv/`, `diffview/`, `efm-langserver/`, and `tig/`. Treat `tmp/` as working notes and experiments, not long-term source of truth.
+This repository manages editor and shell tooling through symlinked dotfiles. `vim/init.lua` is the Neovim entrypoint. Shared Lua helpers live in `vim/lua/`. Most day-to-day behavior changes belong in `vim/plugin/`, with grouped settings under `vim/plugin/config/` and language-specific LSP setup under `vim/plugin/lsp/`. Legacy Vim helpers live in `vim/functions/`. Other tool configs are split by app in `direnv/`, `diffview/`, `efm-langserver/`, `ghostty/`, and `tig/`. Treat `tmp/` as working notes and experiments, not long-term source of truth.
 
 ## Build, Test, and Development Commands
 
