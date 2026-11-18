@@ -10,6 +10,7 @@ cursor-style-blink = false
 cursor-style = block
 shell-integration-features = no-cursor
 macos-option-as-alt = true
+confirm-close-surface = false
 keybind = cmd+shift+enter=toggle_split_zoom
 keybind = shift+enter=text:\n
 keybind = cmd+n=goto_split:next
