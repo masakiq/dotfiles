@@ -61,14 +61,16 @@ end
 function M.rg_files(opts)
   opts = core.with_file_mappings(core.default_picker_opts(opts))
 
-  pickers.new(opts, {
-    prompt_title = opts.prompt_title or "Files",
-    finder = finders.new_oneshot_job(M.build_rg_file_command(opts), {
-      cwd = opts.cwd,
-    }),
-    previewer = conf.file_previewer(opts),
-    sorter = conf.file_sorter(opts),
-  }):find()
+  pickers
+    .new(opts, {
+      prompt_title = opts.prompt_title or "Files",
+      finder = finders.new_oneshot_job(M.build_rg_file_command(opts), {
+        cwd = opts.cwd,
+      }),
+      previewer = conf.file_previewer(opts),
+      sorter = conf.file_sorter(opts),
+    })
+    :find()
 end
 
 return M

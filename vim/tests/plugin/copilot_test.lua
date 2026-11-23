@@ -280,7 +280,10 @@ T["copilot.lua skips setup when the auth file is denied in trust"] = function()
   eq(trust_called, false)
   eq(#messages, 1)
   eq(messages[1].level, vim.log.levels.WARN)
-  eq(messages[1].message, "[Copilot.lua] Skipping setup because /test-config/github-copilot/apps.json is denied in :trust")
+  eq(
+    messages[1].message,
+    "[Copilot.lua] Skipping setup because /test-config/github-copilot/apps.json is denied in :trust"
+  )
 end
 
 return T

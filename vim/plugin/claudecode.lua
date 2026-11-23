@@ -30,19 +30,19 @@ claudecode.setup({
   visual_demotion_delay_ms = 50,
 
   -- Diff display settings
-  diff_provider = "auto",        -- "auto", "native", or "diffview"
+  diff_provider = "auto", -- "auto", "native", or "diffview"
   diff_opts = {
     auto_close_on_accept = true, -- Automatically close diff when changes are accepted
-    show_diff_stats = true,      -- Show diff statistics
-    vertical_split = true,       -- Display diff in vertical split
-    open_in_current_tab = true,  -- Open diff in current tab instead of new tab
+    show_diff_stats = true, -- Show diff statistics
+    vertical_split = true, -- Display diff in vertical split
+    open_in_current_tab = true, -- Open diff in current tab instead of new tab
   },
 
   -- Terminal integration settings
   terminal = {
-    split_side = "right",             -- Split position ("left" or "right")
-    split_width_percentage = 0.5,     -- Percentage of editor width (0.0-1.0)
-    provider = "native",              -- "snacks" or "native"
+    split_side = "right", -- Split position ("left" or "right")
+    split_width_percentage = 0.5, -- Percentage of editor width (0.0-1.0)
+    provider = "native", -- "snacks" or "native"
     show_native_term_exit_tip = true, -- Show native terminal exit tip
   },
 })

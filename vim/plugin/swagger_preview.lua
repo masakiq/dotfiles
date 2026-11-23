@@ -10,19 +10,14 @@ local function is_swagger_command_available()
     return true
   end
 
-  vim.api.nvim_echo(
+  vim.api.nvim_echo({
     {
-      {
-        "Command `swagger-ui-watcher` not found. Please execute `npm install -g swagger-ui-watcher`",
-        "WarningMsg"
-      }
+      "Command `swagger-ui-watcher` not found. Please execute `npm install -g swagger-ui-watcher`",
+      "WarningMsg",
     },
-    true,
-    {}
-  )
+  }, true, {})
   return false
 end
-
 
 local function is_port_available(port)
   local handle = io.popen("lsof -iTCP:" .. port .. " -sTCP:LISTEN -t")
@@ -34,9 +29,9 @@ end
 local function extract_max_port()
   local max_port = base_port
   for _, v in pairs(previewed_files) do
-    if v['port'] then
-      if not max_port or v['port'] > max_port then
-        max_port = v['port']
+    if v["port"] then
+      if not max_port or v["port"] > max_port then
+        max_port = v["port"]
       end
     end
   end
@@ -44,24 +39,28 @@ local function extract_max_port()
 end
 
 local function stop_server()
-  if not is_swagger_command_available() then return end
+  if not is_swagger_command_available() then
+    return
+  end
 
   local swagger_path = vim.fn.expand("%:p")
 
   if not previewed_files[swagger_path] then
     return
   end
-  vim.fn.jobstop(previewed_files[swagger_path]['job_pid'])
+  vim.fn.jobstop(previewed_files[swagger_path]["job_pid"])
   previewed_files[swagger_path] = nil
 end
 
 local function start_server()
-  if not is_swagger_command_available() then return end
+  if not is_swagger_command_available() then
+    return
+  end
 
   local swagger_path = vim.fn.expand("%:p")
 
   if previewed_files[swagger_path] then
-    os.execute("open http://" .. host .. ":" .. previewed_files[swagger_path]['port'])
+    os.execute("open http://" .. host .. ":" .. previewed_files[swagger_path]["port"])
     return
   end
   previewed_files[swagger_path] = {}
@@ -71,10 +70,10 @@ local function start_server()
     port = port + 1
   end
 
-  previewed_files[swagger_path]['port'] = port
+  previewed_files[swagger_path]["port"] = port
   local cmd = "swagger-ui-watcher -p " .. port .. " -h " .. host .. " " .. swagger_path
 
-  previewed_files[swagger_path]['job_pid'] = vim.fn.jobstart(cmd, {
+  previewed_files[swagger_path]["job_pid"] = vim.fn.jobstart(cmd, {
     on_stdout = function(_, data, _)
       print(vim.inspect(data))
     end,

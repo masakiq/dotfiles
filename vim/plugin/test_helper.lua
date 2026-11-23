@@ -24,22 +24,18 @@ local function send_command_to_pane_by_name(pane_name, command)
   end
 
   -- cancel と send を1つのコマンドにまとめて非同期実行
-  local cmd = string.format(
-    "tmux send -t %s -X cancel 2>/dev/null; tmux send -t %s '%s' C-m",
-    pane_index, pane_index, command
-  )
+  local cmd =
+    string.format("tmux send -t %s -X cancel 2>/dev/null; tmux send -t %s '%s' C-m", pane_index, pane_index, command)
   vim.fn.jobstart(cmd, { detach = true })
 end
 
 local function send_command_to_pane(pane_offset, command)
   local target_pane =
-      string.format("$(printf ':.%%s' $(math $(tmux display-message -p '#{pane_index}') + %d))", pane_offset)
+    string.format("$(printf ':.%%s' $(math $(tmux display-message -p '#{pane_index}') + %d))", pane_offset)
 
   -- cancel と send を1つのコマンドにまとめて非同期実行
-  local cmd = string.format(
-    "tmux send -t %s -X cancel 2>/dev/null; tmux send -t %s '%s' C-m",
-    target_pane, target_pane, command
-  )
+  local cmd =
+    string.format("tmux send -t %s -X cancel 2>/dev/null; tmux send -t %s '%s' C-m", target_pane, target_pane, command)
   vim.fn.jobstart(cmd, { detach = true })
 end
 
