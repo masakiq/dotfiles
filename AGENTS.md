@@ -13,7 +13,7 @@ This repository manages editor and shell tooling through symlinked dotfiles. `vi
 
 ## Coding Style & Naming Conventions
 
-Lua uses spaces with 2-space indentation; `.stylua.toml` is authoritative. Keep modules narrow and place code in the directory that owns the behavior: reusable helpers in `vim/lua/`, editor commands/autocmds in `vim/plugin/`, and grouped settings in `vim/plugin/config/`. Use `lower_snake_case` for filenames and local variables. Prefer descriptive user-command names such as `MarkdownPreviewITerm` and avoid broad refactors when a small, targeted config change is enough.
+Lua uses spaces with 2-space indentation; `.stylua.toml` is authoritative. Keep modules narrow and place code in the directory that owns the behavior: reusable helpers in `vim/lua/`, editor commands/autocmds in `vim/plugin/`, and grouped settings in `vim/plugin/config/`. Use `lower_snake_case` for filenames and local variables. Prefer descriptive user-command names such as `MarkdownPreviewGhostty` and avoid broad refactors when a small, targeted config change is enough.
 
 ## Testing Guidelines
 
