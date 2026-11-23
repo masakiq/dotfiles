@@ -158,6 +158,30 @@ local function close_markdown_preview_in_ghostty()
   end
 end
 
+local function ghostty_focused_terminal_id()
+  local id = vim.fn.system({
+    "osascript",
+    "-e",
+    'tell application "Ghostty" to get id of focused terminal of selected tab of front window',
+  })
+  id = vim.trim(id)
+  if vim.v.shell_error == 0 and id:match("^[%w%-]+$") then
+    return id
+  end
+  return nil
+end
+
+local function focus_ghostty_terminal(id)
+  if not id then
+    return
+  end
+  vim.fn.system({
+    "osascript",
+    "-e",
+    'tell application "Ghostty" to focus terminal id "' .. id .. '"',
+  })
+end
+
 local function open_markdown_preview_in_ghostty(url)
   if vim.fn.executable("terminal-browser") ~= 1 then
     vim.notify("terminal-browser is not installed", vim.log.levels.ERROR)
@@ -168,11 +192,15 @@ local function open_markdown_preview_in_ghostty(url)
     return
   end
 
+  local editor_terminal_id = ghostty_focused_terminal_id()
   local result = vim.fn.system(terminal_browser_cmd({ "open", url, "--split", "right" }))
   if vim.v.shell_error ~= 0 then
     vim.notify("Failed to open terminal-browser preview: " .. result, vim.log.levels.ERROR)
     return
   end
+
+  -- The new split takes focus; return it to the editor pane.
+  focus_ghostty_terminal(editor_terminal_id)
 
   preview_ghostty_browser_key = result:match("opened%s+(%S+)")
 end
